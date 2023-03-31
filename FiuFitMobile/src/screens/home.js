@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        backgroundColor: '#1B98F5'
     },
     homeItem: {
         flex: 1,
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     textStyle: {
-        color: 'black',
+        color: 'white',
         fontSize: 50,
         fontWeight: 'bold'
     }
