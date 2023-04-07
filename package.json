@@ -10,12 +10,14 @@
     "test": "jest"
   },
   "dependencies": {
+    "@fiu-fit/common": "github:Fiu-Fit/common",
     "@react-native-community/cli-platform-android": "^11.0.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/native-stack": "^6.9.12",
     "@react-navigation/stack": "^6.3.16",
+    "axios": "^1.3.5",
     "react": "18.2.0",
     "react-native": "0.71.5",
     "react-native-gesture-handler": "^2.9.0",
