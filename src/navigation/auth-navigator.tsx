@@ -1,18 +1,31 @@
-import { createStackNavigator } from '@react-navigation/stack';
-import { SignInScreen } from '../screens/auth/signin';
-import { SignUpScreen } from '../screens/auth/signup';
-import { HomeScreen } from '../screens/home';
+/* eslint-disable react/react-in-jsx-scope */
+import {createStackNavigator} from '@react-navigation/stack';
+import {SignInScreen} from '../screens/auth/signin';
+import {SignUpScreen} from '../screens/auth/signup';
+import {HomeScreen} from '../screens/home';
 
 const Stack = createStackNavigator();
 
 const AuthStack = () => {
-    return (
-      <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Welcome', headerShown: false }} />
-          <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: 'Sign In'}} />
-          <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Sign Up' }} />
-      </Stack.Navigator>
-    )
-}
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{title: 'Welcome', headerShown: false}}
+      />
+      <Stack.Screen
+        name="SignIn"
+        component={SignInScreen}
+        options={{title: 'Sign In'}}
+      />
+      <Stack.Screen
+        name="SignUp"
+        component={SignUpScreen}
+        options={{title: 'Sign Up'}}
+      />
+    </Stack.Navigator>
+  );
+};
 
-export default AuthStack
+export default AuthStack;
