@@ -3,7 +3,8 @@ import RNFS from 'react-native-fs';
 
 const config = {
   transport: [consoleTransport, fileAsyncTransport],
-  enabledExtensions: ['AppParent'],
+  // We need to add every tag/module here for it to show up.
+  enabledExtensions: ['sign_in'],
   transportOptions: {
     colors: {
       none: 'white',
