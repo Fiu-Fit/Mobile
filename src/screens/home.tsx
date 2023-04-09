@@ -4,7 +4,7 @@ import {View, Text, StyleSheet, Button} from 'react-native';
 export const HomeScreen = ({navigation}: {navigation: any}) => (
   <View style={styles.container}>
     <View style={styles.homeItem}>
-      <Text style={styles.textStyle}>FiuFit</Text>
+      <Text style={styles.textStyle}>HOME</Text>
     </View>
     <View style={styles.homeItem}>
       <Button title="Sign In" onPress={() => navigation.push('SignIn')} />

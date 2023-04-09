@@ -1,59 +1,239 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button, TextInput} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  View,
+  Keyboard,
+} from 'react-native';
 import axios from 'axios';
-import {LoggerFactory} from '@fiu-fit/common';
+//import {LoggerFactory} from '@fiu-fit/common';
 
-export const SignUpScreen = () => {
-  const logger = LoggerFactory('signUpScreen');
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+import Input from '../../components/input';
+import Button from '../../components/button';
+import Loader from '../../components/loader';
+import COLORS from '../../constants/colors';
+import ENDPOINTS from '../../constants/endpoints';
 
-  const handleSignUp = async () => {
-    try {
-      const response = await axios.post('http://localhost:8080/auth/register', {
-        firstName,
-        lastName,
-        email,
-        password,
-        role: 1,
-      });
-      logger.info(response.data);
-    } catch (error) {
-      logger.error(error);
+export const SignUpScreen = ({navigation}: {navigation: any}) => {
+  //const logger = LoggerFactory('signUpScreen');
+  const [inputs, setInputs] = React.useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    role: 'Trainer',
+  });
+
+  interface FormErrors {
+    firstname?: string;
+    lastname?: string;
+    email?: string | undefined;
+    password?: string;
+    role?: string;
+  }
+
+  const [errors, setErrors] = React.useState<FormErrors>({});
+  const [loading, setLoading] = React.useState(false);
+
+  const handleOnChange = (text: string, input: string) => {
+    setInputs(prevState => ({...prevState, [input]: text}));
+  };
+
+  const handleError = (errorMessage: string, input: string) => {
+    setErrors(prevState => ({...prevState, [input]: errorMessage}));
+  };
+
+  const validateEmail = (value: string): boolean => {
+    if (!value) {
+      handleError('Please input email', 'email');
+      return false;
+    } else if (!value.match(/\S+@\S+\.\S+/)) {
+      handleError('Please input valid email', 'email');
+      return false;
+    }
+    return true;
+  };
+
+  const validatePassword = (value: string): boolean => {
+    if (!value) {
+      handleError('Please input password', 'password');
+      return false;
+    } else if (parseInt(value, 10) < 5) {
+      handleError('Min password length of 5', 'password');
+      return false;
+    }
+    return true;
+  };
+
+  const validateName = (value: string, input: string): boolean => {
+    if (!value) {
+      setErrors(prevState => ({
+        ...prevState,
+        [input]: 'Check this field',
+      }));
+      return false;
+    }
+    return true;
+  };
+
+  const validate = () => {
+    Keyboard.dismiss();
+    const emailIsValid = validateEmail(inputs.email);
+    const passwordIsValid = validatePassword(inputs.password);
+    const firstnameIsValid = validateName(inputs.firstname, 'firstname');
+    const lastnameIsValid = validateName(inputs.lastname, 'lastname');
+
+    if (
+      emailIsValid &&
+      passwordIsValid &&
+      firstnameIsValid &&
+      lastnameIsValid
+    ) {
+      handleSignUp();
     }
   };
 
+  const handleSignUp = async () => {
+    try {
+      console.log(inputs);
+      const response = await axios.post(ENDPOINTS.auth_register, {
+        firstname: inputs.firstname,
+        lastname: inputs.lastname,
+        email: inputs.email,
+        password: inputs.password,
+        role: inputs.role,
+      });
+      //logger.info(response.data);
+      console.log(response.data);
+    } catch (error) {
+      //logger.error(error);
+      console.log(error);
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigation.push('Home');
+    }, 3000);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Create Account Screen</Text>
-      <TextInput
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
-      />
-      <TextInput
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
-      />
-      <TextInput placeholder="Email" value={email} onChangeText={setEmail} />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Sign Up" onPress={handleSignUp} />
-    </View>
+    <SafeAreaView style={styles.container}>
+      {loading && <Loader />}
+      <View style={styles.header}>
+        <Text style={styles.title}>Register</Text>
+        <Text style={styles.description}>Enter your details</Text>
+      </View>
+      <ScrollView style={styles.subcontainer}>
+        <View style={styles.inputContainer}>
+          <Input
+            // @ts-ignore
+            placeholder="Enter you first name"
+            placeholderTextColor={COLORS.darkGrey}
+            onChangeText={(text: string) => handleOnChange(text, 'firstname')}
+            labelText="First Name"
+            labelColor={COLORS.darkGrey}
+            iconName="account-outline"
+            error={errors.firstname}
+            password={false}
+            onFocus={() => {
+              handleError('', 'firstName');
+            }}
+          />
+          <Input
+            // @ts-ignore
+            placeholder="Enter your last name"
+            placeholderTextColor={COLORS.darkGrey}
+            onChangeText={(text: string) => handleOnChange(text, 'lastname')}
+            labelText="Last Name"
+            labelColor={COLORS.darkGrey}
+            iconName="account"
+            error={errors.lastname}
+            password={false}
+            onFocus={() => {
+              handleError('', 'lastName');
+            }}
+          />
+          <Input
+            // @ts-ignore
+            placeholder="Enter your email"
+            placeholderTextColor={COLORS.darkGrey}
+            onChangeText={(text: string) => handleOnChange(text, 'email')}
+            labelText="Email"
+            labelColor={COLORS.darkGrey}
+            iconName="email-outline"
+            error={errors.email}
+            password={false}
+            onFocus={() => {
+              handleError('', 'email');
+            }}
+          />
+          <Input
+            // @ts-ignore
+            placeholder="Enter your password"
+            placeholderTextColor={COLORS.darkGrey}
+            iconName="lock-outline"
+            labelColor={COLORS.darkGrey}
+            labelText="Password"
+            onChangeText={(text: string) => handleOnChange(text, 'password')}
+            password
+            error={errors.password}
+            onFocus={() => {
+              handleError('', 'password');
+            }}
+          />
+          <Button
+            title="Register"
+            backgroundColor={COLORS.blue}
+            onPress={validate}
+          />
+          <Text
+            onPress={() => navigation.push('SignIn')}
+            style={styles.alreadyText}>
+            Already have account?
+          </Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: COLORS.white,
+  },
+  header: {
+    backgroundColor: COLORS.blue,
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    borderBottomLeftRadius: 200,
+    borderBottomEndRadius: 200,
+    elevation: 2,
     alignItems: 'center',
+  },
+  subcontainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: COLORS.white,
+  },
+  description: {
+    fontSize: 15,
+    marginVertical: 10,
+    color: COLORS.light,
+  },
+  inputContainer: {
+    marginVertical: 20,
+  },
+  alreadyText: {
+    color: COLORS.black,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 15,
   },
 });
