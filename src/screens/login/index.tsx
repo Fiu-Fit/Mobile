@@ -18,12 +18,11 @@ const LoginScreen = ({navigation}: {navigation: any}) => {
     password: '',
   });
 
-  interface FormErrors {
-    email?: string;
-    password?: string;
-  }
+  const [errors, setErrors] = React.useState({
+    email: '',
+    password: '',
+  });
 
-  const [errors, setErrors] = React.useState<FormErrors>({});
   const [loading, setLoading] = React.useState(false);
 
   const handleOnChange = (text: string, input: string) => {
@@ -48,11 +47,11 @@ const LoginScreen = ({navigation}: {navigation: any}) => {
     return true;
   };
 
-  const validateInput = (value: string, input: string): boolean => {
+  const validatePassword = (value: string, input: string): boolean => {
     if (!value) {
       setErrors(prevState => ({
         ...prevState,
-        [input]: 'Check this field',
+        [input]: 'Please input password',
       }));
       return false;
     }
@@ -62,7 +61,7 @@ const LoginScreen = ({navigation}: {navigation: any}) => {
   const validate = () => {
     Keyboard.dismiss();
     const emailIsValid = validateEmail(inputs.email);
-    const passwordIsValid = validateInput(inputs.password, 'password');
+    const passwordIsValid = validatePassword(inputs.password, 'password');
 
     if (emailIsValid && passwordIsValid) {
       handleSignIn();
@@ -75,9 +74,9 @@ const LoginScreen = ({navigation}: {navigation: any}) => {
         email: inputs.email,
         password: inputs.password,
       });
-      console.log(response.data);
+      logger.info(response.data);
     } catch (error) {
-      console.log(error);
+      logger.info(error as string);
     }
     setLoading(true);
     setTimeout(() => {
@@ -127,7 +126,7 @@ const LoginScreen = ({navigation}: {navigation: any}) => {
           onPress={validate}
         />
         <Text
-          onPress={() => navigation.push('SignUp')}
+          onPress={() => navigation.push('Register')}
           style={styles.alreadyText}>
           Don't have an account?
         </Text>

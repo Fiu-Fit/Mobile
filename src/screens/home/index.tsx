@@ -8,12 +8,12 @@ const HomeScreen = ({navigation}: {navigation: any}) => (
       <Text style={styles.textStyle}>HOME</Text>
     </View>
     <View style={styles.homeItem}>
-      <Button title="Sign In" onPress={() => navigation.push('SignIn')} />
+      <Button title="Sign In" onPress={() => navigation.push('Login')} />
     </View>
     <View style={styles.homeItem}>
       <Button
         title="Create Account"
-        onPress={() => navigation.push('SignUp')}
+        onPress={() => navigation.push('Register')}
       />
     </View>
   </View>

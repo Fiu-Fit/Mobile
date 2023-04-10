@@ -5,9 +5,6 @@ export const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
   },
-  errorContainer: {
-    alignItems: 'flex-end',
-  },
   label: {
     marginVertical: 5,
     fontSize: 14,
@@ -39,5 +36,9 @@ export const styles = StyleSheet.create({
     color: COLORS.red,
     fontSize: 12,
     marginTop: 7,
+  },
+  labelContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

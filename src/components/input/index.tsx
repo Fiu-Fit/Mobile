@@ -24,9 +24,13 @@ const Input = ({
 }: InputProps) => {
   const [isFocused, setIsFocused] = React.useState(false);
   const [hidePassword, setHidePassword] = React.useState(password);
+
   return (
     <View style={styles.container}>
-      <Text style={[styles.label, {color: labelColor}]}>{labelText}</Text>
+      <View style={styles.labelContainer}>
+        <Text style={[styles.label, {color: labelColor}]}>{labelText}</Text>
+        {error && <Text style={styles.textError}>{error}</Text>}
+      </View>
       <View
         style={[
           styles.inputContainer,
@@ -59,9 +63,6 @@ const Input = ({
             name={hidePassword ? 'eye-outline' : 'eye-off-outline'}
           />
         )}
-      </View>
-      <View style={styles.errorContainer}>
-        {error && <Text style={styles.textError}>{error}</Text>}
       </View>
     </View>
   );

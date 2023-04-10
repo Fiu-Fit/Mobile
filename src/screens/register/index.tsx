@@ -10,6 +10,7 @@ import LoggerFactory from '../../utils/logger-utility';
 import {styles} from './styles';
 
 const logger = LoggerFactory('register');
+const MIN_PASS_LENGTH = 5;
 
 const RegisterScreen = ({navigation}: {navigation: any}) => {
   logger.info('Started Register screen!');
@@ -21,15 +22,14 @@ const RegisterScreen = ({navigation}: {navigation: any}) => {
     role: 'Trainer',
   });
 
-  interface FormErrors {
-    firstname?: string;
-    lastname?: string;
-    email?: string | undefined;
-    password?: string;
-    role?: string;
-  }
+  const [errors, setErrors] = React.useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    role: '',
+  });
 
-  const [errors, setErrors] = React.useState<FormErrors>({});
   const [loading, setLoading] = React.useState(false);
 
   const handleOnChange = (text: string, input: string) => {
@@ -55,7 +55,8 @@ const RegisterScreen = ({navigation}: {navigation: any}) => {
     if (!value) {
       handleError('Please input password', 'password');
       return false;
-    } else if (parseInt(value, 10) < 5) {
+    }
+    if (value.length < MIN_PASS_LENGTH) {
       handleError('Min password length of 5', 'password');
       return false;
     }
@@ -89,7 +90,6 @@ const RegisterScreen = ({navigation}: {navigation: any}) => {
 
   const handleSignUp = async () => {
     try {
-      console.log(inputs);
       const response = await axios.post(ENDPOINTS.auth_register, {
         firstname: inputs.firstname,
         lastname: inputs.lastname,
@@ -97,16 +97,14 @@ const RegisterScreen = ({navigation}: {navigation: any}) => {
         password: inputs.password,
         role: inputs.role,
       });
-      //logger.info(response.data);
-      console.log(response.data);
+      logger.info(response.data);
     } catch (error) {
-      //logger.error(error);
-      console.log(error);
+      logger.error(error as string);
     }
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      navigation.push('Home');
+      navigation.push('Login');
     }, 3000);
   };
 
@@ -130,7 +128,7 @@ const RegisterScreen = ({navigation}: {navigation: any}) => {
             error={errors.firstname}
             password={false}
             onFocus={() => {
-              handleError('', 'firstName');
+              handleError('', 'firstname');
             }}
           />
           <Input
@@ -144,7 +142,7 @@ const RegisterScreen = ({navigation}: {navigation: any}) => {
             error={errors.lastname}
             password={false}
             onFocus={() => {
-              handleError('', 'lastName');
+              handleError('', 'lastname');
             }}
           />
           <Input
@@ -181,7 +179,7 @@ const RegisterScreen = ({navigation}: {navigation: any}) => {
             onPress={validate}
           />
           <Text
-            onPress={() => navigation.push('SignIn')}
+            onPress={() => navigation.push('Login')}
             style={styles.alreadyText}>
             Already have account?
           </Text>
