@@ -69,10 +69,7 @@ export const SignUpScreen = ({navigation}: {navigation: any}) => {
 
   const validateName = (value: string, input: string): boolean => {
     if (!value) {
-      setErrors(prevState => ({
-        ...prevState,
-        [input]: 'Check this field',
-      }));
+      handleError('Please input ' + input, input);
       return false;
     }
     return true;
