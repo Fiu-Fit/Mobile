@@ -1,23 +1,18 @@
 import React from 'react';
-import {
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  View,
-  Keyboard,
-} from 'react-native';
+import {Text, SafeAreaView, ScrollView, View, Keyboard} from 'react-native';
 import axios from 'axios';
-//import {LoggerFactory} from '@fiu-fit/common';
-
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Loader from '../../components/loader';
 import COLORS from '../../constants/colors';
 import ENDPOINTS from '../../constants/endpoints';
+import LoggerFactory from '../../utils/logger-utility';
+import {styles} from './styles';
 
-export const SignUpScreen = ({navigation}: {navigation: any}) => {
-  //const logger = LoggerFactory('signUpScreen');
+const logger = LoggerFactory('register');
+
+const RegisterScreen = ({navigation}: {navigation: any}) => {
+  logger.info('Started Register screen!');
   const [inputs, setInputs] = React.useState({
     firstname: '',
     lastname: '',
@@ -196,41 +191,4 @@ export const SignUpScreen = ({navigation}: {navigation: any}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-  },
-  header: {
-    backgroundColor: COLORS.blue,
-    paddingVertical: 30,
-    paddingHorizontal: 20,
-    borderBottomLeftRadius: 200,
-    borderBottomEndRadius: 200,
-    elevation: 2,
-    alignItems: 'center',
-  },
-  subcontainer: {
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: COLORS.white,
-  },
-  description: {
-    fontSize: 15,
-    marginVertical: 10,
-    color: COLORS.light,
-  },
-  inputContainer: {
-    marginVertical: 20,
-  },
-  alreadyText: {
-    color: COLORS.black,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: 15,
-  },
-});
+export default RegisterScreen;

@@ -1,21 +1,18 @@
 import React from 'react';
-import {
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  View,
-  Keyboard,
-  Image,
-} from 'react-native';
+import {Text, SafeAreaView, View, Keyboard, Image} from 'react-native';
 import axios from 'axios';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Loader from '../../components/loader';
 import COLORS from '../../constants/colors';
 import ENDPOINTS from '../../constants/endpoints';
+import LoggerFactory from '../../utils/logger-utility';
+import {styles} from './styles';
 
-export const SignInScreen = ({navigation}: {navigation: any}) => {
-  //const logger = LoggerFactory('signUpScreen');
+const logger = LoggerFactory('login');
+
+const LoginScreen = ({navigation}: {navigation: any}) => {
+  logger.info('Started Login screen!');
   const [inputs, setInputs] = React.useState({
     email: '',
     password: '',
@@ -139,42 +136,4 @@ export const SignInScreen = ({navigation}: {navigation: any}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.blue,
-  },
-  header: {
-    flex: 0.6,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 30,
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: COLORS.white,
-  },
-  description: {
-    fontSize: 15,
-    marginVertical: 10,
-    color: COLORS.light,
-  },
-  inputContainer: {
-    flex: 1,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-  },
-  alreadyText: {
-    color: COLORS.grey,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: 15,
-  },
-  logo: {
-    height: 100,
-    width: 300,
-    resizeMode: 'cover',
-  },
-});
+export default LoginScreen;
