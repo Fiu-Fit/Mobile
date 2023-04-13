@@ -2,8 +2,8 @@ import React from 'react';
 import {Text, SafeAreaView, View, Keyboard, Image} from 'react-native';
 import axios from 'axios';
 import Input from '../../components/input';
-import Button from '../../components/button';
-import Loader from '../../components/loader';
+import Button from '../../components/Button';
+import Loader from '../../components/Loader';
 import COLORS from '../../constants/colors';
 import ENDPOINTS from '../../constants/endpoints';
 import LoggerFactory from '../../utils/logger-utility';
@@ -70,10 +70,7 @@ const LoginScreen = ({navigation}: {navigation: any}) => {
 
   const handleSignIn = async () => {
     try {
-      const response = await axios.post(ENDPOINTS.auth_login, {
-        email: inputs.email,
-        password: inputs.password,
-      });
+      const response = await axios.post(ENDPOINTS.auth_login, inputs);
       logger.info(response.data);
     } catch (error) {
       logger.info(error as string);

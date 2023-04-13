@@ -2,8 +2,8 @@ import React from 'react';
 import {Text, SafeAreaView, ScrollView, View, Keyboard} from 'react-native';
 import axios from 'axios';
 import Input from '../../components/input';
-import Button from '../../components/button';
-import Loader from '../../components/loader';
+import Button from '../../components/Button';
+import Loader from '../../components/Loader';
 import COLORS from '../../constants/colors';
 import ENDPOINTS from '../../constants/endpoints';
 import LoggerFactory from '../../utils/logger-utility';
@@ -15,16 +15,16 @@ const MIN_PASS_LENGTH = 5;
 const RegisterScreen = ({navigation}: {navigation: any}) => {
   logger.info('Started Register screen!');
   const [inputs, setInputs] = React.useState({
-    firstname: '',
-    lastname: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     role: 'Trainer',
   });
 
   const [errors, setErrors] = React.useState({
-    firstname: '',
-    lastname: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     role: '',
@@ -75,14 +75,14 @@ const RegisterScreen = ({navigation}: {navigation: any}) => {
     Keyboard.dismiss();
     const emailIsValid = validateEmail(inputs.email);
     const passwordIsValid = validatePassword(inputs.password);
-    const firstnameIsValid = validateName(inputs.firstname, 'firstname');
-    const lastnameIsValid = validateName(inputs.lastname, 'lastname');
+    const firstnameIsValid = validateName(inputs.firstName, 'firstName');
+    const lastNameIsValid = validateName(inputs.lastName, 'lastName');
 
     if (
       emailIsValid &&
       passwordIsValid &&
       firstnameIsValid &&
-      lastnameIsValid
+      lastNameIsValid
     ) {
       handleSignUp();
     }
@@ -90,13 +90,7 @@ const RegisterScreen = ({navigation}: {navigation: any}) => {
 
   const handleSignUp = async () => {
     try {
-      const response = await axios.post(ENDPOINTS.auth_register, {
-        firstname: inputs.firstname,
-        lastname: inputs.lastname,
-        email: inputs.email,
-        password: inputs.password,
-        role: inputs.role,
-      });
+      const response = await axios.post(ENDPOINTS.auth_register, inputs);
       logger.info(response.data);
     } catch (error) {
       logger.error(error as string);
@@ -121,28 +115,28 @@ const RegisterScreen = ({navigation}: {navigation: any}) => {
             // @ts-ignore
             placeholder="Enter you first name"
             placeholderTextColor={COLORS.darkGrey}
-            onChangeText={(text: string) => handleOnChange(text, 'firstname')}
+            onChangeText={(text: string) => handleOnChange(text, 'firstName')}
             labelText="First Name"
             labelColor={COLORS.darkGrey}
             iconName="account-outline"
-            error={errors.firstname}
+            error={errors.firstName}
             password={false}
             onFocus={() => {
-              handleError('', 'firstname');
+              handleError('', 'firstName');
             }}
           />
           <Input
             // @ts-ignore
             placeholder="Enter your last name"
             placeholderTextColor={COLORS.darkGrey}
-            onChangeText={(text: string) => handleOnChange(text, 'lastname')}
+            onChangeText={(text: string) => handleOnChange(text, 'lastName')}
             labelText="Last Name"
             labelColor={COLORS.darkGrey}
             iconName="account"
-            error={errors.lastname}
+            error={errors.lastName}
             password={false}
             onFocus={() => {
-              handleError('', 'lastname');
+              handleError('', 'lastName');
             }}
           />
           <Input
