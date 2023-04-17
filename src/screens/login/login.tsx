@@ -1,73 +1,22 @@
 import React from 'react';
-import {Text, SafeAreaView, View, Keyboard, Image} from 'react-native';
+import {Text, SafeAreaView, View, Image} from 'react-native';
 import axios from 'axios';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Loader from '../../components/loader';
 import COLORS from '../../constants/colors';
 import LoggerFactory from '../../utils/logger-utility';
+import {Formik, FormikErrors} from 'formik';
 import {LoginScreenNavigationProp} from '../../navigation/navigation-props';
 import {styles} from './styles';
+import {errorInputProps, inputProps} from '../../utils/custom-types';
 
 const logger = LoggerFactory('login');
 
 const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
-  const [inputs, setInputs] = React.useState({
-    email: '',
-    password: '',
-  });
-
-  const [errors, setErrors] = React.useState({
-    email: '',
-    password: '',
-  });
-
   const [loading, setLoading] = React.useState(false);
 
-  const handleOnChange = (text: string, input: string) => {
-    setInputs(prevState => ({...prevState, [input]: text}));
-  };
-
-  const handleError = (errorMessage: string, input: string) => {
-    setErrors(prevState => ({...prevState, [input]: errorMessage}));
-  };
-
-  const validateEmail = (value: string): boolean => {
-    if (!value) {
-      setErrors(prevState => ({...prevState, email: 'Please input email'}));
-      return false;
-    } else if (!value.match(/\S+@\S+\.\S+/)) {
-      setErrors(prevState => ({
-        ...prevState,
-        email: 'Please input valid email',
-      }));
-      return false;
-    }
-    return true;
-  };
-
-  const validatePassword = (value: string, input: string): boolean => {
-    if (!value) {
-      setErrors(prevState => ({
-        ...prevState,
-        [input]: 'Please input password',
-      }));
-      return false;
-    }
-    return true;
-  };
-
-  const validate = () => {
-    Keyboard.dismiss();
-    const emailIsValid = validateEmail(inputs.email);
-    const passwordIsValid = validatePassword(inputs.password, 'password');
-
-    if (emailIsValid && passwordIsValid) {
-      handleSignIn();
-    }
-  };
-
-  const handleSignIn = async () => {
+  const handleSignIn = async (inputs: inputProps) => {
     setLoading(true);
     try {
       const response = await axios.post('/auth/login', inputs);
@@ -76,6 +25,7 @@ const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
     } catch (error) {
       logger.info(error as string);
     }
+    setLoading(false);
   };
 
   return (
@@ -85,39 +35,67 @@ const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
         <Image style={styles.logo} source={require('../../imgs/fiufit.png')} />
       </View>
       <View style={styles.inputContainer}>
-        <Input
-          // @ts-ignore
-          placeholder="Enter your email"
-          placeholderTextColor={COLORS.darkGrey}
-          onChangeText={(text: string) => handleOnChange(text, 'email')}
-          labelText="Email"
-          labelColor={COLORS.white}
-          iconName="email-outline"
-          error={errors.email}
-          password={false}
-          onFocus={() => {
-            handleError('', 'email');
+        <Formik
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            role: 'Athlete',
           }}
-        />
-        <Input
-          // @ts-ignore
-          placeholder="Enter your password"
-          placeholderTextColor={COLORS.darkGrey}
-          iconName="lock-outline"
-          labelText="Password"
-          labelColor={COLORS.white}
-          onChangeText={(text: string) => handleOnChange(text, 'password')}
-          password
-          error={errors.password}
-          onFocus={() => {
-            handleError('', 'password');
+          validate={values => {
+            let errors: FormikErrors<errorInputProps> = {};
+            if (!values.email) {
+              errors.email = 'Please input email';
+            } else if (!values.email.match(/\S+@\S+\.\S+/)) {
+              errors.email = 'Please input valid email';
+            }
+            if (!values.password) {
+              errors.password = 'Please input password';
+            }
+            return errors;
           }}
-        />
-        <Button
-          title="Sign In"
-          backgroundColor={COLORS.darkBlue}
-          onPress={validate}
-        />
+          onSubmit={values => {
+            handleSignIn(values);
+          }}>
+          {({values, errors, handleChange, handleSubmit}) => (
+            <>
+              <Input
+                value={values.email}
+                placeholder="Enter your email"
+                placeholderTextColor={COLORS.darkGrey}
+                onChangeText={handleChange('email')}
+                labelText="Email"
+                labelColor={COLORS.white}
+                iconName="email-outline"
+                error={errors.email}
+                password={false}
+                onFocus={() => {
+                  errors.email = '';
+                }}
+              />
+              <Input
+                value={values.password}
+                placeholder="Enter your password"
+                placeholderTextColor={COLORS.darkGrey}
+                iconName="lock-outline"
+                labelText="Password"
+                labelColor={COLORS.white}
+                onChangeText={handleChange('password')}
+                password
+                error={errors.password}
+                onFocus={() => {
+                  errors.password = '';
+                }}
+              />
+              <Button
+                title="Login"
+                backgroundColor={COLORS.darkBlue}
+                onPress={handleSubmit}
+              />
+            </>
+          )}
+        </Formik>
         <Text
           onPress={() => navigation.push('Register')}
           style={styles.alreadyText}>
