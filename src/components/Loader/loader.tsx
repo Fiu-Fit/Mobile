@@ -1,15 +1,16 @@
 import React from 'react';
 import {View, useWindowDimensions, ActivityIndicator, Text} from 'react-native';
 import COLORS from '../../constants/colors';
-import {styles} from './styles';
 
 const Loader = () => {
   const {height, width} = useWindowDimensions();
   return (
-    <View style={[styles.container, {height, width}]}>
-      <View style={styles.loader}>
+    <View
+      style={{height, width}}
+      className="justify-center bg-black/50 absolute">
+      <View className="h-70, bg-black mx-50 flex-row justify-start items-center px-20 round-sm">
         <ActivityIndicator size="large" color={COLORS.blue} />
-        <Text style={styles.text}>Loading...</Text>
+        <Text className="ml-10 text-xl">Loading...</Text>
       </View>
     </View>
   );
