@@ -9,7 +9,6 @@ import LoggerFactory from '../../utils/logger-utility';
 import {inputProps, errorInputProps} from '../../utils/custom-types';
 import {RegisterScreenNavigationProp} from '../../navigation/navigation-props';
 import {Formik, FormikErrors} from 'formik';
-import {styles} from './styles';
 
 const logger = LoggerFactory('register');
 const MIN_PASS_LENGTH = 5;
@@ -34,14 +33,13 @@ const RegisterScreen = ({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-black">
       {loading && <Loader />}
-      <View style={styles.header}>
-        <Text style={styles.title}>Register</Text>
-        <Text style={styles.description}>Enter your details</Text>
+      <View className="flex-none pt-20 items-center justify-center">
+        <Text className="text-6xl font-white text-white">Register</Text>
       </View>
-      <ScrollView style={styles.subcontainer}>
-        <View style={styles.inputContainer}>
+      <ScrollView className="flex-none px-7">
+        <View className="my-20">
           <Formik
             initialValues={{
               firstName: '',
@@ -81,7 +79,6 @@ const RegisterScreen = ({
                   placeholderTextColor={COLORS.darkGrey}
                   onChangeText={handleChange('firstName')}
                   labelText="First Name"
-                  labelColor={COLORS.darkGrey}
                   iconName="account-outline"
                   error={errors.firstName}
                   password={false}
@@ -95,7 +92,6 @@ const RegisterScreen = ({
                   placeholderTextColor={COLORS.darkGrey}
                   onChangeText={handleChange('lastName')}
                   labelText="Last Name"
-                  labelColor={COLORS.darkGrey}
                   iconName="account"
                   error={errors.lastName}
                   password={false}
@@ -109,7 +105,6 @@ const RegisterScreen = ({
                   placeholderTextColor={COLORS.darkGrey}
                   onChangeText={handleChange('email')}
                   labelText="Email"
-                  labelColor={COLORS.darkGrey}
                   iconName="email-outline"
                   error={errors.email}
                   password={false}
@@ -122,7 +117,6 @@ const RegisterScreen = ({
                   placeholder="Enter your password"
                   placeholderTextColor={COLORS.darkGrey}
                   iconName="lock-outline"
-                  labelColor={COLORS.darkGrey}
                   labelText="Password"
                   onChangeText={handleChange('password')}
                   password
@@ -131,17 +125,13 @@ const RegisterScreen = ({
                     errors.password = '';
                   }}
                 />
-                <Button
-                  title="Register"
-                  backgroundColor={COLORS.blue}
-                  onPress={handleSubmit}
-                />
+                <Button title="Register" onPress={handleSubmit} />
               </>
             )}
           </Formik>
           <Text
             onPress={() => navigation.push('Login')}
-            style={styles.alreadyText}>
+            className="font-bold text-xs text-white/70 text-center">
             Already have account?
           </Text>
         </View>

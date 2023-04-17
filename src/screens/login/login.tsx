@@ -8,7 +8,6 @@ import COLORS from '../../constants/colors';
 import LoggerFactory from '../../utils/logger-utility';
 import {Formik, FormikErrors} from 'formik';
 import {LoginScreenNavigationProp} from '../../navigation/navigation-props';
-import {styles} from './styles';
 import {errorInputProps, inputProps} from '../../utils/custom-types';
 
 const logger = LoggerFactory('login');
@@ -29,12 +28,15 @@ const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-black px-8">
       {loading && <Loader />}
-      <View style={styles.header}>
-        <Image style={styles.logo} source={require('../../imgs/fiufit.png')} />
+      <View className="flex-1 justify-center align-center">
+        <Image
+          className="scale-75 self-center"
+          source={require('../../imgs/fiufit.png')}
+        />
       </View>
-      <View style={styles.inputContainer}>
+      <View className="flex-1 py-5">
         <Formik
           initialValues={{
             firstName: '',
@@ -66,7 +68,6 @@ const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
                 placeholderTextColor={COLORS.darkGrey}
                 onChangeText={handleChange('email')}
                 labelText="Email"
-                labelColor={COLORS.white}
                 iconName="email-outline"
                 error={errors.email}
                 password={false}
@@ -80,7 +81,6 @@ const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
                 placeholderTextColor={COLORS.darkGrey}
                 iconName="lock-outline"
                 labelText="Password"
-                labelColor={COLORS.white}
                 onChangeText={handleChange('password')}
                 password
                 error={errors.password}
@@ -88,17 +88,13 @@ const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
                   errors.password = '';
                 }}
               />
-              <Button
-                title="Login"
-                backgroundColor={COLORS.darkBlue}
-                onPress={handleSubmit}
-              />
+              <Button title="Login" onPress={handleSubmit} />
             </>
           )}
         </Formik>
         <Text
           onPress={() => navigation.push('Register')}
-          style={styles.alreadyText}>
+          className="font-bold text-center">
           Don't have an account?
         </Text>
       </View>
