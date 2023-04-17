@@ -1,9 +1,9 @@
 import React from 'react';
 import {Text, SafeAreaView, ScrollView, View, Keyboard} from 'react-native';
 import axios from 'axios';
-import Input from '../../components/Input';
-import Button from '../../components/Button';
-import Loader from '../../components/Loader';
+import Input from '../../components/input';
+import Button from '../../components/button';
+import Loader from '../../components/loader';
 import COLORS from '../../constants/colors';
 import LoggerFactory from '../../utils/logger-utility';
 import {RegisterScreenNavigationProp} from '../../navigation/navigation-props';
