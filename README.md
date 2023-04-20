@@ -8,7 +8,12 @@
 
 Seguir [este tutorial](https://reactnative.dev/docs/environment-setup?os=windows&guide=native) para instalar y configurar React Native.
 
+## Installation
+
+**Pay attention,** use `npm install`. If you use yarn, you'll break everything. Don't blame us when you waste 3 hours trying to get this to run.
+
 ## Comandos
+
 
 ### npx react-native start
 
