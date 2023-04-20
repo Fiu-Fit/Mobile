@@ -10,7 +10,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@fiu-fit/common": "github:Fiu-Fit/common",
     "@react-native-community/cli-platform-android": "^11.0.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.5.7",
