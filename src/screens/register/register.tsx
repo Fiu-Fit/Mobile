@@ -9,7 +9,6 @@ import LoggerFactory from '../../utils/logger-utility';
 import {inputProps, errorInputProps} from '../../utils/custom-types';
 import {RegisterScreenNavigationProp} from '../../navigation/navigation-props';
 import {Formik, FormikErrors} from 'formik';
-import {RoleNameToEnum} from '@fiu-fit/common';
 
 const logger = LoggerFactory('register');
 const MIN_PASS_LENGTH = 5;
@@ -47,7 +46,7 @@ const RegisterScreen = ({
               lastName: '',
               email: '',
               password: '',
-              role: RoleNameToEnum.Athlete.toString(),
+              role: 'Athlete',
             }}
             validate={values => {
               let errors: FormikErrors<errorInputProps> = {};
