@@ -2,6 +2,7 @@ import { ScrollView } from 'react-native';
 import { Card, Paragraph } from 'react-native-paper';
 import NavBar from '../../components/navBar';
 import AddButton from '../../components/addButton';
+import { useAppTheme } from '../../App';
 
 const cards = [
   { title: 'Card 1', content: 'card 1' },
@@ -17,13 +18,16 @@ const cards = [
 ];
 
 const DemoScreen = ({ navigation }: { navigation: any }) => {
+  const appTheme = useAppTheme();
   return (
     <>
       <NavBar />
-      <ScrollView>
+      <ScrollView style={{ backgroundColor: appTheme.colors.background }}>
         <AddButton />
         {cards.map((card, index) => (
-          <Card key={index}>
+          <Card
+            key={index}
+            style={{ backgroundColor: appTheme.colors.surfaceVariant }}>
             <Card.Title title={card.title} />
             <Card.Content>
               <Paragraph>{card.content}</Paragraph>

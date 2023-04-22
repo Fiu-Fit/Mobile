@@ -19,7 +19,7 @@ const AddButton = ({
     <IconButton
       icon='plus'
       iconColor={theme.colors.onQuinary}
-      containerColor={theme.colors.onQuinary}
+      containerColor={theme.colors.quinary}
       size={20}
       onPress={() => onPress()}
       mode='contained'
