@@ -88,7 +88,8 @@ const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
                   errors.password = '';
                 }}
               />
-              <Button title="Login" onPress={handleSubmit} />
+              {/* <Button title="Login" onPress={handleSubmit} /> */}
+              <Button title="Login" onPress={() => navigation.push('Home')} />
             </>
           )}
         </Formik>
