@@ -1,6 +1,7 @@
 import { ScrollView } from 'react-native';
 import { Card, Paragraph } from 'react-native-paper';
 import NavBar from '../../components/navBar';
+import AddButton from '../../components/addButton';
 
 const cards = [
   { title: 'Card 1', content: 'card 1' },
@@ -20,6 +21,7 @@ const DemoScreen = ({ navigation }: { navigation: any }) => {
     <>
       <NavBar />
       <ScrollView>
+        <AddButton />
         {cards.map((card, index) => (
           <Card key={index}>
             <Card.Title title={card.title} />

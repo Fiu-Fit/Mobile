@@ -1,5 +1,5 @@
-import React from 'react';
-import {TouchableOpacity, Text} from 'react-native';
+import { Button, IconButton } from 'react-native-paper';
+import { useAppTheme } from '../../App';
 
 interface AddButtonProps {
   descriptive?: boolean;
@@ -10,15 +10,20 @@ const AddButton = ({
   descriptive = false,
   onPress = () => {},
 }: AddButtonProps) => {
-  return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={onPress}
-      className="bg-red-700 h-12 w-full justify-center items-center mt-10 mb-5 rounded-md">
-      <Text className="text-white text-lg text-bold">
-        {descriptive ? 'Add' : '+'}
-      </Text>
-    </TouchableOpacity>
+  const theme = useAppTheme();
+  return descriptive ? (
+    <Button mode='contained' onPress={() => onPress()}>
+      Add
+    </Button>
+  ) : (
+    <IconButton
+      icon='plus'
+      iconColor={theme.colors.onQuinary}
+      containerColor={theme.colors.onQuinary}
+      size={20}
+      onPress={() => onPress()}
+      mode='contained'
+    />
   );
 };
 
