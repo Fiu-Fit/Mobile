@@ -1,5 +1,4 @@
-import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import AuthStack from './navigation/auth-navigator';
 import axios from 'axios';
 
