@@ -1,18 +1,22 @@
 import React from 'react';
-import {Text, SafeAreaView, View, Image} from 'react-native';
+import { Image, SafeAreaView, Text, View } from 'react-native';
 import axios from 'axios';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Loader from '../../components/loader';
 import COLORS from '../../constants/colors';
 import LoggerFactory from '../../utils/logger-utility';
-import {Formik, FormikErrors} from 'formik';
-import {LoginScreenNavigationProp} from '../../navigation/navigation-props';
-import {errorInputProps, inputProps} from '../../utils/custom-types';
+import { Formik, FormikErrors } from 'formik';
+import { LoginScreenNavigationProp } from '../../navigation/navigation-props';
+import { errorInputProps, inputProps } from '../../utils/custom-types';
 
 const logger = LoggerFactory('login');
 
-const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
+const LoginScreen = ({
+  navigation,
+}: {
+  navigation: LoginScreenNavigationProp;
+}) => {
   const [loading, setLoading] = React.useState(false);
 
   const handleSignIn = async (inputs: inputProps) => {
@@ -28,15 +32,15 @@ const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-black px-8">
+    <SafeAreaView className='flex-1 bg-black px-8'>
       {loading && <Loader />}
-      <View className="flex-1 justify-center align-center">
+      <View className='flex-1 justify-center align-center'>
         <Image
-          className="scale-75 self-center"
+          className='scale-75 self-center'
           source={require('../../imgs/fiufit.png')}
         />
       </View>
-      <View className="flex-1 py-5">
+      <View className='flex-1 py-5'>
         <Formik
           initialValues={{
             firstName: '',
@@ -60,15 +64,15 @@ const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
           onSubmit={values => {
             handleSignIn(values);
           }}>
-          {({values, errors, handleChange, handleSubmit}) => (
+          {({ values, errors, handleChange, handleSubmit }) => (
             <>
               <Input
                 value={values.email}
-                placeholder="Enter your email"
+                placeholder='Enter your email'
                 placeholderTextColor={COLORS.darkGrey}
                 onChangeText={handleChange('email')}
-                labelText="Email"
-                iconName="email-outline"
+                labelText='Email'
+                iconName='email-outline'
                 error={errors.email}
                 password={false}
                 onFocus={() => {
@@ -77,10 +81,10 @@ const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
               />
               <Input
                 value={values.password}
-                placeholder="Enter your password"
+                placeholder='Enter your password'
                 placeholderTextColor={COLORS.darkGrey}
-                iconName="lock-outline"
-                labelText="Password"
+                iconName='lock-outline'
+                labelText='Password'
                 onChangeText={handleChange('password')}
                 password
                 error={errors.password}
@@ -89,13 +93,13 @@ const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
                 }}
               />
               {/* <Button title="Login" onPress={handleSubmit} /> */}
-              <Button title="Login" onPress={() => navigation.push('Home')} />
+              <Button title='Login' onPress={() => navigation.push('Home')} />
             </>
           )}
         </Formik>
         <Text
           onPress={() => navigation.push('Register')}
-          className="font-bold text-center">
+          className='font-bold text-center'>
           Don't have an account?
         </Text>
       </View>
