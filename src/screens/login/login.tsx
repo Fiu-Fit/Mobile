@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, SafeAreaView, Text, View } from 'react-native';
+import { Text, SafeAreaView, View, Image } from 'react-native';
 import axios from 'axios';
 import Input from '../../components/input';
 import Button from '../../components/button';
