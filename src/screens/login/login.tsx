@@ -92,8 +92,8 @@ const LoginScreen = ({
                   errors.password = '';
                 }}
               />
-              {/* <Button title="Login" onPress={handleSubmit} /> */}
-              <Button title='Login' onPress={() => navigation.push('Home')} />
+              <Button title='Login' onPress={handleSubmit} />
+              {/* <Button title='Login' onPress={() => navigation.push('Home')} /> */}
             </>
           )}
         </Formik>
