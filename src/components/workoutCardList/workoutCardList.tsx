@@ -1,20 +1,19 @@
-import React from 'react';
-import {TouchableOpacity, Text} from 'react-native';
+import { FlatList } from 'react-native';
+import { IWorkoutCard } from '../workoutCard/workoutCard';
+import WorkoutCard from '../workoutCard';
 
 interface WorkoutCardListProps {
-  title: string;
-  backgroundColor?: string;
-  onPress?: () => void;
+  workouts: IWorkoutCard[];
 }
-
-const WorkoutCardList = ({title, onPress = () => {}}: WorkoutCardListProps) => {
+const WorkoutCardList = ({ workouts }: WorkoutCardListProps) => {
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={onPress}
-      className="bg-primary-color h-12 w-full justify-center items-center mt-10 mb-5 rounded-md">
-      <Text className="text-white text-lg text-bold">{title}</Text>
-    </TouchableOpacity>
+    <>
+      <FlatList
+        data={workouts}
+        renderItem={({ item }) => <WorkoutCard workoutItem={item} />}
+        keyExtractor={item => `workout-card-${item.id}`}
+      />
+    </>
   );
 };
 

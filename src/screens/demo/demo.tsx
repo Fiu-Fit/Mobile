@@ -1,7 +1,6 @@
-import { Image, StyleSheet, View, FlatList } from 'react-native';
-import { Card, Paragraph } from 'react-native-paper';
+import { View } from 'react-native';
 import { useAppTheme } from '../../App';
-import AddButton from '../../components/addButton';
+import WorkoutCardList from '../../components/workoutCardList';
 
 const cards = [
   { id: 1, title: 'Card 1', content: 'card 1' },
@@ -24,64 +23,12 @@ const cards = [
   { id: 18, title: 'Card 10', content: 'card 18' },
 ];
 
-type CardType = {
-  id: number;
-  title: string;
-  content: string;
-};
-
-type Props = {
-  navigation: any;
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    height: 150,
-  },
-  tinyLogo: {
-    width: 50,
-    height: 50,
-  },
-  logo: {
-    width: 66,
-    height: 58,
-    flex: 1,
-  },
-});
-
 const DemoScreen = ({ navigation }) => {
   const appTheme = useAppTheme();
 
-  const renderItem = ({ item }: { item: CardType }) => (
-    <Card
-      key={item.id}
-      style={{
-        backgroundColor: appTheme.colors.surfaceVariant
-      }}>
-      <Card.Content style={styles.container}>
-        <Image
-          style={styles.logo}
-          source={{
-            uri: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80',
-          }}
-          resizeMode='cover'
-        />
-        <Paragraph style={{ flex: 2 }}>{item.content}</Paragraph>
-        <AddButton />
-      </Card.Content>
-    </Card>
-  );
-
-  const keyExtractor = (item: CardType) => item.id.toString();
-
   return (
     <View style={{ backgroundColor: appTheme.colors.background, flex: 1 }}>
-      <FlatList
-        data={cards}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-      />
+      <WorkoutCardList workouts={cards} />
     </View>
   );
 };
