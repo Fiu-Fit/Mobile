@@ -1,4 +1,4 @@
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { Card, Paragraph } from 'react-native-paper';
 import AddButton from '../addButton';
 import { useAppTheme } from '../../App';
@@ -14,7 +14,7 @@ interface WorkoutCardProps {
   onPress?: () => void;
 }
 const styles = StyleSheet.create({
-  container: {
+  cardContent: {
     flexDirection: 'row',
     height: 150,
   },
@@ -27,21 +27,25 @@ const styles = StyleSheet.create({
     height: 58,
     flex: 1,
   },
+  cardPadding: {
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
 });
 
-const WorkoutCardList = ({
-  workoutItem,
-  onPress = () => {},
-}: WorkoutCardProps) => {
+const WorkoutCard = ({ workoutItem, onPress = () => {} }: WorkoutCardProps) => {
   const appTheme = useAppTheme();
 
   return (
     <Card
       key={`workout-card-${workoutItem.id}`}
-      style={{
-        backgroundColor: appTheme.colors.surfaceVariant,
-      }}>
-      <Card.Content style={styles.container}>
+      style={[
+        styles.cardPadding,
+        {
+          backgroundColor: appTheme.colors.surfaceVariant,
+        },
+      ]}>
+      <Card.Content style={styles.cardContent}>
         <Image
           style={styles.logo}
           source={{
@@ -49,11 +53,14 @@ const WorkoutCardList = ({
           }}
           resizeMode='cover'
         />
-        <Paragraph style={{ flex: 2 }}>{workoutItem.content}</Paragraph>
+        <View style={{ flex: 2 }}>
+          <Paragraph>{workoutItem.title}</Paragraph>
+          <Paragraph>{workoutItem.content}</Paragraph>
+        </View>
         <AddButton />
       </Card.Content>
     </Card>
   );
 };
 
-export default WorkoutCardList;
+export default WorkoutCard;
