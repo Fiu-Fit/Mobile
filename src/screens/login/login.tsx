@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, SafeAreaView, View, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Input from '../../components/input';
 import Button from '../../components/button';
@@ -19,14 +20,25 @@ const LoginScreen = ({
 }) => {
   const [loading, setLoading] = React.useState(false);
 
+  const saveToken = async (token: string) => {
+    try {
+      await AsyncStorage.setItem('UserToken', token);
+    } catch (error) {
+      logger.error('Error while saving user token: ', error);
+    }
+  };
+
   const handleSignIn = async (inputs: inputProps) => {
     setLoading(true);
+    const { email, password } = inputs;
     try {
-      const response = await axios.post('/auth/login', inputs);
+      const response = await axios.get(
+        'https://api-gateway-k7eu.onrender.com/',
+      );
       logger.info(response.data);
       navigation.push('Home');
     } catch (error) {
-      logger.info(error as string);
+      logger.error('Error while logging in: ', error);
     }
     setLoading(false);
   };
