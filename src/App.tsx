@@ -1,6 +1,5 @@
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import AuthStack from './navigation/auth-navigator';
-import axios from 'axios';
 import {
   Provider as PaperProvider,
   MD3DarkTheme,
