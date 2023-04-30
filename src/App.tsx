@@ -1,6 +1,5 @@
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import AuthStack from './navigation/auth-navigator';
-import axios from 'axios';
 import {
   Provider as PaperProvider,
   MD3DarkTheme,
@@ -9,8 +8,6 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
-
-// axios.defaults.baseURL = 'http://localhost:8080'; // API Gateway URL
 
 const customLightTheme = {
   ...MD3LightTheme,
