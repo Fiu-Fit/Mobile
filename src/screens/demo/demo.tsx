@@ -1,6 +1,8 @@
 import { View } from 'react-native';
 import { useAppTheme } from '../../App';
 import WorkoutCardList from '../../components/workoutCardList';
+import NavBar from '../../components/navBar';
+import { DemoScreenNavigationProp } from '../../navigation/navigation-props';
 
 const cards = [
   { id: 1, title: 'Card 1', content: 'card 1' },
@@ -23,11 +25,15 @@ const cards = [
   { id: 18, title: 'Card 10', content: 'card 18' },
 ];
 
-const DemoScreen = ({ navigation }) => {
+const DemoScreen = ({
+  navigation,
+}: {
+  navigation: DemoScreenNavigationProp;
+}) => {
   const appTheme = useAppTheme();
-
   return (
     <View style={{ backgroundColor: appTheme.colors.background, flex: 1 }}>
+      <NavBar navigation={navigation} />
       <WorkoutCardList workouts={cards} />
     </View>
   );
