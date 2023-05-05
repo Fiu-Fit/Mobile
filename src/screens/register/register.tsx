@@ -6,9 +6,11 @@ import Button from '../../components/button';
 import Loader from '../../components/loader';
 import COLORS from '../../constants/colors';
 import LoggerFactory from '../../utils/logger-utility';
-import { inputProps, errorInputProps } from '../../utils/custom-types';
+import { InputProps, ErrorInputProps } from '../../utils/custom-types';
 import { RegisterScreenNavigationProp } from '../../navigation/navigation-props';
 import { Formik, FormikErrors } from 'formik';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_GATEWAY_URL } from '../../utils/constants';
 
 const logger = LoggerFactory('register');
 const MIN_PASS_LENGTH = 5;
@@ -20,11 +22,24 @@ const RegisterScreen = ({
 }) => {
   const [loading, setLoading] = React.useState(false);
 
-  const handleSignUp = async (inputs: inputProps) => {
+  const saveToken = async (token: string) => {
+    try {
+      await AsyncStorage.setItem('UserToken', token);
+    } catch (error) {
+      logger.error('Error while saving user token: ', error);
+    }
+  };
+
+  const handleSignUp = async (inputs: InputProps) => {
     setLoading(true);
     try {
-      const response = await axios.post('/auth/register', inputs);
-      logger.info(response.data);
+      logger.info('Inputs: ', inputs);
+      const response = await axios.post(
+        `${API_GATEWAY_URL}/auth/register`,
+        inputs,
+      );
+      logger.debug('Saving token: ', response.data.token);
+      await saveToken(response.data.token);
       navigation.push('Login');
     } catch (error) {
       logger.error(error as string);
@@ -49,7 +64,7 @@ const RegisterScreen = ({
               role: 'Athlete',
             }}
             validate={values => {
-              let errors: FormikErrors<errorInputProps> = {};
+              let errors: FormikErrors<ErrorInputProps> = {};
               if (!values.firstName) {
                 errors.firstName = 'Please input firstName';
               }
