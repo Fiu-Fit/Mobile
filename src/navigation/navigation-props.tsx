@@ -6,6 +6,7 @@ type RootStackParamList = {
   Profile: undefined;
   Login: undefined;
   Register: undefined;
+  Workout: undefined;
 };
 
 export type HomeScreenNavigationProp = StackNavigationProp<
@@ -27,4 +28,8 @@ export type DemoScreenNavigationProp = StackNavigationProp<
 export type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Profile'
+>;
+export type WorkoutScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Workout'
 >;
