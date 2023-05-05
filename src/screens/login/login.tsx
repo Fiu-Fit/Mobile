@@ -33,13 +33,13 @@ const LoginScreen = ({
     setLoading(true);
     const { email, password } = inputs;
     try {
-      const response = await axios.post(`${API_GATEWAY_URL}}/auth/login`, {
+      const response = await axios.post(`${API_GATEWAY_URL}/auth/login`, {
         email,
         password,
       });
       logger.debug('Saving token: ', response.data.token);
       saveToken(response.data.token);
-      navigation.push('Home');
+      navigation.push('Demo');
     } catch (error) {
       logger.error('Error while logging in: ', error);
     }
