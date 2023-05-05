@@ -9,7 +9,8 @@ import COLORS from '../../constants/colors';
 import LoggerFactory from '../../utils/logger-utility';
 import { Formik, FormikErrors } from 'formik';
 import { LoginScreenNavigationProp } from '../../navigation/navigation-props';
-import { errorInputProps, inputProps } from '../../utils/custom-types';
+import { ErrorInputProps, InputProps } from '../../utils/custom-types';
+import { API_GATEWAY_URL } from '../../utils/constants';
 
 const logger = LoggerFactory('login');
 
@@ -28,14 +29,16 @@ const LoginScreen = ({
     }
   };
 
-  const handleSignIn = async (inputs: inputProps) => {
+  const handleSignIn = async (inputs: InputProps) => {
     setLoading(true);
     const { email, password } = inputs;
     try {
-      const response = await axios.get(
-        'https://api-gateway-k7eu.onrender.com/',
-      );
-      logger.info(response.data);
+      const response = await axios.post(`${API_GATEWAY_URL}}/auth/login`, {
+        email,
+        password,
+      });
+      logger.debug('Saving token: ', response.data.token);
+      saveToken(response.data.token);
       navigation.push('Home');
     } catch (error) {
       logger.error('Error while logging in: ', error);
@@ -62,7 +65,7 @@ const LoginScreen = ({
             role: 'Athlete',
           }}
           validate={values => {
-            let errors: FormikErrors<errorInputProps> = {};
+            let errors: FormikErrors<ErrorInputProps> = {};
             if (!values.email) {
               errors.email = 'Please input email';
             } else if (!values.email.match(/\S+@\S+\.\S+/)) {
