@@ -1,7 +1,9 @@
-import {StackNavigationProp} from '@react-navigation/stack';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 type RootStackParamList = {
   Home: undefined;
+  Demo: undefined;
+  Profile: undefined;
   Login: undefined;
   Register: undefined;
 };
@@ -17,4 +19,12 @@ export type LoginScreenNavigationProp = StackNavigationProp<
 export type RegisterScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Register'
+>;
+export type DemoScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Demo'
+>;
+export type ProfileScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Profile'
 >;
