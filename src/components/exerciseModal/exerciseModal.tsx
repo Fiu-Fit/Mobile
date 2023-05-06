@@ -1,20 +1,7 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { Modal, Portal } from 'react-native-paper';
-
-export interface IExerciseCard {
-  id: number;
-  title: string;
-  content: string;
-}
-
-const styles = StyleSheet.create({
-  logo: {
-    width: '60%',
-    height: '60%',
-    resizeMode: 'cover',
-  },
-});
+import { IExerciseCard } from '../exerciseCard/exerciseCard';
 
 type ModalProps = {
   visible: boolean;
@@ -39,18 +26,32 @@ const ExerciseModal = ({ visible, onDismiss, exerciseItem }: ModalProps) => {
         visible={visible}
         onDismiss={onDismiss}
         contentContainerStyle={containerStyle}>
-        <View className='items-center'>
-          <Image
-            style={styles.logo}
-            source={{
-              uri: 'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
-            }}
-          />
-          <View className='items-center'>
+        <View className='items-center' style={{ flex: 1 }}>
+          <View
+            className='items-center mx-10 justify-between'
+            style={{ flex: 0.5 }}>
+            <Image
+              style={{ width: 300, height: '100%' }}
+              source={{
+                uri: 'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
+              }}
+            />
+          </View>
+          <View
+            className='items-center mx-10 justify-between'
+            style={{ flex: 0.5 }}>
             <Text className='text-3xl' style={{ color: appTheme.colors.text }}>
-              {exerciseItem.title} {exerciseItem.content}
+              {exerciseItem.name} - {exerciseItem.duration}
             </Text>
-            <Text style={{ color: appTheme.colors.text }}>Descripcion</Text>
+            <ScrollView>
+              <Text
+                style={{
+                  color: appTheme.colors.onSurfaceDisabled,
+                  marginTop: 20,
+                }}>
+                {exerciseItem.description}
+              </Text>
+            </ScrollView>
           </View>
         </View>
       </Modal>

@@ -1,16 +1,53 @@
-import { Alert, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import ExerciseCardList from '../../components/exerciseCardList';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React from 'react';
+import WorkoutRatingModal from '../../components/workoutRatingModal';
 
 const exercises = [
-  { id: 1, title: 'Twist Ruso', content: '00:20' },
-  { id: 2, title: 'Escalada de Montaña', content: 'x16' },
-  { id: 3, title: 'Toque al Talón', content: 'x20' },
-  { id: 4, title: 'Elevaciones de Piernas', content: 'x16' },
-  { id: 5, title: 'Tablón', content: '00:20' },
+  {
+    id: 1,
+    name: 'Twist Ruso',
+    duration: '00:20',
+    description:
+      'Siéntate en el suelo con las rodillas flexionadas, los pies ligeramente levantados y la espalda inclinada hacia atrás.\n\nA continuación, une las manos y gira de un lado a otro',
+  },
+  {
+    id: 2,
+    name: 'Escalada de Montaña',
+    duration: 'x16',
+    description: 'Description',
+  },
+  {
+    id: 3,
+    name: 'Toque al Talón',
+    duration: 'x20',
+    description: 'Description',
+  },
+  {
+    id: 4,
+    name: 'Elevaciones de Piernas',
+    duration: 'x16',
+    description: 'Description',
+  },
+  { id: 5, name: 'Tablón', duration: '00:20', description: 'Description' },
 ];
+
+export interface IWorkoutRating {
+  globalRating: number;
+  comments: string[];
+}
+
+const rating = {
+  globalRating: 4,
+  comments: [
+    '¡Wow! Realmente disfruté este entrenamiento. Los ejercicios fueron desafiantes y me encantó cómo trabajaron diferentes grupos musculares. ¡Definitivamente quiero hacerlo de nuevo!',
+    '¡Increíble sesión de entrenamiento! Los ejercicios fueron variados y efectivos. Me encantó cómo pude sentir que mi cuerpo se fortalecía con cada movimiento. ¡Altamente recomendado!',
+    'Qué gran entrenamiento. Los ejercicios fueron divertidos y me mantuvieron comprometido durante toda la sesión. Me encantó la combinación de fuerza y cardio. ¡Me siento enérgico y revitalizado!',
+  ],
+};
 
 const workout = {
   name: 'Abdominales',
@@ -21,6 +58,7 @@ const workout = {
   exercises: exercises,
   athleteIds: [],
   authorId: 4,
+  rating: rating,
 };
 
 const WorkoutScreen = ({
@@ -29,6 +67,10 @@ const WorkoutScreen = ({
   navigation: WorkoutScreenNavigationProp;
 }) => {
   const appTheme = useAppTheme();
+  const [visible, setVisible] = React.useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
   return (
     <View
       className='flex-1'
@@ -51,10 +93,24 @@ const WorkoutScreen = ({
         <Text className='text-lg ml-5' style={{ color: appTheme.colors.text }}>
           {workout.duration} min - {workout.exercises.length} ejercicios
         </Text>
-        <Icon
-          onPress={() => Alert.alert('Hi')}
-          style={{fontSize: 25, color: appTheme.colors.text, marginRight: 30}}
-          name={'star'}
+        <View className='flex-row justify-center'>
+          <Text className='text-xl'>{workout.rating.globalRating}</Text>
+          <Icon
+            onPress={() => showModal()}
+            style={{
+              fontSize: 30,
+              color: appTheme.colors.text,
+              marginRight: 30,
+              marginLeft: 5,
+            }}
+            name={'star'}
+          />
+        </View>
+
+        <WorkoutRatingModal
+          visible={visible}
+          onDismiss={hideModal}
+          workoutRatingItem={workout.rating}
         />
       </View>
       <View

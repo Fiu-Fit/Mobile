@@ -6,8 +6,9 @@ import ExerciseModal from '../exerciseModal';
 
 export interface IExerciseCard {
   id: number;
-  title: string;
-  content: string;
+  name: string;
+  duration: string;
+  description: string;
 }
 
 interface ExerciseCardProps {
@@ -56,8 +57,8 @@ const ExerciseCard = ({ exerciseItem }: ExerciseCardProps) => {
             resizeMode='cover'
           />
           <View className='items-center' style={{ flex: 2 }}>
-            <Paragraph>{exerciseItem.title}</Paragraph>
-            <Paragraph>{exerciseItem.content}</Paragraph>
+            <Paragraph>{exerciseItem.name}</Paragraph>
+            <Paragraph>{exerciseItem.duration}</Paragraph>
           </View>
         </Card.Content>
       </Card>
