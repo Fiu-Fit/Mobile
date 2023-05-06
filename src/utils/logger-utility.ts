@@ -1,4 +1,8 @@
-import {logger, fileAsyncTransport, consoleTransport} from 'react-native-logs';
+import {
+  logger,
+  fileAsyncTransport,
+  consoleTransport,
+} from 'react-native-logs';
 import RNFS from 'react-native-fs';
 
 const config = {
