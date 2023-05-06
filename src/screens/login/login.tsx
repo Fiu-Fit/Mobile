@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, SafeAreaView, View, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Loader from '../../components/loader';
@@ -10,7 +9,7 @@ import LoggerFactory from '../../utils/logger-utility';
 import { Formik, FormikErrors } from 'formik';
 import { LoginScreenNavigationProp } from '../../navigation/navigation-props';
 import { ErrorInputProps, InputProps } from '../../utils/custom-types';
-import { API_GATEWAY_URL } from '../../utils/constants';
+import { axiosClient } from '../../utils/constants';
 
 const logger = LoggerFactory('login');
 
@@ -33,7 +32,7 @@ const LoginScreen = ({
     setLoading(true);
     const { email, password } = inputs;
     try {
-      const response = await axios.post(`${API_GATEWAY_URL}/auth/login`, {
+      const response = await axiosClient.post('/auth/login', {
         email,
         password,
       });

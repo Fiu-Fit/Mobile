@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, SafeAreaView, ScrollView, View } from 'react-native';
-import axios from 'axios';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Loader from '../../components/loader';
@@ -10,7 +9,7 @@ import { InputProps, ErrorInputProps } from '../../utils/custom-types';
 import { RegisterScreenNavigationProp } from '../../navigation/navigation-props';
 import { Formik, FormikErrors } from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_GATEWAY_URL } from '../../utils/constants';
+import { axiosClient } from '../../utils/constants';
 
 const logger = LoggerFactory('register');
 const MIN_PASS_LENGTH = 5;
@@ -34,10 +33,7 @@ const RegisterScreen = ({
     setLoading(true);
     try {
       logger.info('Inputs: ', inputs);
-      const response = await axios.post(
-        `${API_GATEWAY_URL}/auth/register`,
-        inputs,
-      );
+      const response = await axiosClient.post('/auth/register', inputs);
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
       navigation.push('Login');
