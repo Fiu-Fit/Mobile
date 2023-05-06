@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Card, Modal, Paragraph, Portal } from 'react-native-paper';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Card, Paragraph } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 import React from 'react';
 import ExerciseModal from '../exerciseModal';
@@ -12,23 +12,12 @@ export interface IExerciseCard {
 
 interface ExerciseCardProps {
   exerciseItem: IExerciseCard;
-  onPress?: () => void;
 }
+
 const styles = StyleSheet.create({
-  cardContent: {
-    flexDirection: 'row',
-    height: 150,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   tinyLogo: {
     width: 50,
     height: 50,
-  },
-  logo: {
-    width: 66,
-    height: 58,
-    flex: 1,
   },
   cardPadding: {
     marginVertical: 8,
@@ -36,44 +25,31 @@ const styles = StyleSheet.create({
   },
 });
 
-const ExerciseCard = ({
-  exerciseItem,
-  onPress = () => {},
-}: ExerciseCardProps) => {
+const ExerciseCard = ({ exerciseItem }: ExerciseCardProps) => {
   const appTheme = useAppTheme();
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const containerStyle = {
-    backgroundColor: appTheme.colors.surface,
-    padding: 20,
-    width: '90%',
-    alignSelf: 'center',
-    height: '70%',
-    borderRadius: 20,
-  };
 
   return (
     <TouchableOpacity onPress={showModal}>
-      <Portal>
-        <Modal
-          visible={visible}
-          onDismiss={hideModal}
-          contentContainerStyle={containerStyle}>
-          <ExerciseModal exerciseItem={exerciseItem} />
-        </Modal>
-      </Portal>
+      <ExerciseModal
+        visible={visible}
+        onDismiss={hideModal}
+        exerciseItem={exerciseItem}
+      />
       <Card
         key={`exercise-card-${exerciseItem.id}`}
+        className='my-2 mx-5'
         style={[
           styles.cardPadding,
           {
             backgroundColor: appTheme.colors.surfaceVariant,
           },
         ]}>
-        <Card.Content style={styles.cardContent}>
+        <Card.Content className='flex-row justify-center items-center h-36'>
           <Image
-            style={styles.logo}
+            className='h-14 w-16 flex-1'
             source={{
               uri: 'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
             }}

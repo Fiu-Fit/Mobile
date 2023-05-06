@@ -1,7 +1,8 @@
-import { Text, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import ExerciseCardList from '../../components/exerciseCardList';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const exercises = [
   { id: 1, title: 'Twist Ruso', content: '00:20' },
@@ -41,15 +42,20 @@ const WorkoutScreen = ({
           {workout.name}
         </Text>
         <Text className='text-lg' style={{ color: appTheme.colors.outline }}>
-          Lorem ipsum dolor sit amet consect
+          {workout.description}
         </Text>
       </View>
       <View
-        className='items-start justify-center'
+        className='flex-row items-center justify-between'
         style={{ backgroundColor: appTheme.colors.outlineVariant, flex: 0.08 }}>
         <Text className='text-lg ml-5' style={{ color: appTheme.colors.text }}>
           {workout.duration} min - {workout.exercises.length} ejercicios
         </Text>
+        <Icon
+          onPress={() => Alert.alert('Hi')}
+          style={{fontSize: 25, color: appTheme.colors.text, marginRight: 30}}
+          name={'star'}
+        />
       </View>
       <View
         style={{
