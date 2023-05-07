@@ -38,7 +38,7 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       saveToken(response.data.token);
-      navigation.push('Demo');
+      navigation.push('Workouts');
     } catch (error) {
       logger.error('Error while logging in: ', error);
     }

@@ -25,7 +25,7 @@ const cards = [
   { id: 18, title: 'Card 10', content: 'card 18' },
 ];
 
-const DemoScreen = ({
+const WorkoutsScreen = ({
   navigation,
 }: {
   navigation: DemoScreenNavigationProp;
@@ -39,4 +39,4 @@ const DemoScreen = ({
   );
 };
 
-export default DemoScreen;
+export default WorkoutsScreen;
