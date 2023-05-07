@@ -2,9 +2,10 @@ import { Image, StyleSheet, View } from 'react-native';
 import { Card, Paragraph } from 'react-native-paper';
 import AddButton from '../addButton';
 import { useAppTheme } from '../../App';
+import { observer } from 'mobx-react';
 
 export interface IWorkoutCard {
-  id: number;
+  id: string;
   title: string;
   content: string;
 }
@@ -63,4 +64,4 @@ const WorkoutCard = ({ workoutItem, onPress = () => {} }: WorkoutCardProps) => {
   );
 };
 
-export default WorkoutCard;
+export default observer(WorkoutCard);
