@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { useAppTheme } from '../../App';
 import WorkoutCardList from '../../components/workoutCardList';
 import NavBar from '../../components/navBar';
-import { DemoScreenNavigationProp } from '../../navigation/navigation-props';
+import { WorkoutsScreenNavigationProp } from '../../navigation/navigation-props';
 
 const cards = [
   { id: 1, title: 'Card 1', content: 'card 1' },
@@ -28,7 +28,7 @@ const cards = [
 const WorkoutsScreen = ({
   navigation,
 }: {
-  navigation: DemoScreenNavigationProp;
+  navigation: WorkoutsScreenNavigationProp;
 }) => {
   const appTheme = useAppTheme();
   return (
