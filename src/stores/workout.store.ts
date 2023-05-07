@@ -1,5 +1,5 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
-import { WorkoutProps } from '../utils/custom-types';
+import { WorkoutProps } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import { IWorkoutCard } from '../components/workoutCard/workoutCard';
 import LoggerFactory from '../utils/logger-utility';
