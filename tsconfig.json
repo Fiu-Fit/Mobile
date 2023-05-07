@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "useDefineForClassFields": true
   },
   "extends": "@tsconfig/react-native/tsconfig.json"
 }
