@@ -5,8 +5,9 @@ import HomeScreen from '../screens/home';
 import WorkoutsScreen from '../screens/workouts';
 import UserProfile from '../screens/userProfile';
 import WorkoutScreen from '../screens/workout';
+import { RootStackParamList } from './navigation-props';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const AuthStack = () => {
   return (

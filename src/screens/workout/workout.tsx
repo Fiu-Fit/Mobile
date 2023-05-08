@@ -5,6 +5,8 @@ import ExerciseCardList from '../../components/exerciseCardList';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 import WorkoutRatingModal from '../../components/workoutRatingModal';
+import { ExerciseStore } from '../../stores/exercise.store';
+import { observer } from 'mobx-react';
 
 const exercises = [
   {
@@ -61,15 +63,24 @@ const workout = {
   rating: rating,
 };
 
-const WorkoutScreen = ({
-  navigation,
-}: {
+type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
-}) => {
+  route: {
+    params: {
+      workoutId: string;
+    };
+  };
+};
+
+const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
   const appTheme = useAppTheme();
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+  const { workoutId } = route.params;
+  const exercisesStore = React.useMemo(() => {
+    return new ExerciseStore(workoutId);
+  }, [workoutId]);
 
   return (
     <View
@@ -118,10 +129,10 @@ const WorkoutScreen = ({
           backgroundColor: appTheme.colors.inverseOnSurface,
           flex: 0.72,
         }}>
-        <ExerciseCardList exercises={workout.exercises} />
+        <ExerciseCardList exercises={exercisesStore.cardsInfo} />
       </View>
     </View>
   );
 };
 
-export default WorkoutScreen;
+export default observer(WorkoutScreen);

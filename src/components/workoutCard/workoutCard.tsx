@@ -39,7 +39,11 @@ const WorkoutCard = ({ workoutItem, navigation }: WorkoutCardProps) => {
   const appTheme = useAppTheme();
 
   return (
-    <TouchableOpacity onPress={() => navigation.push('Workout')}>
+    <TouchableOpacity
+      onPress={() => {
+        console.log('ASDSADSAA');
+        navigation.push('Workout', { workoutId: workoutItem.id });
+      }}>
       <Card
         key={`workout-card-${workoutItem.id}`}
         style={[

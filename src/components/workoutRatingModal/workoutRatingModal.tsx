@@ -1,4 +1,4 @@
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { Modal, Portal, Divider } from 'react-native-paper';
 import { IWorkoutRating } from '../../screens/workout/workout';
@@ -7,6 +7,10 @@ import { FlatList } from 'react-native';
 import WorkoutCommentCard from '../workoutCommentCard';
 import React from 'react';
 import WorkoutCommentModal from '../workoutCommentModal';
+import LoggerFactory from '../../utils/logger-utility';
+import Loader from '../loader';
+
+const logger = LoggerFactory('workoutRating');
 
 type WorkoutRatingModalProps = {
   visible: boolean;
@@ -23,6 +27,7 @@ const WorkoutRatingModal = ({
   const [commentModalVisible, setCommentModalVisible] = React.useState(false);
   const showCommentModal = () => setCommentModalVisible(true);
   const hideCommentModal = () => setCommentModalVisible(false);
+  const [loading, setLoading] = React.useState(false);
 
   const containerStyle = {
     backgroundColor: appTheme.colors.surface,
@@ -33,7 +38,14 @@ const WorkoutRatingModal = ({
   };
 
   const ratingCompleted = (rating: number) => {
-    Alert.alert('Rating Completed: ', rating.toString());
+    setLoading(true);
+    try {
+      logger.info('Rating: ', rating.toString());
+      //const response = await axiosClient.post('/workouts/rate/this_workout_id', rating);
+    } catch (error) {
+      logger.error(error as string);
+    }
+    setLoading(false);
   };
 
   return (
@@ -43,6 +55,7 @@ const WorkoutRatingModal = ({
         onDismiss={onDismiss}
         contentContainerStyle={containerStyle}>
         <View className='items-center' style={{ flex: 0.4 }}>
+          {loading && <Loader />}
           <Text className='my-5' style={{ color: appTheme.colors.text }}>
             Puntúa este entrenamiento
           </Text>
