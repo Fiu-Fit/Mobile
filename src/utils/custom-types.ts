@@ -12,3 +12,11 @@ export type ErrorInputProps = {
   email: string;
   password: string;
 };
+
+export type CommentInputProps = {
+  comment: string;
+};
+
+export type ErrorCommentInputProps = {
+  comment: string;
+};

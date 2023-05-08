@@ -8,7 +8,7 @@ import RNFS from 'react-native-fs';
 const config = {
   transport: [consoleTransport, fileAsyncTransport],
   // We need to add every tag/module here for it to show up.
-  enabledExtensions: ['login', 'register', 'workout-store'],
+  enabledExtensions: ['login', 'register', 'workout-store', 'workout-comment'],
   transportOptions: {
     colors: {
       none: 'white',

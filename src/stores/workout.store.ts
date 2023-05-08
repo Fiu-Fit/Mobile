@@ -22,6 +22,19 @@ export class WorkoutStore {
       }),
     );
   }
+  /*
+  get exercisesInfo(id: string): IExerciseCard[] {
+    return this.workouts
+      .filter(workout => workout._id === id)[0]
+      .exercises.map(
+        (exercise): IExerciseCard => ({
+          id: exercise._id,
+          title: exercise.name,
+          content: exercise.duration,
+        }),
+      );
+  }*/
+
   constructor() {
     makeObservable(this, {
       workouts: observable,

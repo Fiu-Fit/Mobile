@@ -17,7 +17,10 @@ const WorkoutsScreen = ({
   return (
     <View style={{ backgroundColor: appTheme.colors.background, flex: 1 }}>
       <NavBar navigation={navigation} />
-      <WorkoutCardList workouts={workoutsStore.cardsInfo} />
+      <WorkoutCardList
+        workouts={workoutsStore.cardsInfo}
+        navigation={navigation}
+      />
     </View>
   );
 };

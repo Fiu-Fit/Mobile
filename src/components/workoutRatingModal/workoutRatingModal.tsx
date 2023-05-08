@@ -5,9 +5,10 @@ import { IWorkoutRating } from '../../screens/workout/workout';
 import { AirbnbRating } from 'react-native-ratings';
 import { FlatList } from 'react-native';
 import WorkoutCommentCard from '../workoutCommentCard';
-import AddButton from '../addButton';
+import React from 'react';
+import WorkoutCommentModal from '../workoutCommentModal';
 
-type ExerciseModalProps = {
+type WorkoutRatingModalProps = {
   visible: boolean;
   onDismiss: () => void;
   workoutRatingItem: IWorkoutRating;
@@ -17,8 +18,11 @@ const WorkoutRatingModal = ({
   visible,
   onDismiss,
   workoutRatingItem,
-}: ExerciseModalProps) => {
+}: WorkoutRatingModalProps) => {
   const appTheme = useAppTheme();
+  const [commentModalVisible, setCommentModalVisible] = React.useState(false);
+  const showCommentModal = () => setCommentModalVisible(true);
+  const hideCommentModal = () => setCommentModalVisible(false);
 
   const containerStyle = {
     backgroundColor: appTheme.colors.surface,
@@ -39,7 +43,9 @@ const WorkoutRatingModal = ({
         onDismiss={onDismiss}
         contentContainerStyle={containerStyle}>
         <View className='items-center' style={{ flex: 0.4 }}>
-          <Text className='my-5'>Puntúa este entrenamiento</Text>
+          <Text className='my-5' style={{ color: appTheme.colors.text }}>
+            Puntúa este entrenamiento
+          </Text>
           <AirbnbRating
             count={5}
             defaultRating={0}
@@ -51,7 +57,9 @@ const WorkoutRatingModal = ({
           </Text>
         </View>
         <View className='items-center mt-10' style={{ flex: 0.6 }}>
-          <Text className='text-xl' style={{color: appTheme.colors.text}}>Comentarios</Text>
+          <Text className='text-xl' style={{ color: appTheme.colors.text }}>
+            Comentarios
+          </Text>
           <FlatList
             className='mx-10 mt-2 mb-2'
             data={workoutRatingItem.comments}
@@ -60,8 +68,14 @@ const WorkoutRatingModal = ({
               <WorkoutCommentCard workoutComment={item} />
             )}
           />
-          <TouchableOpacity className='mb-4'>
-            <Text className='text-xs'>Agregar</Text>
+          <TouchableOpacity className='mb-4' onPress={showCommentModal}>
+            <Text className='text-xs' style={{ color: appTheme.colors.text }}>
+              Agregar
+            </Text>
+            <WorkoutCommentModal
+              visible={commentModalVisible}
+              onDismiss={hideCommentModal}
+            />
           </TouchableOpacity>
         </View>
       </Modal>

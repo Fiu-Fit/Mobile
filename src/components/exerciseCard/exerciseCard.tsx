@@ -5,7 +5,7 @@ import React from 'react';
 import ExerciseModal from '../exerciseModal';
 
 export interface IExerciseCard {
-  id: number;
+  id: string;
   name: string;
   duration: string;
   description: string;
