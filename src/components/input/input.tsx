@@ -8,6 +8,7 @@ type InputProps = {
   placeholder: string;
   placeholderTextColor: string;
   onChangeText: (text: string) => void;
+  multiline?: boolean;
   labelText: string;
   labelColor?: string;
   iconName: string;

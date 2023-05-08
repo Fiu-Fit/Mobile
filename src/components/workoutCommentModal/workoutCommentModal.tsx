@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, View } from 'react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
 import { useAppTheme } from '../../App';
 import { Modal, Portal } from 'react-native-paper';
 import Button from '../../components/button';
@@ -75,11 +75,11 @@ const WorkoutCommentModal = ({
               {({ values, errors, handleChange, handleSubmit }) => (
                 <>
                   <Input
-                    multiline={true}
                     value={values.comment}
                     placeholder='Ingresa un comentario'
                     placeholderTextColor={appTheme.colors.quaternaryContainer}
                     onChangeText={handleChange('comment')}
+                    multiline={true}
                     labelText='Comentario'
                     iconName='comment-outline'
                     error={errors.comment}

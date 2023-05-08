@@ -2,12 +2,18 @@ import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 
-const WorkoutCommentCard = ({ workoutComment }: string) => {
+type WorkoutCommentCardProps = {
+  workoutComment: string;
+};
+
+const WorkoutCommentCard = ({ workoutComment }: WorkoutCommentCardProps) => {
   const appTheme = useAppTheme();
 
   return (
     <View className='my-5'>
-      <Text style={{ color: appTheme.colors.onSurfaceDisabled }}>{workoutComment}</Text>
+      <Text style={{ color: appTheme.colors.onSurfaceDisabled }}>
+        {workoutComment}
+      </Text>
     </View>
   );
 };
