@@ -1,6 +1,7 @@
 import { FlatList } from 'react-native';
 import { IWorkoutCard } from '../workoutCard/workoutCard';
 import WorkoutCard from '../workoutCard';
+import { observer } from 'mobx-react';
 
 interface WorkoutCardListProps {
   workouts: IWorkoutCard[];
@@ -17,4 +18,4 @@ const WorkoutCardList = ({ workouts }: WorkoutCardListProps) => {
   );
 };
 
-export default WorkoutCardList;
+export default observer(WorkoutCardList);
