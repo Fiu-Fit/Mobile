@@ -9,6 +9,14 @@ import {
 } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
 
+if (
+  !new (class {
+    x: any;
+  })().hasOwnProperty('x')
+) {
+  throw new Error('Transpiler is not configured correctly');
+}
+
 const customLightTheme = {
   ...MD3LightTheme,
   colors: {

@@ -1,4 +1,4 @@
-export type inputProps = {
+export type InputProps = {
   firstName: string;
   lastName: string;
   email: string;
@@ -6,7 +6,7 @@ export type inputProps = {
   role: string;
 };
 
-export type errorInputProps = {
+export type ErrorInputProps = {
   firstName: string;
   lastName: string;
   email: string;
