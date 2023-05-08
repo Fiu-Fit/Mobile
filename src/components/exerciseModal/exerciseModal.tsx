@@ -41,7 +41,7 @@ const ExerciseModal = ({ visible, onDismiss, exerciseItem }: ModalProps) => {
             className='items-center mx-10 justify-between'
             style={{ flex: 0.5 }}>
             <Text className='text-3xl' style={{ color: appTheme.colors.text }}>
-              {exerciseItem.name} - {exerciseItem.duration}
+              {exerciseItem.name} - {exerciseItem.sets}x{exerciseItem.reps}
             </Text>
             <ScrollView>
               <Text

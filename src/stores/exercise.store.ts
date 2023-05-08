@@ -1,51 +1,48 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
-import { WorkoutExerciseType } from '../utils/workout-types';
+import { ExerciseProps } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
-import { IExerciseCard } from '../components/exerciseCard/exerciseCard';
 import LoggerFactory from '../utils/logger-utility';
 
-const logger = LoggerFactory('exercise-store');
+const logger = LoggerFactory('workout-store');
 
 export class ExerciseStore {
-  exercises: WorkoutExerciseType[] = [];
+  exercise: ExerciseProps = {
+    _id: '',
+    name: '',
+    description: '',
+    category: -1,
+  };
   state = 'pending';
 
-  get exercisesCount() {
-    return this.exercises.length;
-  }
-  get cardsInfo(): IExerciseCard[] {
-    console.log('AAsds: ', this.exercises);
-    return this.exercises.map(
-      (exercise): IExerciseCard => ({
-        id: exercise._id,
-        sets: exercise.sets.toString(),
-        reps: exercise.reps.toString(),
-      }),
-    );
+  get exerciseInfo(): ExerciseProps {
+    return this.exercise;
   }
 
-  constructor(workoutId: string) {
+  constructor(exerciseId: string) {
     makeObservable(this, {
-      exercises: observable,
-      exercisesCount: computed,
-      cardsInfo: computed,
-      fetchExercises: flow,
+      exercise: observable,
+      exerciseInfo: computed,
+      fetchExercise: flow,
     });
-    this.fetchExercises(workoutId);
+    this.fetchExercise(exerciseId);
   }
 
-  *fetchExercises(workoutId: string) {
-    this.exercises = [];
+  *fetchExercise(exerciseId: string) {
+    this.exercise = {
+      _id: '',
+      name: '',
+      description: '',
+      category: -1,
+    };
     this.state = 'pending';
     try {
-      logger.debug('Getting workouts...');
-      const { data } = yield axiosClient.get<WorkoutExerciseType>(
-        `/workouts/${workoutId}`,
+      logger.debug('Getting exercise...');
+      const { data } = yield axiosClient.get<ExerciseProps>(
+        `/exercises/${exerciseId}`,
       );
       logger.debug('Got data: ', data);
       runInAction(() => {
-        this.exercises = data.exercises;
-        console.log('Exercises: ', this.exercises);
+        this.exercise = data;
         this.state = 'done';
       });
     } catch (e) {

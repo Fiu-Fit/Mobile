@@ -5,7 +5,7 @@ import ExerciseCardList from '../../components/exerciseCardList';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 import WorkoutRatingModal from '../../components/workoutRatingModal';
-import { ExerciseStore } from '../../stores/exercise.store';
+import { WorkoutExerciseStore } from '../../stores/workoutExercise.store';
 import { observer } from 'mobx-react';
 
 const exercises = [
@@ -79,7 +79,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
   const hideModal = () => setVisible(false);
   const { workoutId } = route.params;
   const exercisesStore = React.useMemo(() => {
-    return new ExerciseStore(workoutId);
+    return new WorkoutExerciseStore(workoutId);
   }, [workoutId]);
 
   return (

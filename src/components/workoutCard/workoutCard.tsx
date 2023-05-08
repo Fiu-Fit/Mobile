@@ -40,10 +40,7 @@ const WorkoutCard = ({ workoutItem, navigation }: WorkoutCardProps) => {
 
   return (
     <TouchableOpacity
-      onPress={() => {
-        console.log('ASDSADSAA');
-        navigation.push('Workout', { workoutId: workoutItem.id });
-      }}>
+      onPress={() => navigation.push('Workout', { workoutId: workoutItem.id })}>
       <Card
         key={`workout-card-${workoutItem.id}`}
         style={[

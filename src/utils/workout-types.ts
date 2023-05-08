@@ -21,7 +21,7 @@ export enum Unit {
 }
 
 export type WorkoutExerciseType = {
-  _id: string;
+  exerciseId: string;
   sets: number;
   reps: number;
   weight?: number;
@@ -39,4 +39,11 @@ export type WorkoutProps = {
   athleteIds: number[];
   authorId: number;
   updatedAt?: Date;
+};
+
+export type ExerciseProps = {
+  _id: string;
+  name: string;
+  description: string;
+  category: CategoryType;
 };
