@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "649565336432",
+    "project_id": "fiufit-e9664",
+    "storage_bucket": "fiufit-e9664.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649565336432:android:a36c8c1705b53e873195b5",
+        "android_client_info": {
+          "package_name": "com.fiufitmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "649565336432-ir03vpcijnogo5ursqq7ud2696c7knk2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fiufitmobile",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "649565336432-aftssi22monbq7e2egkrufg8uou85kac.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJRVz1xVO4Bpe4xgcCaHiPalgMJ2elOEQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "649565336432-4tkbb7cp4dd1uakdntqjopu3d1ea3gf0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
