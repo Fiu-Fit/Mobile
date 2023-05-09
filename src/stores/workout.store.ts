@@ -22,6 +22,7 @@ export class WorkoutStore {
       }),
     );
   }
+
   constructor() {
     makeObservable(this, {
       workouts: observable,

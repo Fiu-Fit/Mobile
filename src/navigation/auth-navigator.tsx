@@ -4,8 +4,10 @@ import RegisterScreen from '../screens/register';
 import HomeScreen from '../screens/home';
 import WorkoutsScreen from '../screens/workouts';
 import UserProfile from '../screens/userProfile';
+import WorkoutScreen from '../screens/workout';
+import { RootStackParamList } from './navigation-props';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const AuthStack = () => {
   return (
@@ -14,6 +16,7 @@ const AuthStack = () => {
       <Stack.Screen name='Login' component={LoginScreen} />
       <Stack.Screen name='Register' component={RegisterScreen} />
       <Stack.Screen name='Workouts' component={WorkoutsScreen} />
+      <Stack.Screen name='Workout' component={WorkoutScreen} />
       <Stack.Screen name='Profile' component={UserProfile} />
     </Stack.Navigator>
   );

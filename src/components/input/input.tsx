@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TextInput} from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import COLORS from '../../constants/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -8,6 +8,7 @@ type InputProps = {
   placeholder: string;
   placeholderTextColor: string;
   onChangeText: (text: string) => void;
+  multiline?: boolean;
   labelText: string;
   labelColor?: string;
   iconName: string;
@@ -28,15 +29,15 @@ const Input = ({
   const [hidePassword, setHidePassword] = React.useState(password);
 
   return (
-    <View className="mb-4px">
-      <View className="flex-row justify-between">
-        <Text className="my-5 text-xm">{labelText}</Text>
+    <View className='mb-4px'>
+      <View className='flex-row justify-between'>
+        <Text className='my-5 text-xm'>{labelText}</Text>
         {error && (
-          <Text className="text-error-color text-xm mt-7">{error}</Text>
+          <Text className='text-error-color text-xm mt-7'>{error}</Text>
         )}
       </View>
       <View
-        className="bg-white/90 h-55 flex-row ph-15, items-center rounded-md border"
+        className='bg-white/90 h-55 flex-row ph-15, items-center rounded-md border'
         style={[
           {
             borderColor: error
@@ -47,7 +48,7 @@ const Input = ({
           },
         ]}>
         <Icon
-          style={{fontSize: 22, color: COLORS.blue, marginHorizontal: 10}}
+          style={{ fontSize: 22, color: COLORS.blue, marginHorizontal: 10 }}
           name={iconName}
         />
         <TextInput
@@ -60,13 +61,13 @@ const Input = ({
           onBlur={() => {
             setIsFocused(false);
           }}
-          className="flex-1 text-primary-color"
+          className='flex-1 text-primary-color'
           {...props}
         />
         {password && (
           <Icon
             onPress={() => setHidePassword(!hidePassword)}
-            style={{fontSize: 22, color: COLORS.blue, marginRight: 10}}
+            style={{ fontSize: 22, color: COLORS.blue, marginRight: 10 }}
             name={hidePassword ? 'eye-outline' : 'eye-off-outline'}
           />
         )}

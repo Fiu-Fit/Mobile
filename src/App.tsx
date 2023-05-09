@@ -68,6 +68,7 @@ const customLightTheme = {
     onQuinary: 'rgb(255, 255, 255)',
     quinaryContainer: 'rgb(255, 218, 216)',
     onQuinaryContainer: 'rgb(65, 0, 7)',
+    text: 'rgb(0, 0, 0)',
   },
 };
 const customDarkTheme = {
@@ -121,6 +122,7 @@ const customDarkTheme = {
     onQuinary: 'rgb(99, 13, 22)',
     quinaryContainer: 'rgb(130, 37, 42)',
     onQuinaryContainer: 'rgb(255, 218, 216)',
+    text: 'rgb(255, 255, 255)',
   },
 };
 

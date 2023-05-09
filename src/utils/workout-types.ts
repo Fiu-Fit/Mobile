@@ -13,12 +13,19 @@ export enum CategoryType {
   UNRECOGNIZED = -1,
 }
 
-export type ExerciseType = {
-  _id: string;
+export enum Unit {
+  SECONDS = 0,
+  REPETITIONS = 1,
+  METERS = 2,
+  UNRECOGNIZED = -1,
+}
+
+export type WorkoutExerciseType = {
   exerciseId: string;
-  name: string;
-  description: string;
-  category: CategoryType;
+  sets: number;
+  reps: number;
+  weight?: number;
+  unit: Unit;
 };
 
 export type WorkoutProps = {
@@ -28,8 +35,15 @@ export type WorkoutProps = {
   duration: number;
   difficulty: number;
   category: CategoryType;
-  exercises: ExerciseType[];
+  exercises: WorkoutExerciseType[];
   athleteIds: number[];
   authorId: number;
   updatedAt?: Date;
+};
+
+export type ExerciseProps = {
+  _id: string;
+  name: string;
+  description: string;
+  category: CategoryType;
 };
