@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { View, Image, StyleSheet, Text } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { useAppTheme } from '../../App';
+import { ProfileScreenNavigationProp } from '../../navigation/navigation-props';
+import auth from '@react-native-firebase/auth';
 
 // interface WorkoutCardProps {
 //   name: string;
@@ -27,7 +29,11 @@ import { useAppTheme } from '../../App';
 //   triners,
 //   onEdit,
 // }: WorkoutCardProps) => {
-const UserProfile = () => {
+const UserProfile = ({
+  navigation,
+}: {
+  navigation: ProfileScreenNavigationProp;
+}) => {
   const appTheme = useAppTheme();
 
   const name = 'hola';
@@ -57,6 +63,11 @@ const UserProfile = () => {
     setEditedInfo(personalInfo);
     setEditedEmail(email);
     setIsEditing(false);
+  };
+
+  const handleSignOut = async () => {
+    await auth().signOut();
+    navigation.push('Login');
   };
 
   if (isEditing) {
@@ -119,6 +130,9 @@ const UserProfile = () => {
           style={styles.button}
           onPress={() => setIsEditing(true)}>
           Edit
+        </Button>
+        <Button mode='contained' style={styles.button} onPress={handleSignOut}>
+          Cerrar sesion
         </Button>
       </View>
     );
