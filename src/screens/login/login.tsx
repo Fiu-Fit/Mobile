@@ -102,7 +102,7 @@ const LoginScreen = ({
 
       await createNewUser(user);
 
-      navigation.push('Home');
+      navigation.push('Workouts');
     } catch (error) {
       logger.error('Error while logging in with google: ', error);
     }
