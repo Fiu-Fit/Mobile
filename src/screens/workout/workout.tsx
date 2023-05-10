@@ -3,39 +3,38 @@ import { useAppTheme } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import ExerciseCardList from '../../components/exerciseCardList';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import React from 'react';
+import React, { useEffect } from 'react';
 import WorkoutRatingModal from '../../components/workoutRatingModal';
-import { WorkoutExerciseStore } from '../../stores/workoutExercise.store';
+import { WorkoutDetailStore } from '../../stores/workoutDetail.store';
 import { observer } from 'mobx-react';
+import Loader from '../../components/loader';
+import { flowResult } from 'mobx';
+import { IExerciseCard } from '../../components/exerciseCard/exerciseCard';
 
-const exercises = [
+const exercises: IExerciseCard[] = [
   {
-    id: 1,
+    id: '1',
     name: 'Twist Ruso',
-    duration: '00:20',
     description:
       'Siéntate en el suelo con las rodillas flexionadas, los pies ligeramente levantados y la espalda inclinada hacia atrás.\n\nA continuación, une las manos y gira de un lado a otro',
   },
   {
-    id: 2,
+    id: '2',
     name: 'Escalada de Montaña',
-    duration: 'x16',
     description: 'Description',
   },
   {
-    id: 3,
+    id: '3',
     name: 'Toque al Talón',
-    duration: 'x20',
     description: 'Description',
   },
   {
-    id: 4,
+    id: '4',
     name: 'Elevaciones de Piernas',
-    duration: 'x16',
     description: 'Description',
   },
-  { id: 5, name: 'Tablón', duration: '00:20', description: 'Description' },
-];
+  { id: '5', name: 'Tablón', description: 'Description' },
+].map(exercise => ({ ...exercise, sets: '1', reps: '20', category: 'Abs' }));
 
 export interface IWorkoutRating {
   globalRating: number;
@@ -51,17 +50,7 @@ const rating = {
   ],
 };
 
-const workout = {
-  name: 'Abdominales',
-  description: 'Lorem ipsum dolor sit amet consect',
-  duration: 40,
-  difficulty: 3,
-  category: 0,
-  exercises: exercises,
-  athleteIds: [],
-  authorId: 4,
-  rating: rating,
-};
+const workoutDetailStore = new WorkoutDetailStore();
 
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
@@ -78,11 +67,15 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const { workoutId } = route.params;
-  const exercisesStore = React.useMemo(() => {
-    return new WorkoutExerciseStore(workoutId);
-  }, [workoutId]);
 
-  return (
+  useEffect(() => {
+    flowResult(workoutDetailStore.fetchWorkout(workoutId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return workoutDetailStore.state === 'pending' ? (
+    <Loader />
+  ) : (
     <View
       className='flex-1'
       style={{ backgroundColor: appTheme.colors.background }}>
@@ -92,20 +85,23 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
         <Text
           className='text-4xl mt-10'
           style={{ color: appTheme.colors.text }}>
-          {workout.name}
+          {workoutDetailStore.workoutHeader.name}
         </Text>
         <Text className='text-lg' style={{ color: appTheme.colors.outline }}>
-          {workout.description}
+          {workoutDetailStore.workoutHeader.description}
         </Text>
       </View>
       <View
         className='flex-row items-center justify-between'
         style={{ backgroundColor: appTheme.colors.outlineVariant, flex: 0.08 }}>
         <Text className='text-lg ml-5' style={{ color: appTheme.colors.text }}>
-          {workout.duration} min - {workout.exercises.length} ejercicios
+          {workoutDetailStore.workoutHeader.duration} min -{' '}
+          {workoutDetailStore.workoutHeader.exerciseCount} ejercicios
         </Text>
         <View className='flex-row justify-center'>
-          <Text className='text-xl'>{workout.rating.globalRating}</Text>
+          <Text className='text-xl'>
+            {workoutDetailStore.workoutHeader.globalRating}
+          </Text>
           <Icon
             onPress={() => showModal()}
             style={{
@@ -121,7 +117,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
         <WorkoutRatingModal
           visible={visible}
           onDismiss={hideModal}
-          workoutRatingItem={workout.rating}
+          workoutRatingItem={rating}
         />
       </View>
       <View
@@ -129,7 +125,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
           backgroundColor: appTheme.colors.inverseOnSurface,
           flex: 0.72,
         }}>
-        <ExerciseCardList exercises={exercisesStore.cardsInfo} />
+        <ExerciseCardList exercises={exercises} />
       </View>
     </View>
   );
