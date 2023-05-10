@@ -1,5 +1,9 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
-import { CategoryType, WorkoutProps } from '../utils/workout-types';
+import {
+  CategoryType,
+  IWorkoutHeader,
+  WorkoutProps,
+} from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import { IExerciseCard } from '../components/exerciseCard/exerciseCard';
 import LoggerFactory from '../utils/logger-utility';
@@ -17,14 +21,6 @@ const defaultWorkout = {
   exercises: [],
   athleteIds: [],
   authorId: 0,
-};
-
-type IWorkoutHeader = {
-  name: string;
-  description: string;
-  duration: number;
-  globalRating: number;
-  exerciseCount: number;
 };
 
 export class WorkoutDetailStore {
