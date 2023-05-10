@@ -38,7 +38,7 @@ const RegisterScreen = ({
       await saveToken(response.data.token);
       navigation.push('Interests', { name: inputs.firstName });
     } catch (error) {
-      logger.error(error.response.data as string);
+      logger.error(error as string);
     }
     setLoading(false);
   };

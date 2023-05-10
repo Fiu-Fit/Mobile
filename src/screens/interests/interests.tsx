@@ -4,6 +4,9 @@ import { Text, Checkbox } from 'react-native-paper';
 import { InterestsScreenNavigationProp } from '../../navigation/navigation-props';
 import { useAppTheme } from '../../App';
 import Button from '../../components/button';
+import LoggerFactory from '../../utils/logger-utility';
+
+const logger = LoggerFactory('interests');
 
 type InterestsScreenProps = {
   navigation: InterestsScreenNavigationProp;
@@ -59,8 +62,7 @@ const CheckboxRow = ({
 
 const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
   const appTheme = useAppTheme();
-  //const { name } = route.params;
-  const name = 'Martin';
+  const { name } = route.params;
   const [checkboxValues, setCheckboxValues] = React.useState<CheckboxValues>(
     {},
   );
@@ -76,7 +78,8 @@ const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
     const selectedInterests = Object.keys(checkboxValues).filter(
       key => checkboxValues[key],
     );
-    console.log(selectedInterests);
+    logger.info('Selected interests: ', selectedInterests);
+    navigation.navigate('Goals');
   };
 
   return (
@@ -112,13 +115,7 @@ const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
         />
       </View>
       <View className='flex-row mx-10'>
-        <Button
-          title='Continuar'
-          onPress={() => {
-            //navigation.navigate('Home');
-            handleInterestsSubmit();
-          }}
-        />
+        <Button title='Continuar' onPress={() => handleInterestsSubmit()} />
       </View>
     </View>
   );
