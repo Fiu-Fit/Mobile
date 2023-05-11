@@ -126,7 +126,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
       </View>
       <View
         style={{
-          backgroundColor: appTheme.colors.inverseOnSurface,
+          backgroundColor: appTheme.colors.background,
           flex: 0.72,
         }}>
         <ExerciseCardList exercises={exercisesStore.cardsInfo} />

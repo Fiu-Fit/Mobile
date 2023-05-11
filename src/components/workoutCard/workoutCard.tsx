@@ -2,7 +2,10 @@ import { Image, StyleSheet, View } from 'react-native';
 import { Card, Paragraph } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 import { observer } from 'mobx-react';
-import { WorkoutsScreenNavigationProp } from '../../navigation/navigation-props';
+import {
+  HomeScreenNavigationProp,
+  WorkoutsScreenNavigationProp,
+} from '../../navigation/navigation-props';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export interface IWorkoutCard {
@@ -13,7 +16,7 @@ export interface IWorkoutCard {
 
 interface WorkoutCardProps {
   workoutItem: IWorkoutCard;
-  navigation: WorkoutsScreenNavigationProp;
+  navigation: WorkoutsScreenNavigationProp | HomeScreenNavigationProp;
 }
 const styles = StyleSheet.create({
   cardContent: {

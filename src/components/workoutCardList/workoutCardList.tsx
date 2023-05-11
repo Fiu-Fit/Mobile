@@ -2,11 +2,14 @@ import { FlatList } from 'react-native';
 import { IWorkoutCard } from '../workoutCard/workoutCard';
 import WorkoutCard from '../workoutCard';
 import { observer } from 'mobx-react';
-import { WorkoutsScreenNavigationProp } from '../../navigation/navigation-props';
+import {
+  HomeScreenNavigationProp,
+  WorkoutsScreenNavigationProp,
+} from '../../navigation/navigation-props';
 
 interface WorkoutCardListProps {
   workouts: IWorkoutCard[];
-  navigation: WorkoutsScreenNavigationProp;
+  navigation: WorkoutsScreenNavigationProp | HomeScreenNavigationProp;
 }
 const WorkoutCardList = ({ workouts, navigation }: WorkoutCardListProps) => {
   return (
