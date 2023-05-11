@@ -24,7 +24,8 @@ type InterestsScreenProps = {
 
 const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
   const appTheme = useAppTheme();
-  const { name } = route.params;
+  //const { name } = route.params;
+  const name = 'Ian';
   const [checkboxValues, setCheckboxValues] = React.useState<CheckboxValues>(
     {},
   );
@@ -47,7 +48,7 @@ const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
   return (
     <View
       className='flex-1 justify-around items-center'
-      style={{ backgroundColor: appTheme.colors.backdrop }}>
+      style={{ backgroundColor: appTheme.colors.background }}>
       <View className='flex-row'>
         <Text className='text-3xl'>Bienvenido, </Text>
         <Text className='text-3xl text-primary-color'>{name}</Text>

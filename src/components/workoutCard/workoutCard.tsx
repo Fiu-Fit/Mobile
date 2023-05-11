@@ -58,8 +58,14 @@ const WorkoutCard = ({ workoutItem, navigation }: WorkoutCardProps) => {
             resizeMode='cover'
           />
           <View className='items-center' style={{ flex: 2 }}>
-            <Paragraph>{workoutItem.title}</Paragraph>
-            <Paragraph>{workoutItem.content}</Paragraph>
+            <Paragraph
+              style={{ color: appTheme.colors.onBackground }}
+              className='text-2xl'>
+              {workoutItem.title}
+            </Paragraph>
+            <Paragraph style={{ color: appTheme.colors.onBackground }}>
+              {workoutItem.content}
+            </Paragraph>
           </View>
         </Card.Content>
       </Card>
