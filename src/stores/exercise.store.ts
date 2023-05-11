@@ -4,7 +4,7 @@ import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
 import { ICard } from '../utils/custom-types';
 
-const logger = LoggerFactory('workout-store');
+const logger = LoggerFactory('exercise-store');
 
 export class ExerciseStore {
   exercises: Exercise[] = [];

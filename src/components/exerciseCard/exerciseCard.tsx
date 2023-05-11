@@ -1,12 +1,12 @@
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card, Paragraph } from 'react-native-paper';
 import { useAppTheme } from '../../App';
-import React from 'react';
-import ExerciseModal from '../exerciseModal';
 import { IExerciseCard } from '../../utils/workout-types';
+import { ICard } from '../../utils/custom-types';
 
 interface ExerciseCardProps {
-  exerciseItem: IExerciseCard;
+  exerciseItem: IExerciseCard | ICard;
+  onPress?: () => void;
 }
 
 const styles = StyleSheet.create({
@@ -20,19 +20,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const ExerciseCard = ({ exerciseItem }: ExerciseCardProps) => {
+const ExerciseCard = ({ exerciseItem, onPress }: ExerciseCardProps) => {
   const appTheme = useAppTheme();
-  const [visible, setVisible] = React.useState(false);
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
 
   return (
-    <TouchableOpacity onPress={showModal}>
-      <ExerciseModal
-        visible={visible}
-        onDismiss={hideModal}
-        exerciseItem={exerciseItem}
-      />
+    <TouchableOpacity onPress={onPress}>
       <Card
         key={`exercise-card-${exerciseItem.id}`}
         className='my-2 mx-5'
