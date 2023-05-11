@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import {
-  Text,
-  SafeAreaView,
-  View,
   Image,
+  SafeAreaView,
+  Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Input from '../../components/input';
@@ -193,6 +193,10 @@ const LoginScreen = ({
           className='font-bold text-center'>
           Don't have an account?
         </Text>
+        <Button
+          onPress={() => navigation.push('PasswordRecovery')}
+          title='Olvidaste tu contraseña?'
+        />
       </View>
     </SafeAreaView>
   );
