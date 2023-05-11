@@ -1,10 +1,11 @@
-import { Image, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { Formik, FormikErrors } from 'formik';
 import Input from '../../components/input';
 import COLORS from '../../constants/colors';
 import Button from '../../components/button';
 import { firebase } from '@react-native-firebase/auth';
 import { PasswordRecoveryScreenNavigationProp } from '../../navigation/navigation-props';
+import FiuFitLogo from '../../components/dumb/fiuFitLogo';
 
 export type InputProps = {
   email: string;
@@ -23,12 +24,7 @@ const PasswordRecoveryScreen = ({
 
   return (
     <SafeAreaView className='flex-1 bg-black px-8 w-full'>
-      <View className='my-20 justify-center align-center'>
-        <Image
-          className='scale-75 self-center'
-          source={require('../../imgs/fiufit.png')}
-        />
-      </View>
+      <FiuFitLogo />
       <View className='flex-1 py-5 w-full'>
         <Formik
           initialValues={{
