@@ -20,15 +20,19 @@ export enum Unit {
   UNRECOGNIZED = -1,
 }
 
-export type Exercise = {
+export type WorkoutExercise = {
   exerciseId: string;
-  name: string;
-  description: string;
-  category: CategoryType;
   sets: number;
   reps: number;
   weight?: number;
   unit: Unit;
+  exercise: Exercise;
+};
+
+export type Exercise = {
+  name: string;
+  description: string;
+  category: CategoryType;
 };
 
 export type WorkoutProps = {
@@ -39,7 +43,7 @@ export type WorkoutProps = {
   difficulty: number;
   category: CategoryType;
   rating: number;
-  exercises: Exercise[];
+  exercises: WorkoutExercise[];
   athleteIds: number[];
   authorId: number;
   updatedAt?: Date;

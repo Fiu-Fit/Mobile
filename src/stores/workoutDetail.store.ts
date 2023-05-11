@@ -48,9 +48,9 @@ export class WorkoutDetailStore {
     return this.workout.exercises.map((workoutExercise): IExerciseCard => {
       return {
         id: workoutExercise.exerciseId,
-        name: workoutExercise.name,
-        description: workoutExercise.description,
-        category: workoutExercise.category.toString(),
+        name: workoutExercise.exercise.name,
+        description: workoutExercise.exercise.description,
+        category: workoutExercise.exercise.category.toString(),
         sets: workoutExercise.sets.toString(),
         reps: workoutExercise.reps.toString(),
       };
