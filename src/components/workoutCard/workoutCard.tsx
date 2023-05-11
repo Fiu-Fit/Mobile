@@ -19,10 +19,6 @@ interface WorkoutCardProps {
   navigation: WorkoutsScreenNavigationProp | HomeScreenNavigationProp;
 }
 const styles = StyleSheet.create({
-  cardContent: {
-    flexDirection: 'row',
-    height: 150,
-  },
   tinyLogo: {
     width: 50,
     height: 50,
@@ -46,21 +42,22 @@ const WorkoutCard = ({ workoutItem, navigation }: WorkoutCardProps) => {
       onPress={() => navigation.push('Workout', { workoutId: workoutItem.id })}>
       <Card
         key={`workout-card-${workoutItem.id}`}
+        className='my-2 mx-5'
         style={[
           styles.cardPadding,
           {
             backgroundColor: appTheme.colors.surfaceVariant,
           },
         ]}>
-        <Card.Content style={styles.cardContent}>
+        <Card.Content className='flex-row justify-center items-center h-36'>
           <Image
             style={styles.logo}
             source={{
-              uri: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80',
+              uri: 'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
             }}
             resizeMode='cover'
           />
-          <View style={{ flex: 2 }}>
+          <View className='items-center' style={{ flex: 2 }}>
             <Paragraph>{workoutItem.title}</Paragraph>
             <Paragraph>{workoutItem.content}</Paragraph>
           </View>
