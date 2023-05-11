@@ -36,7 +36,7 @@ const RegisterScreen = ({
       const response = await axiosClient.post('/auth/register', inputs);
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      navigation.push('Login');
+      navigation.push('Interests', { name: inputs.firstName });
     } catch (error) {
       logger.error(error as string);
     }

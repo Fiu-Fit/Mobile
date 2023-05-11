@@ -7,6 +7,8 @@ export type RootStackParamList = {
   Profile: undefined;
   Login: undefined;
   Register: undefined;
+  Interests: { name: string };
+  Goals: undefined;
 };
 
 export type HomeScreenNavigationProp = StackNavigationProp<
@@ -32,4 +34,12 @@ export type WorkoutScreenNavigationProp = StackNavigationProp<
 export type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Profile'
+>;
+export type InterestsScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Interests'
+>;
+export type GoalsScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Goals'
 >;

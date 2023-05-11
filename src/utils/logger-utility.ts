@@ -14,6 +14,8 @@ const config = {
     'workout-store',
     'workout-comment',
     'exercise-store',
+    'interests',
+    'goals',
   ],
   transportOptions: {
     colors: {

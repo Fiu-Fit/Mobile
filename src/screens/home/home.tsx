@@ -1,21 +1,46 @@
-import { Button, Text, View } from 'react-native';
-import { styles } from './styles';
+import { View } from 'react-native';
+import { Text, Divider } from 'react-native-paper';
+import { HomeScreenNavigationProp } from '../../navigation/navigation-props';
+import { useAppTheme } from '../../App';
+import WorkoutCardList from '../../components/workoutCardList';
+import { WorkoutStore } from '../../stores/workout.store';
+import MetricCard from '../../components/metricCard';
+import HomeHeader from '../../components/homeHeader.tsx';
+import { Calendar } from 'react-native-calendars';
 
-const HomeScreen = ({ navigation }: { navigation: any }) => (
-  <View style={styles.container}>
-    <View style={styles.homeItem}>
-      <Text style={styles.textStyle}>HOME</Text>
+const workoutsStore = new WorkoutStore();
+
+const HomeScreen = ({
+  navigation,
+}: {
+  navigation: HomeScreenNavigationProp;
+}) => {
+  const appTheme = useAppTheme();
+
+  return (
+    <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>
+      <View style={{ flex: 0.1 }}>
+        <HomeHeader navigation={navigation} />
+        <Divider className='mt-5' />
+      </View>
+      <View className='flex-row justify-around' style={{ flex: 0.2 }}>
+        <MetricCard title={'Ejercicios'} value={'120'} />
+        <MetricCard title={'Calorias'} value='12000' />
+        <MetricCard title={'Minutos'} value='400' />
+      </View>
+      <View className='justify-center items-center' style={{ flex: 0.1 }}>
+        <Text>Calendario</Text>
+      </View>
+      <View style={{ flex: 0.6, backgroundColor: appTheme.colors.background }}>
+        <Divider />
+        <Text className='self-center text-xl my-4'>Mis entrenamientos</Text>
+        <WorkoutCardList
+          workouts={workoutsStore.cardsInfo}
+          navigation={navigation}
+        />
+      </View>
     </View>
-    <View style={styles.homeItem}>
-      <Button title='Sign In' onPress={() => navigation.push('Login')} />
-    </View>
-    <View style={styles.homeItem}>
-      <Button
-        title='Create Account'
-        onPress={() => navigation.push('Register')}
-      />
-    </View>
-  </View>
-);
+  );
+};
 
 export default HomeScreen;
