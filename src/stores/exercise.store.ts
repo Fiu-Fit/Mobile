@@ -1,20 +1,20 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
-import { ExerciseProps } from '../utils/workout-types';
+import { ExerciseInfo } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
 
 const logger = LoggerFactory('workout-store');
 
 export class ExerciseStore {
-  exercise: ExerciseProps = {
-    _id: '',
+  exercise: ExerciseInfo = {
+    exerciseId: '',
     name: '',
     description: '',
     category: -1,
   };
   state = 'pending';
 
-  get exerciseInfo(): ExerciseProps {
+  get exerciseInfo(): ExerciseInfo {
     return this.exercise;
   }
 
@@ -29,7 +29,7 @@ export class ExerciseStore {
 
   *fetchExercise(exerciseId: string) {
     this.exercise = {
-      _id: '',
+      exerciseId: '',
       name: '',
       description: '',
       category: -1,
@@ -37,7 +37,7 @@ export class ExerciseStore {
     this.state = 'pending';
     try {
       logger.debug('Getting exercise...');
-      const { data } = yield axiosClient.get<ExerciseProps>(
+      const { data } = yield axiosClient.get<ExerciseInfo>(
         `/exercises/${exerciseId}`,
       );
       logger.debug('Got data: ', data);
