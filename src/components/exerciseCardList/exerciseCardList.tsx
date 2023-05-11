@@ -1,6 +1,6 @@
 import { FlatList } from 'react-native';
-import { IExerciseCard } from '../exerciseCard/exerciseCard';
 import ExerciseCard from '../exerciseCard';
+import { IExerciseCard } from '../../utils/workout-types';
 
 interface ExerciseCardListProps {
   exercises: IExerciseCard[];

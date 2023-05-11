@@ -30,9 +30,17 @@ export type WorkoutExercise = {
 };
 
 export type Exercise = {
+  _id: string;
   name: string;
   description: string;
-  category: CategoryType;
+  category: string;
+};
+
+export type IExerciseCard = {
+  id: string;
+  title: string;
+  content: string;
+  exercise: Exercise;
 };
 
 export type WorkoutProps = {
@@ -47,13 +55,6 @@ export type WorkoutProps = {
   athleteIds: number[];
   authorId: number;
   updatedAt?: Date;
-};
-
-export type ExerciseInfo = {
-  exerciseId: string;
-  name: string;
-  description: string;
-  category: CategoryType;
 };
 
 export type IWorkoutHeader = {

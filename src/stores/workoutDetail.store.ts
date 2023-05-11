@@ -1,11 +1,12 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
 import {
   CategoryType,
+  IExerciseCard,
   IWorkoutHeader,
+  WorkoutExercise,
   WorkoutProps,
 } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
-import { IExerciseCard } from '../components/exerciseCard/exerciseCard';
 import LoggerFactory from '../utils/logger-utility';
 
 const logger = LoggerFactory('exercise-store');
@@ -44,17 +45,19 @@ export class WorkoutDetailStore {
       exerciseCount: exercises.length,
     };
   }
-  get cardsInfo(): IExerciseCard[] {
+  get exerciseCards(): IExerciseCard[] {
     return this.workout.exercises.map((workoutExercise): IExerciseCard => {
       return {
         id: workoutExercise.exerciseId,
-        name: workoutExercise.exercise.name,
-        description: workoutExercise.exercise.description,
-        category: workoutExercise.exercise.category.toString(),
-        sets: workoutExercise.sets.toString(),
-        reps: workoutExercise.reps.toString(),
+        title: workoutExercise.exercise.name,
+        content: `${workoutExercise.sets} x ${workoutExercise.reps}`,
+        exercise: workoutExercise.exercise,
       };
     });
+  }
+
+  get exercises(): WorkoutExercise[] {
+    return this.workout.exercises;
   }
 
   constructor() {
@@ -62,7 +65,7 @@ export class WorkoutDetailStore {
       workoutId: observable,
       workout: observable,
       state: observable,
-      cardsInfo: computed,
+      exerciseCards: computed,
       workoutHeader: computed,
       fetchWorkout: flow,
     });

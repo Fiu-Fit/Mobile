@@ -17,10 +17,11 @@ const AddButton = ({
     </Button>
   ) : (
     <IconButton
+      style={{ position: 'absolute', bottom: 20, right: 20 }}
       icon='plus'
       iconColor={theme.colors.onQuinary}
       containerColor={theme.colors.quinary}
-      size={10}
+      size={40}
       onPress={() => onPress()}
       mode='contained'
     />

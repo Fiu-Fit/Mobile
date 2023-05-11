@@ -20,3 +20,9 @@ export type CommentInputProps = {
 export type ErrorCommentInputProps = {
   comment: string;
 };
+
+export interface ICard {
+  id: string;
+  title: string;
+  content: string;
+}

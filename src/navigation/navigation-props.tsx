@@ -3,12 +3,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 export type RootStackParamList = {
   Home: undefined;
   Workouts: undefined;
-  Workout: { workoutId: string };
+  Workout: { itemId: string };
   Profile: undefined;
   Login: undefined;
   Register: undefined;
   Interests: { name: string };
   Goals: undefined;
+  CreateGoal: undefined;
 };
 
 export type HomeScreenNavigationProp = StackNavigationProp<
@@ -42,4 +43,8 @@ export type InterestsScreenNavigationProp = StackNavigationProp<
 export type GoalsScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Goals'
+>;
+export type CreateGoalScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'CreateGoal'
 >;

@@ -1,8 +1,8 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
 import { WorkoutProps } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
-import { IWorkoutCard } from '../components/workoutCard/workoutCard';
 import LoggerFactory from '../utils/logger-utility';
+import { ICard } from '../utils/custom-types';
 
 const logger = LoggerFactory('workout-store');
 
@@ -13,9 +13,9 @@ export class WorkoutStore {
   get workoutCount() {
     return this.workouts.length;
   }
-  get cardsInfo(): IWorkoutCard[] {
+  get cardsInfo(): ICard[] {
     return this.workouts.map(
-      (workout): IWorkoutCard => ({
+      (workout): ICard => ({
         id: workout._id,
         title: workout.name,
         content: workout.description,

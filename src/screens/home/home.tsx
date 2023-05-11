@@ -2,11 +2,10 @@ import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { HomeScreenNavigationProp } from '../../navigation/navigation-props';
 import { useAppTheme } from '../../App';
-import WorkoutCardList from '../../components/workoutCardList';
+import WorkoutCardList from '../../components/itemCardList';
 import { WorkoutStore } from '../../stores/workout.store';
 import MetricCard from '../../components/metricCard';
 import HomeHeader from '../../components/homeHeader.tsx';
-import { Calendar } from 'react-native-calendars';
 
 const workoutsStore = new WorkoutStore();
 

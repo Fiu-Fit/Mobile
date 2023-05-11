@@ -1,7 +1,7 @@
 import { Image, ScrollView, Text, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { Modal, Portal } from 'react-native-paper';
-import { IExerciseCard } from '../exerciseCard/exerciseCard';
+import { IExerciseCard } from '../../utils/workout-types';
 
 type ModalProps = {
   visible: boolean;
@@ -40,8 +40,10 @@ const ExerciseModal = ({ visible, onDismiss, exerciseItem }: ModalProps) => {
           <View
             className='items-center mx-10 justify-between'
             style={{ flex: 0.5 }}>
-            <Text className='text-3xl' style={{ color: appTheme.colors.text }}>
-              {exerciseItem.name} - {exerciseItem.sets}x{exerciseItem.reps}
+            <Text
+              className='text-3xl'
+              style={{ color: appTheme.colors.onBackground }}>
+              {exerciseItem.title}
             </Text>
             <ScrollView>
               <Text
@@ -49,7 +51,7 @@ const ExerciseModal = ({ visible, onDismiss, exerciseItem }: ModalProps) => {
                   color: appTheme.colors.onSurfaceDisabled,
                   marginTop: 20,
                 }}>
-                {exerciseItem.description}
+                {exerciseItem.exercise.description}
               </Text>
             </ScrollView>
           </View>

@@ -3,15 +3,7 @@ import { Card, Paragraph } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 import React from 'react';
 import ExerciseModal from '../exerciseModal';
-
-export interface IExerciseCard {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  sets: string;
-  reps: string;
-}
+import { IExerciseCard } from '../../utils/workout-types';
 
 interface ExerciseCardProps {
   exerciseItem: IExerciseCard;
@@ -59,9 +51,11 @@ const ExerciseCard = ({ exerciseItem }: ExerciseCardProps) => {
             resizeMode='cover'
           />
           <View className='items-center' style={{ flex: 2 }}>
-            <Paragraph>{exerciseItem.name}</Paragraph>
-            <Paragraph>
-              {exerciseItem.sets}x{exerciseItem.reps}
+            <Paragraph className='text-xl'>{exerciseItem.title}</Paragraph>
+            <Paragraph
+              className='text-base self-center'
+              style={{ color: appTheme.colors.onSurfaceVariant }}>
+              {exerciseItem.content}
             </Paragraph>
           </View>
         </Card.Content>

@@ -1,32 +1,36 @@
 import { View } from 'react-native';
-import { Text } from 'react-native-paper';
-import { GoalsScreenNavigationProp } from '../../navigation/navigation-props';
+import { Text, Divider } from 'react-native-paper';
+import { HomeScreenNavigationProp } from '../../navigation/navigation-props';
 import { useAppTheme } from '../../App';
+import WorkoutCardList from '../../components/itemCardList';
 import Button from '../../components/button';
+import { GoalStore } from '../../stores/goals.store';
+import ItemCardList from '../../components/itemCardList';
+import AddButton from '../../components/addButton';
+
+const goalsStore = new GoalStore();
 
 const GoalsScreen = ({
   navigation,
 }: {
-  navigation: GoalsScreenNavigationProp;
+  navigation: HomeScreenNavigationProp;
 }) => {
   const appTheme = useAppTheme();
 
   return (
-    <View
-      className='flex-1 justify-around items-center'
-      style={{ backgroundColor: appTheme.colors.backdrop }}>
-      <View className='flex-row'>
-        <Text className='text-3xl'>Establece tus metas</Text>
+    <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>
+      <View className='justify-center' style={{ flex: 0.2 }}>
+        <Text className='text-3xl self-center'>Mis metas</Text>
       </View>
-
-      <View className='flex-row mx-10'>
-        <Button
-          title='Continuar'
-          onPress={() => {
-            navigation.navigate('Home');
-          }}
+      <View style={{ flex: 0.8, backgroundColor: appTheme.colors.background }}>
+        <Divider />
+        <ItemCardList
+          items={goalsStore.cardsInfo}
+          navigation={navigation}
+          screen={'Goal'}
         />
       </View>
+      <AddButton onPress={() => navigation.push('CreateGoal')} />
     </View>
   );
 };

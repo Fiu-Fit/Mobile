@@ -8,6 +8,7 @@ import { RootStackParamList } from './navigation-props';
 import InterestsScreen from '../screens/interests';
 import GoalsScreen from '../screens/goals';
 import TabNavigator from './tab-navigator';
+import CreateGoalScreen from '../screens/createGoal';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -18,10 +19,9 @@ const AuthStack = () => {
       <Stack.Screen name='Login' component={LoginScreen} />
       <Stack.Screen name='Goals' component={GoalsScreen} />
       <Stack.Screen name='Register' component={RegisterScreen} />
-      <Stack.Screen name='Home' component={TabNavigator} />
-      <Stack.Screen name='Workouts' component={WorkoutsScreen} />
+      <Stack.Screen name='Tab' component={TabNavigator} />
       <Stack.Screen name='Workout' component={WorkoutScreen} />
-      <Stack.Screen name='Profile' component={UserProfile} />
+      <Stack.Screen name='CreateGoal' component={CreateGoalScreen} />
     </Stack.Navigator>
   );
 };

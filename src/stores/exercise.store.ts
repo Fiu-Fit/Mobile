@@ -1,48 +1,42 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
-import { ExerciseInfo } from '../utils/workout-types';
+import { Exercise } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
+import { ICard } from '../utils/custom-types';
 
 const logger = LoggerFactory('workout-store');
 
 export class ExerciseStore {
-  exercise: ExerciseInfo = {
-    exerciseId: '',
-    name: '',
-    description: '',
-    category: -1,
-  };
+  exercises: Exercise[] = [];
   state = 'pending';
 
-  get exerciseInfo(): ExerciseInfo {
-    return this.exercise;
+  get cardsInfo(): ICard[] {
+    return this.exercises.map(
+      (exercise): ICard => ({
+        id: exercise._id,
+        title: exercise.name,
+        content: exercise.category,
+      }),
+    );
   }
 
-  constructor(exerciseId: string) {
+  constructor() {
     makeObservable(this, {
-      exercise: observable,
-      exerciseInfo: computed,
-      fetchExercise: flow,
+      exercises: observable,
+      cardsInfo: computed,
+      fetchExercises: flow,
     });
-    this.fetchExercise(exerciseId);
+    this.fetchExercises();
   }
 
-  *fetchExercise(exerciseId: string) {
-    this.exercise = {
-      exerciseId: '',
-      name: '',
-      description: '',
-      category: -1,
-    };
+  *fetchExercises() {
     this.state = 'pending';
     try {
-      logger.debug('Getting exercise...');
-      const { data } = yield axiosClient.get<ExerciseInfo>(
-        `/exercises/${exerciseId}`,
-      );
-      logger.debug('Got data: ', data);
+      logger.debug('Getting exercises...');
+      const { data } = yield axiosClient.get<Exercise[]>('/exercises');
+      logger.debug('Got data from goals: ', data);
       runInAction(() => {
-        this.exercise = data;
+        this.exercises = data;
         this.state = 'done';
       });
     } catch (e) {
