@@ -10,6 +10,7 @@ import Loader from '../../components/loader';
 import { flowResult } from 'mobx';
 import WorkoutHeader from '../../components/workoutHeader';
 import WorkoutInfo from '../../components/workoutInfo';
+import Button from '../../components/button';
 
 export interface IWorkoutRating {
   globalRating: number;
@@ -67,7 +68,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
       <View
         style={{
           backgroundColor: appTheme.colors.background,
-          flex: 0.72,
+          flex: 0.62,
         }}>
         <WorkoutRatingModal
           visible={visible}
@@ -75,6 +76,9 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
           workoutRatingItem={rating}
         />
         <ExerciseCardList exercises={workoutDetailStore.exerciseCards} />
+      </View>
+      <View className='mb-10 mx-10' style={{ flex: 0.10 }}>
+        <Button title='Completar' onPress={() => navigation.goBack()} />
       </View>
     </View>
   );

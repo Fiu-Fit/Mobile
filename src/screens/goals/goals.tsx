@@ -2,8 +2,6 @@ import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { HomeScreenNavigationProp } from '../../navigation/navigation-props';
 import { useAppTheme } from '../../App';
-import WorkoutCardList from '../../components/itemCardList';
-import Button from '../../components/button';
 import { GoalStore } from '../../stores/goals.store';
 import ItemCardList from '../../components/itemCardList';
 import AddButton from '../../components/addButton';

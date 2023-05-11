@@ -10,6 +10,7 @@ export type RootStackParamList = {
   Interests: { name: string };
   Goals: undefined;
   CreateGoal: undefined;
+  Goal: { itemId: string };
 };
 
 export type HomeScreenNavigationProp = StackNavigationProp<
@@ -47,4 +48,8 @@ export type GoalsScreenNavigationProp = StackNavigationProp<
 export type CreateGoalScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'CreateGoal'
+>;
+export type GoalScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Goal'
 >;

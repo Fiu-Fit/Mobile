@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -27,17 +27,20 @@ const WorkoutInfo = ({
         {duration} min - {exerciseCount} ejercicios
       </Text>
       <View className='flex-row justify-center'>
-        <Text className='text-xl'>{globalRating}</Text>
-        <Icon
-          onPress={onPressModal}
-          style={{
-            fontSize: 30,
-            color: appTheme.colors.onSurface,
-            marginRight: 30,
-            marginLeft: 5,
-          }}
-          name={'star'}
-        />
+        <TouchableOpacity
+          className='flex-row justify-center'
+          onPress={onPressModal}>
+          <Text className='text-xl'>4 {globalRating}</Text>
+          <Icon
+            style={{
+              fontSize: 30,
+              color: appTheme.colors.onSurface,
+              marginRight: 30,
+              marginLeft: 5,
+            }}
+            name={'star'}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );

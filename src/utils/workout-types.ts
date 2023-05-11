@@ -13,6 +13,21 @@ export enum CategoryType {
   UNRECOGNIZED = -1,
 }
 
+export const categoryMap = new Map<number, string>([
+  [CategoryType.LEGS, 'Legs'],
+  [CategoryType.CHEST, 'Chest'],
+  [CategoryType.BACK, 'Back'],
+  [CategoryType.SHOULDERS, 'Shoulders'],
+  [CategoryType.ARMS, 'Arms'],
+  [CategoryType.CORE, 'Core'],
+  [CategoryType.CARDIO, 'Cardio'],
+  [CategoryType.FULLBODY, 'Full Body'],
+  [CategoryType.FREEWEIGHT, 'Free Weight'],
+  [CategoryType.STRETCHING, 'Stretching'],
+  [CategoryType.STRENGTH, 'Strength'],
+  [CategoryType.UNRECOGNIZED, 'Unrecognized'],
+]);
+
 export enum Unit {
   SECONDS = 0,
   REPETITIONS = 1,
@@ -33,7 +48,7 @@ export type Exercise = {
   _id: string;
   name: string;
   description: string;
-  category: string;
+  category: CategoryType;
 };
 
 export type IExerciseCard = {

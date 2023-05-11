@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, SafeAreaView, ScrollView, View } from 'react-native';
+import { Text, SafeAreaView, ScrollView, View, FlatList } from 'react-native';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Loader from '../../components/loader';
@@ -9,7 +9,7 @@ import { Formik, FormikErrors } from 'formik';
 import { ExerciseStore } from '../../stores/exercise.store';
 import { GoalInputProps } from '../../utils/goal-types';
 import { useAppTheme } from '../../App';
-import ExerciseCardList from '../../components/exerciseCardList';
+import ExerciseCard from '../../components/exerciseCard';
 
 const execisesStore = new ExerciseStore();
 const logger = LoggerFactory('create-goal');
@@ -21,12 +21,14 @@ const CreateGoalScreen = ({
 }) => {
   const [loading, setLoading] = React.useState(false);
   const [showExerciseList, setShowExerciseList] = React.useState(true);
+  const [selectedExerciseId, setSelectedExerciseId] = React.useState<string>();
 
   const appTheme = useAppTheme();
   const handleNewGoal = async (inputs: GoalInputProps) => {
     setLoading(true);
     try {
       logger.info('Inputs: ', inputs);
+      logger.info('Exercise ID: ', selectedExerciseId);
       //const response = await axiosClient.post('/goals', inputs);
       navigation.push('Goals');
     } catch (error) {
@@ -44,7 +46,20 @@ const CreateGoalScreen = ({
       {showExerciseList ? (
         <View>
           <Text className='self-center text-xl'>Elige un ejercicio</Text>
-          <ExerciseCardList exercises={execisesStore.cardsInfo} />
+          <FlatList
+            className='mt-5 mb-4'
+            data={execisesStore.cardsInfo}
+            renderItem={({ item }) => (
+              <ExerciseCard
+                exerciseItem={item}
+                onPress={() => {
+                  setSelectedExerciseId(item.id);
+                  setShowExerciseList(false);
+                }}
+              />
+            )}
+            keyExtractor={item => `exercise-card-${item.id}`}
+          />
           <Button
             title={'Continuar'}
             onPress={() => setShowExerciseList(false)}
@@ -85,7 +100,7 @@ const CreateGoalScreen = ({
                     placeholderTextColor={appTheme.colors.onPrimary}
                     onChangeText={handleChange('title')}
                     labelText='Título'
-                    iconName='account-outline'
+                    iconName='arm-flex'
                     error={errors.title}
                     password={false}
                     onFocus={() => {
@@ -98,7 +113,7 @@ const CreateGoalScreen = ({
                     placeholderTextColor={appTheme.colors.onPrimary}
                     onChangeText={handleChange('description')}
                     labelText='Descripción'
-                    iconName='account-outline'
+                    iconName='arrange-send-backward'
                     error={errors.description}
                     password={false}
                     onFocus={() => {
@@ -111,7 +126,7 @@ const CreateGoalScreen = ({
                     placeholderTextColor={appTheme.colors.onPrimary}
                     onChangeText={handleChange('targetValue')}
                     labelText='Objetivo'
-                    iconName='account-outline'
+                    iconName='vector-circle'
                     error={errors.targetValue}
                     password={false}
                     onFocus={() => {
@@ -124,7 +139,7 @@ const CreateGoalScreen = ({
                     placeholderTextColor={appTheme.colors.onPrimary}
                     onChangeText={handleChange('deadline')}
                     labelText='Deadline (opcional)'
-                    iconName='account-outline'
+                    iconName='flag-checkered'
                     error={errors.deadline}
                     password={false}
                   />

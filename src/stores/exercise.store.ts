@@ -1,5 +1,5 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
-import { Exercise } from '../utils/workout-types';
+import { CategoryType, Exercise, categoryMap } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
 import { ICard } from '../utils/custom-types';
@@ -15,7 +15,7 @@ export class ExerciseStore {
       (exercise): ICard => ({
         id: exercise._id,
         title: exercise.name,
-        content: exercise.category,
+        content: categoryMap.get(exercise.category) || '',
       }),
     );
   }
