@@ -3,12 +3,10 @@ import { Text, Divider } from 'react-native-paper';
 import { HomeScreenNavigationProp } from '../../navigation/navigation-props';
 import { useAppTheme } from '../../App';
 import WorkoutCardList from '../../components/workoutCardList';
-import { WorkoutStore } from '../../stores/workout.store';
 import MetricCard from '../../components/metricCard';
 import HomeHeader from '../../components/homeHeader.tsx';
-import { Calendar } from 'react-native-calendars';
-
-const workoutsStore = new WorkoutStore();
+import { workoutStore } from '../../stores/workout.store';
+import { useEffect } from 'react';
 
 const HomeScreen = ({
   navigation,
@@ -16,6 +14,9 @@ const HomeScreen = ({
   navigation: HomeScreenNavigationProp;
 }) => {
   const appTheme = useAppTheme();
+  useEffect(() => {
+    workoutStore.fetchWorkouts();
+  }, []);
 
   return (
     <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>
@@ -35,7 +36,7 @@ const HomeScreen = ({
         <Divider />
         <Text className='self-center text-xl my-4'>Mis entrenamientos</Text>
         <WorkoutCardList
-          workouts={workoutsStore.cardsInfo}
+          workouts={workoutStore.cardsInfo}
           navigation={navigation}
         />
       </View>

@@ -9,6 +9,7 @@ export type RootStackParamList = {
   Register: undefined;
   Interests: { name: string };
   Goals: undefined;
+  PasswordRecovery: undefined;
 };
 
 export type HomeScreenNavigationProp = StackNavigationProp<
@@ -42,4 +43,8 @@ export type InterestsScreenNavigationProp = StackNavigationProp<
 export type GoalsScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Goals'
+>;
+export type PasswordRecoveryScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'PasswordRecovery'
 >;

@@ -16,6 +16,7 @@ const config = {
     'exercise-store',
     'interests',
     'goals',
+    'password-recovery',
   ],
   transportOptions: {
     colors: {

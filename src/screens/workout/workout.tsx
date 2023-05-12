@@ -5,11 +5,11 @@ import ExerciseCardList from '../../components/exerciseCardList';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React, { useEffect } from 'react';
 import WorkoutRatingModal from '../../components/workoutRatingModal';
-import { WorkoutDetailStore } from '../../stores/workoutDetail.store';
 import { observer } from 'mobx-react';
 import Loader from '../../components/loader';
 import { flowResult } from 'mobx';
 import { IExerciseCard } from '../../components/exerciseCard/exerciseCard';
+import { workoutDetailStore } from '../../stores/workoutDetail.store';
 
 const exercises: IExerciseCard[] = [
   {
@@ -50,8 +50,6 @@ const rating = {
   ],
 };
 
-const workoutDetailStore = new WorkoutDetailStore();
-
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
   route: {
@@ -84,7 +82,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
         style={{ backgroundColor: appTheme.colors.background, flex: 0.2 }}>
         <Text
           className='text-4xl mt-10'
-          style={{ color: appTheme.colors.text }}>
+          style={{ color: appTheme.colors.onBackground }}>
           {workoutDetailStore.workoutHeader.name}
         </Text>
         <Text className='text-lg' style={{ color: appTheme.colors.outline }}>
@@ -94,7 +92,9 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
       <View
         className='flex-row items-center justify-between'
         style={{ backgroundColor: appTheme.colors.outlineVariant, flex: 0.08 }}>
-        <Text className='text-lg ml-5' style={{ color: appTheme.colors.text }}>
+        <Text
+          className='text-lg ml-5'
+          style={{ color: appTheme.colors.onBackground }}>
           {workoutDetailStore.workoutHeader.duration} min -{' '}
           {workoutDetailStore.workoutHeader.exerciseCount} ejercicios
         </Text>

@@ -30,7 +30,6 @@ export class WorkoutStore {
       cardsInfo: computed,
       fetchWorkouts: flow,
     });
-    this.fetchWorkouts();
   }
 
   *fetchWorkouts() {
@@ -51,3 +50,5 @@ export class WorkoutStore {
     }
   }
 }
+
+export const workoutStore = new WorkoutStore();
