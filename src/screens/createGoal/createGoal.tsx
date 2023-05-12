@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, SafeAreaView, ScrollView, View, FlatList } from 'react-native';
+import { Text, SafeAreaView, ScrollView, View } from 'react-native';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Loader from '../../components/loader';
@@ -9,7 +9,7 @@ import { Formik, FormikErrors } from 'formik';
 import { ExerciseStore } from '../../stores/exercise.store';
 import { GoalInputProps } from '../../utils/goal-types';
 import { useAppTheme } from '../../App';
-import ExerciseCard from '../../components/exerciseCard';
+import ItemCardList from '../../components/itemCardList/itemCardList';
 
 const execisesStore = new ExerciseStore();
 const logger = LoggerFactory('create-goal');
@@ -46,20 +46,14 @@ const CreateGoalScreen = ({
       {showExerciseList ? (
         <View>
           <Text className='self-center text-xl'>Elige un ejercicio</Text>
-          <FlatList
-            className='mt-5 mb-4'
-            data={execisesStore.cardsInfo}
-            renderItem={({ item }) => (
-              <ExerciseCard
-                exerciseItem={item}
-                onPress={() => {
-                  setSelectedExerciseId(item.id);
-                  setShowExerciseList(false);
-                }}
-              />
-            )}
-            keyExtractor={item => `exercise-card-${item.id}`}
+          <ItemCardList
+            items={execisesStore.cardsInfo}
+            onPress={item => {
+              setSelectedExerciseId(item.id);
+              setShowExerciseList(false);
+            }}
           />
+
           <Button
             title={'Continuar'}
             onPress={() => setShowExerciseList(false)}
