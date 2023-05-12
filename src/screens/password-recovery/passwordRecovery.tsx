@@ -6,6 +6,9 @@ import Button from '../../components/button';
 import { firebase } from '@react-native-firebase/auth';
 import { PasswordRecoveryScreenNavigationProp } from '../../navigation/navigation-props';
 import FiuFitLogo from '../../components/dumb/fiuFitLogo';
+import LoggerFactory from '../../utils/logger-utility';
+
+const logger = LoggerFactory('password-recovery');
 
 export type InputProps = {
   email: string;
@@ -17,7 +20,11 @@ const PasswordRecoveryScreen = ({
   navigation: PasswordRecoveryScreenNavigationProp;
 }) => {
   const handlePasswordRecovery = async (inputs: InputProps) => {
-    await firebase.auth().sendPasswordResetEmail(inputs.email);
+    try {
+      await firebase.auth().sendPasswordResetEmail(inputs.email);
+    } catch (err) {
+      logger.error('Error while trying to send password recovery email: ', err);
+    }
 
     navigation.push('Login');
   };
