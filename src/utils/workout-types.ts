@@ -1,3 +1,5 @@
+import { CardInfo } from './custom-types';
+
 export enum CategoryType {
   LEGS = 0,
   CHEST = 1,
@@ -51,10 +53,7 @@ export type Exercise = {
   category: CategoryType;
 };
 
-export type IExerciseCard = {
-  id: string;
-  title: string;
-  content: string;
+export type ExerciseCardInfo = CardInfo & {
   exercise: Exercise;
 };
 

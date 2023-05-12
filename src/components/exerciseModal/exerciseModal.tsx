@@ -1,15 +1,14 @@
 import { Image, ScrollView, Text, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { Modal, Portal } from 'react-native-paper';
-import { IExerciseCard } from '../../utils/workout-types';
+import { ExerciseCardInfo } from '../../utils/workout-types';
 
 type ModalProps = {
-  visible: boolean;
   onDismiss: () => void;
-  exerciseItem: IExerciseCard;
+  exerciseItem: ExerciseCardInfo;
 };
 
-const ExerciseModal = ({ visible, onDismiss, exerciseItem }: ModalProps) => {
+const ExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
   const appTheme = useAppTheme();
 
   const containerStyle = {
@@ -23,7 +22,7 @@ const ExerciseModal = ({ visible, onDismiss, exerciseItem }: ModalProps) => {
   return (
     <Portal>
       <Modal
-        visible={visible}
+        visible={true}
         onDismiss={onDismiss}
         contentContainerStyle={containerStyle}>
         <View className='items-center' style={{ flex: 1 }}>

@@ -1,32 +1,22 @@
 import { FlatList } from 'react-native';
 import ItemCard from '../itemCard';
 import { observer } from 'mobx-react';
-import {
-  HomeScreenNavigationProp,
-  RootStackParamList,
-  WorkoutsScreenNavigationProp,
-} from '../../navigation/navigation-props';
-import { ICard } from '../../utils/custom-types';
+import { CardInfo } from '../../utils/custom-types';
 
-interface ItemListProps {
-  items: ICard[];
-  navigation: WorkoutsScreenNavigationProp | HomeScreenNavigationProp;
-  screen: string;
+interface ItemListProps<T extends CardInfo> {
+  items: T[];
+  onPress: (item: T) => void;
 }
-const ItemCardList = ({ items, navigation, screen }: ItemListProps) => {
+const ItemCardList = <T extends CardInfo>({
+  items,
+  onPress,
+}: ItemListProps<T>) => {
   return (
     <>
       <FlatList
         data={items}
         renderItem={({ item }) => (
-          <ItemCard
-            item={item}
-            onPress={() =>
-              navigation.push(screen as keyof RootStackParamList, {
-                itemId: item.id,
-              })
-            }
-          />
+          <ItemCard item={item} onPress={() => onPress(item)} />
         )}
       />
     </>

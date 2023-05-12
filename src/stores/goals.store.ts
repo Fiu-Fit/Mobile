@@ -1,7 +1,7 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
 import { GoalsProps } from '../utils/goal-types';
 import LoggerFactory from '../utils/logger-utility';
-import { ICard } from '../utils/custom-types';
+import { CardInfo } from '../utils/custom-types';
 
 const logger = LoggerFactory('goal-store');
 
@@ -9,12 +9,14 @@ export class GoalStore {
   goals: GoalsProps[] = [];
   state = 'pending';
 
-  get cardsInfo(): ICard[] {
+  get cardsInfo(): CardInfo[] {
     return this.goals.map(
-      (goal): ICard => ({
+      (goal): CardInfo => ({
         id: goal.id,
         title: goal.title,
         content: goal.status,
+        imageUrl:
+          'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
       }),
     );
   }

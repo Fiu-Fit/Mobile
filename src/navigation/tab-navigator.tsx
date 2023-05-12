@@ -1,8 +1,6 @@
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from '../App';
 import HomeScreen from '../screens/home';
 import UserProfile from '../screens/userProfile';
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import GoalsScreen from '../screens/goals';

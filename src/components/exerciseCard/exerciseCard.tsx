@@ -2,10 +2,10 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card, Paragraph } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 import { IExerciseCard } from '../../utils/workout-types';
-import { ICard } from '../../utils/custom-types';
+import { CardInfo } from '../../utils/custom-types';
 
 interface ExerciseCardProps {
-  exerciseItem: IExerciseCard | ICard;
+  exerciseItem: IExerciseCard | CardInfo;
   onPress?: () => void;
 }
 

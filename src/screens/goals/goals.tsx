@@ -24,8 +24,11 @@ const GoalsScreen = ({
         <Divider />
         <ItemCardList
           items={goalsStore.cardsInfo}
-          navigation={navigation}
-          screen={'Goal'}
+          onPress={item =>
+            navigation.push('Goal', {
+              itemId: item.id,
+            })
+          }
         />
       </View>
       <AddButton onPress={() => navigation.push('CreateGoal')} />

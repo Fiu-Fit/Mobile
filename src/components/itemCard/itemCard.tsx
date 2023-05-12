@@ -3,10 +3,10 @@ import { Card, Paragraph } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 import { observer } from 'mobx-react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ICard } from '../../utils/custom-types';
+import { CardInfo } from '../../utils/custom-types';
 
-interface ItemCardProps {
-  item: ICard;
+interface ItemCardProps<T extends CardInfo> {
+  item: T;
   onPress?: () => void;
 }
 
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ItemCard = ({ item, onPress }: ItemCardProps) => {
+const ItemCard = <T extends CardInfo>({ item, onPress }: ItemCardProps<T>) => {
   const appTheme = useAppTheme();
 
   return (

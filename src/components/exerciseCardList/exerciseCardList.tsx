@@ -1,12 +1,12 @@
 import { FlatList, View } from 'react-native';
 import ExerciseCard from '../exerciseCard';
 import { IExerciseCard } from '../../utils/workout-types';
-import { ICard } from '../../utils/custom-types';
+import { CardInfo } from '../../utils/custom-types';
 import ExerciseModal from '../exerciseModal';
 import React from 'react';
 
 interface ExerciseCardListProps {
-  exercises: IExerciseCard[] | ICard[];
+  exercises: IExerciseCard[] | CardInfo[];
 }
 
 const ExerciseCardList = ({ exercises }: ExerciseCardListProps) => {

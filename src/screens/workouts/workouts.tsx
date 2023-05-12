@@ -19,8 +19,11 @@ const WorkoutsScreen = ({
       <NavBar navigation={navigation} />
       <ItemCardList
         items={workoutsStore.cardsInfo}
-        navigation={navigation}
-        screen={'Workout'}
+        onPress={item =>
+          navigation.push('Workout', {
+            itemId: item.id,
+          })
+        }
       />
     </View>
   );

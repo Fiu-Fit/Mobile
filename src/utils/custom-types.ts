@@ -21,8 +21,9 @@ export type ErrorCommentInputProps = {
   comment: string;
 };
 
-export interface ICard {
+export interface CardInfo {
   id: string;
   title: string;
   content: string;
+  imageUrl: string;
 }

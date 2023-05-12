@@ -1,16 +1,18 @@
 import { View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
-import ExerciseCardList from '../../components/exerciseCardList';
 import React, { useEffect } from 'react';
-import WorkoutRatingModal from '../../components/workoutRatingModal';
+//import WorkoutRatingModal from '../../components/workoutRatingModal';
 import { WorkoutDetailStore } from '../../stores/workoutDetail.store';
 import { observer } from 'mobx-react';
 import Loader from '../../components/loader';
 import { flowResult } from 'mobx';
 import WorkoutHeader from '../../components/workoutHeader';
-import WorkoutInfo from '../../components/workoutInfo';
+//import WorkoutInfo from '../../components/workoutInfo';
 import Button from '../../components/button';
+import ItemCardList from '../../components/itemCardList';
+import ExerciseModal from '../../components/exerciseModal';
+import { ExerciseCardInfo } from '../../utils/workout-types';
 
 export interface IWorkoutRating {
   globalRating: number;
@@ -39,9 +41,9 @@ type WorkoutScreenProps = {
 
 const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
   const appTheme = useAppTheme();
-  const [visible, setVisible] = React.useState(false);
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  const [selectedExercise, setSelectedExercise] = React.useState<
+    ExerciseCardInfo | undefined
+  >(undefined);
   const { itemId } = route.params;
 
   useEffect(() => {
@@ -59,25 +61,36 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
         name={workoutDetailStore.workoutHeader.name}
         description={workoutDetailStore.workoutHeader.description}
       />
-      <WorkoutInfo
+      {/* <WorkoutInfo
         duration={workoutDetailStore.workoutHeader.duration}
         exerciseCount={workoutDetailStore.workoutHeader.exerciseCount}
         globalRating={workoutDetailStore.workoutHeader.globalRating}
         onPressModal={showModal}
-      />
+      /> */}
       <View
         style={{
           backgroundColor: appTheme.colors.background,
           flex: 0.62,
         }}>
-        <WorkoutRatingModal
+        {/* <WorkoutRatingModal
           visible={visible}
           onDismiss={hideModal}
           workoutRatingItem={rating}
+        /> */}
+
+        <ItemCardList
+          items={workoutDetailStore.exerciseCards}
+          onPress={item => setSelectedExercise(item)}
         />
-        <ExerciseCardList exercises={workoutDetailStore.exerciseCards} />
+
+        {selectedExercise && (
+          <ExerciseModal
+            onDismiss={() => setSelectedExercise(undefined)}
+            exerciseItem={selectedExercise}
+          />
+        )}
       </View>
-      <View className='mb-10 mx-10' style={{ flex: 0.10 }}>
+      <View className='mb-10 mx-10' style={{ flex: 0.1 }}>
         <Button title='Completar' onPress={() => navigation.goBack()} />
       </View>
     </View>
