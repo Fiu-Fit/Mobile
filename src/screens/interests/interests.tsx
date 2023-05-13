@@ -24,8 +24,8 @@ type InterestsScreenProps = {
 
 const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
   const appTheme = useAppTheme();
-  //const { name } = route.params;
-  const name = 'Ian';
+  const { name } = route.params;
+  //const name = 'Ian';
   const [checkboxValues, setCheckboxValues] = React.useState<CheckboxValues>(
     {},
   );
@@ -42,7 +42,7 @@ const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
       key => checkboxValues[key],
     );
     logger.info('Selected interests: ', selectedInterests);
-    navigation.navigate('Goals');
+    navigation.navigate('HomeTab');
   };
 
   return (

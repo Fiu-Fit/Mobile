@@ -1,22 +1,21 @@
 import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
-import { HomeScreenNavigationProp } from '../../navigation/navigation-props';
 import { useAppTheme } from '../../App';
-import WorkoutCardList from '../../components/workoutCardList';
+import WorkoutCardList from '../../components/itemCardList';
 import MetricCard from '../../components/metricCard';
 import HomeHeader from '../../components/homeHeader.tsx';
+import React from 'react';
+import Button from '../../components/button';
 import { workoutStore } from '../../stores/workout.store';
 import { useEffect } from 'react';
+import { HomeNavigationProp } from '../../navigation/navigation-props';
 
-const HomeScreen = ({
-  navigation,
-}: {
-  navigation: HomeScreenNavigationProp;
-}) => {
+const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
   useEffect(() => {
     workoutStore.fetchWorkouts();
   }, []);
+  const [favWorkouts, setFavWorkouts] = React.useState(false);
 
   return (
     <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>
@@ -34,11 +33,27 @@ const HomeScreen = ({
       </View>
       <View style={{ flex: 0.6, backgroundColor: appTheme.colors.background }}>
         <Divider />
-        <Text className='self-center text-xl my-4'>Mis entrenamientos</Text>
-        <WorkoutCardList
-          workouts={workoutStore.cardsInfo}
-          navigation={navigation}
-        />
+        <Text className='self-center text-xl my-10'>
+          Entrenamientos favoritos
+        </Text>
+        {favWorkouts ? (
+          <WorkoutCardList
+            workouts={workoutStore.cardsInfo}
+            navigation={navigation}
+          />
+        ) : (
+          <View className='items-center mx-10'>
+            <Text
+              className='text-l mt-10'
+              style={{ color: appTheme.colors.onSurface }}>
+              Aún no tienes entrenamientos favoritos
+            </Text>
+            <Button
+              title='Empezar a buscar'
+              onPress={() => navigation.navigate('Workouts')}
+            />
+          </View>
+        )}
       </View>
     </View>
   );

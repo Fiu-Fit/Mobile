@@ -1,3 +1,5 @@
+import { CardInfo } from './custom-types';
+
 export enum CategoryType {
   LEGS = 0,
   CHEST = 1,
@@ -12,6 +14,21 @@ export enum CategoryType {
   STRENGTH = 10,
   UNRECOGNIZED = -1,
 }
+
+export const categoryMap = new Map<number, string>([
+  [CategoryType.LEGS, 'Legs'],
+  [CategoryType.CHEST, 'Chest'],
+  [CategoryType.BACK, 'Back'],
+  [CategoryType.SHOULDERS, 'Shoulders'],
+  [CategoryType.ARMS, 'Arms'],
+  [CategoryType.CORE, 'Core'],
+  [CategoryType.CARDIO, 'Cardio'],
+  [CategoryType.FULLBODY, 'Full Body'],
+  [CategoryType.FREEWEIGHT, 'Free Weight'],
+  [CategoryType.STRETCHING, 'Stretching'],
+  [CategoryType.STRENGTH, 'Strength'],
+  [CategoryType.UNRECOGNIZED, 'Unrecognized'],
+]);
 
 export enum Unit {
   SECONDS = 0,
@@ -30,9 +47,19 @@ export type WorkoutExercise = {
 };
 
 export type Exercise = {
+  _id: string;
   name: string;
   description: string;
   category: CategoryType;
+};
+
+export type WorkoutRating = {
+  globalRating: number;
+  comments: string[];
+};
+
+export type ExerciseCardInfo = CardInfo & {
+  exercise: Exercise;
 };
 
 export type WorkoutProps = {
@@ -42,24 +69,17 @@ export type WorkoutProps = {
   duration: number;
   difficulty: number;
   category: CategoryType;
-  rating: number;
+  rating: WorkoutRating;
   exercises: WorkoutExercise[];
   athleteIds: number[];
   authorId: number;
   updatedAt?: Date;
 };
 
-export type ExerciseInfo = {
-  exerciseId: string;
-  name: string;
-  description: string;
-  category: CategoryType;
-};
-
 export type IWorkoutHeader = {
   name: string;
   description: string;
   duration: number;
-  globalRating: number;
+  rating: WorkoutRating;
   exerciseCount: number;
 };

@@ -1,50 +1,87 @@
 import { StackNavigationProp } from '@react-navigation/stack';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 
-export type RootStackParamList = {
-  Home: undefined;
-  Workouts: undefined;
-  Workout: { workoutId: string };
-  Profile: undefined;
-  Login: undefined;
-  Register: undefined;
-  Interests: { name: string };
-  Goals: undefined;
-  PasswordRecovery: undefined;
+export type AuthStackParamList = {
+  LoginScreen: undefined;
+  RegisterScreen: undefined;
+  InterestsScreen: { name: string };
+  PasswordRecoveryScreen: undefined;
+  HomeTab: undefined;
 };
 
-export type HomeScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Home'
->;
+export type WorkoutStackParamList = {
+  WorkoutScreen: { itemId: string };
+  WorkoutsScreen: undefined;
+};
+
+export type GoalStackParamList = {
+  CreateGoalScreen: undefined;
+  GoalScreen: { itemId: string };
+  GoalsScreen: undefined;
+};
+
+export type TabParamList = {
+  Workouts: undefined;
+  Goals: undefined;
+  Profile: undefined;
+  Home: undefined;
+};
+
 export type LoginScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Login'
+  AuthStackParamList,
+  'LoginScreen'
 >;
+
+export type PasswordRecoveryScreenNavigationProp = StackNavigationProp<
+  AuthStackParamList,
+  'PasswordRecoveryScreen'
+>;
+
 export type RegisterScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Register'
+  AuthStackParamList,
+  'RegisterScreen'
 >;
+
+export type InterestsScreenNavigationProp = StackNavigationProp<
+  AuthStackParamList,
+  'InterestsScreen'
+>;
+
+export type WorkoutScreenNavigationProp = StackNavigationProp<
+  WorkoutStackParamList,
+  'WorkoutScreen'
+>;
+
 export type WorkoutsScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
+  WorkoutStackParamList,
+  'WorkoutsScreen'
+>;
+
+export type CreateGoalScreenNavigationProp = StackNavigationProp<
+  GoalStackParamList,
+  'CreateGoalScreen'
+>;
+export type GoalScreenNavigationProp = StackNavigationProp<
+  GoalStackParamList,
+  'GoalScreen'
+>;
+
+export type WorkoutsNavigationProp = BottomTabNavigationProp<
+  TabParamList,
   'Workouts'
 >;
-export type WorkoutScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Workout'
->;
-export type ProfileScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
+
+export type ProfileNavigationProp = BottomTabNavigationProp<
+  TabParamList,
   'Profile'
 >;
-export type InterestsScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Interests'
->;
-export type GoalsScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
+
+export type GoalsNavigationProp = BottomTabNavigationProp<
+  TabParamList,
   'Goals'
 >;
-export type PasswordRecoveryScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'PasswordRecovery'
+
+export type HomeNavigationProp = BottomTabNavigationProp<
+  TabParamList,
+  'HomeTab'
 >;

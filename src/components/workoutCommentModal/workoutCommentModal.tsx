@@ -77,7 +77,7 @@ const WorkoutCommentModal = ({
                   <Input
                     value={values.comment}
                     placeholder='Ingresa un comentario'
-                    placeholderTextColor={appTheme.colors.quaternaryContainer}
+                    placeholderTextColor={appTheme.colors.background}
                     onChangeText={handleChange('comment')}
                     multiline={true}
                     labelText='Comentario'

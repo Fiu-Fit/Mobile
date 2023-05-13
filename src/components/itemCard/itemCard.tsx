@@ -2,22 +2,14 @@ import { Image, StyleSheet, View } from 'react-native';
 import { Card, Paragraph } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 import { observer } from 'mobx-react';
-import {
-  HomeScreenNavigationProp,
-  WorkoutsScreenNavigationProp,
-} from '../../navigation/navigation-props';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { CardInfo } from '../../utils/custom-types';
 
-export interface IWorkoutCard {
-  id: string;
-  title: string;
-  content: string;
+interface ItemCardProps<T extends CardInfo> {
+  item: T;
+  onPress?: () => void;
 }
 
-interface WorkoutCardProps {
-  workoutItem: IWorkoutCard;
-  navigation: WorkoutsScreenNavigationProp | HomeScreenNavigationProp;
-}
 const styles = StyleSheet.create({
   tinyLogo: {
     width: 50,
@@ -34,14 +26,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const WorkoutCard = ({ workoutItem, navigation }: WorkoutCardProps) => {
+const ItemCard = <T extends CardInfo>({ item, onPress }: ItemCardProps<T>) => {
   const appTheme = useAppTheme();
 
   return (
-    <TouchableOpacity
-      onPress={() => navigation.push('Workout', { workoutId: workoutItem.id })}>
+    <TouchableOpacity onPress={onPress}>
       <Card
-        key={`workout-card-${workoutItem.id}`}
         className='my-2 mx-5'
         style={[
           styles.cardPadding,
@@ -61,10 +51,10 @@ const WorkoutCard = ({ workoutItem, navigation }: WorkoutCardProps) => {
             <Paragraph
               style={{ color: appTheme.colors.onBackground }}
               className='text-2xl'>
-              {workoutItem.title}
+              {item.title}
             </Paragraph>
-            <Paragraph style={{ color: appTheme.colors.onBackground }}>
-              {workoutItem.content}
+            <Paragraph style={{ color: appTheme.colors.onSurfaceVariant }}>
+              {item.content}
             </Paragraph>
           </View>
         </Card.Content>
@@ -73,4 +63,4 @@ const WorkoutCard = ({ workoutItem, navigation }: WorkoutCardProps) => {
   );
 };
 
-export default observer(WorkoutCard);
+export default observer(ItemCard);

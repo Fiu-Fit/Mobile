@@ -1,23 +1,22 @@
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from '../App';
 import HomeScreen from '../screens/home';
 import UserProfile from '../screens/userProfile';
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import GoalsScreen from '../screens/goals';
-import WorkoutsScreen from '../screens/workouts';
+import WorkoutStack from './workout-navigator';
+import GoalStack from './goal-navigator';
 
 const Tab = createBottomTabNavigator();
 
+const iconMap = new Map([
+  ['Home', 'home'],
+  ['Profile', 'account'],
+  ['Goals', 'trophy'],
+  ['Workouts', 'dumbbell'],
+]);
+
 const TabNavigator = () => {
   const appTheme = useAppTheme();
-  const iconMap = new Map([
-    ['Home', 'home'],
-    ['Profile', 'account'],
-    ['Goals', 'trophy'],
-    ['Workouts', 'dumbbell'],
-  ]);
 
   return (
     <Tab.Navigator
@@ -38,8 +37,8 @@ const TabNavigator = () => {
       })}>
       <Tab.Screen name='Home' component={HomeScreen} />
       <Tab.Screen name='Profile' component={UserProfile} />
-      <Tab.Screen name='Goals' component={GoalsScreen} />
-      <Tab.Screen name='Workouts' component={WorkoutsScreen} />
+      <Tab.Screen name='Goals' component={GoalStack} />
+      <Tab.Screen name='Workouts' component={WorkoutStack} />
     </Tab.Navigator>
   );
 };

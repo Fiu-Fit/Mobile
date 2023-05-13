@@ -1,48 +1,44 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
-import { ExerciseInfo } from '../utils/workout-types';
+import { Exercise, categoryMap } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
+import { CardInfo } from '../utils/custom-types';
 
-const logger = LoggerFactory('workout-store');
+const logger = LoggerFactory('exercise-store');
 
 export class ExerciseStore {
-  exercise: ExerciseInfo = {
-    exerciseId: '',
-    name: '',
-    description: '',
-    category: -1,
-  };
+  exercises: Exercise[] = [];
   state = 'pending';
 
-  get exerciseInfo(): ExerciseInfo {
-    return this.exercise;
+  get cardsInfo(): CardInfo[] {
+    return this.exercises.map(
+      (exercise): CardInfo => ({
+        id: exercise._id,
+        title: exercise.name,
+        content: categoryMap.get(exercise.category) || '',
+        imageUrl:
+          'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
+      }),
+    );
   }
 
-  constructor(exerciseId: string) {
+  constructor() {
     makeObservable(this, {
-      exercise: observable,
-      exerciseInfo: computed,
-      fetchExercise: flow,
+      exercises: observable,
+      cardsInfo: computed,
+      fetchExercises: flow,
     });
-    this.fetchExercise(exerciseId);
+    this.fetchExercises();
   }
 
-  *fetchExercise(exerciseId: string) {
-    this.exercise = {
-      exerciseId: '',
-      name: '',
-      description: '',
-      category: -1,
-    };
+  *fetchExercises() {
     this.state = 'pending';
     try {
-      logger.debug('Getting exercise...');
-      const { data } = yield axiosClient.get<ExerciseInfo>(
-        `/exercises/${exerciseId}`,
-      );
-      logger.debug('Got data: ', data);
+      logger.debug('Getting exercises...');
+      const { data } = yield axiosClient.get<Exercise[]>('/exercises');
+      logger.debug('Got data from goals: ', data);
       runInAction(() => {
-        this.exercise = data;
+        this.exercises = data;
         this.state = 'done';
       });
     } catch (e) {

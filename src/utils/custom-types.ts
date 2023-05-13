@@ -20,3 +20,10 @@ export type CommentInputProps = {
 export type ErrorCommentInputProps = {
   comment: string;
 };
+
+export interface CardInfo {
+  id: string;
+  title: string;
+  content: string;
+  imageUrl: string;
+}

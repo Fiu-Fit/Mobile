@@ -26,7 +26,7 @@ const PasswordRecoveryScreen = ({
       logger.error('Error while trying to send password recovery email: ', err);
     }
 
-    navigation.push('Login');
+    navigation.push('LoginScreen');
   };
 
   return (
@@ -65,7 +65,7 @@ const PasswordRecoveryScreen = ({
               <Button title='Enviar email' onPress={handleSubmit} />
               <Button
                 title='Volver a login'
-                onPress={() => navigation.push('Login')}
+                onPress={() => navigation.push('LoginScreen')}
               />
             </>
           )}
