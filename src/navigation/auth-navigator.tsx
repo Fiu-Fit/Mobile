@@ -9,14 +9,17 @@ import TabNavigator from './tab-navigator';
 import CreateGoalScreen from '../screens/createGoal';
 import GoalScreen from '../screens/goal';
 import WorkoutsScreen from '../screens/workouts';
+import PasswordRecovery from '../screens/password-recovery';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const AuthStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name='Interests' component={InterestsScreen} />
       <Stack.Screen name='Login' component={LoginScreen} />
+      <Stack.Screen name='Home' component={TabNavigator} />
+      <Stack.Screen name='Interests' component={InterestsScreen} />
+      <Stack.Screen name='PasswordRecovery' component={PasswordRecovery} />
       <Stack.Screen name='Goals' component={GoalsScreen} />
       <Stack.Screen name='Register' component={RegisterScreen} />
       <Stack.Screen name='Tab' component={TabNavigator} />

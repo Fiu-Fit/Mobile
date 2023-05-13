@@ -11,6 +11,7 @@ export type RootStackParamList = {
   Goals: undefined;
   CreateGoal: undefined;
   Goal: { itemId: string };
+  PasswordRecovery: undefined;
 };
 
 export type HomeScreenNavigationProp = StackNavigationProp<
@@ -52,4 +53,8 @@ export type CreateGoalScreenNavigationProp = StackNavigationProp<
 export type GoalScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Goal'
+>;
+export type PasswordRecoveryScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'PasswordRecovery'
 >;

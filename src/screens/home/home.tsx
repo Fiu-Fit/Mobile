@@ -1,15 +1,14 @@
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { HomeScreenNavigationProp } from '../../navigation/navigation-props';
 import { useAppTheme } from '../../App';
 import WorkoutCardList from '../../components/itemCardList';
-import { WorkoutStore } from '../../stores/workout.store';
 import MetricCard from '../../components/metricCard';
 import HomeHeader from '../../components/homeHeader.tsx';
 import React from 'react';
 import Button from '../../components/button';
-
-const workoutsStore = new WorkoutStore();
+import { workoutStore } from '../../stores/workout.store';
+import { useEffect } from 'react';
 
 const HomeScreen = ({
   navigation,
@@ -17,6 +16,9 @@ const HomeScreen = ({
   navigation: HomeScreenNavigationProp;
 }) => {
   const appTheme = useAppTheme();
+  useEffect(() => {
+    workoutStore.fetchWorkouts();
+  }, []);
   const [favWorkouts, setFavWorkouts] = React.useState(false);
 
   return (
@@ -40,7 +42,7 @@ const HomeScreen = ({
         </Text>
         {favWorkouts ? (
           <WorkoutCardList
-            workouts={workoutsStore.cardsInfo}
+            workouts={workoutStore.cardsInfo}
             navigation={navigation}
           />
         ) : (

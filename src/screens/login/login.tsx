@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import {
-  Text,
-  SafeAreaView,
-  View,
   Image,
+  SafeAreaView,
+  Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Input from '../../components/input';
@@ -20,6 +20,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { Role } from '../../constants/roles';
 import { DateTime } from 'luxon';
+import FiuFitLogo from '../../components/dumb/fiuFitLogo';
 
 const logger = LoggerFactory('login');
 
@@ -48,7 +49,7 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      navigation.push('Workouts');
+      navigation.push('Tab');
     } catch (error) {
       logger.error('Error while logging in: ', error);
     }
@@ -111,12 +112,7 @@ const LoginScreen = ({
   return (
     <SafeAreaView className='flex-1 bg-black px-8 w-full'>
       {loading && <Loader />}
-      <View className='my-20 justify-center align-center'>
-        <Image
-          className='scale-75 self-center'
-          source={require('../../imgs/fiufit.png')}
-        />
-      </View>
+      <FiuFitLogo />
       <View className='flex-1 py-5 w-full'>
         <Formik
           initialValues={{
@@ -193,6 +189,10 @@ const LoginScreen = ({
           className='font-bold text-center'>
           Don't have an account?
         </Text>
+        <Button
+          onPress={() => navigation.push('PasswordRecovery')}
+          title='Olvidaste tu contraseña?'
+        />
       </View>
     </SafeAreaView>
   );

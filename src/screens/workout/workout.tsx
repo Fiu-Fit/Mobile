@@ -3,7 +3,6 @@ import { useAppTheme } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import React, { useEffect } from 'react';
 //import WorkoutRatingModal from '../../components/workoutRatingModal';
-import { WorkoutDetailStore } from '../../stores/workoutDetail.store';
 import { observer } from 'mobx-react';
 import Loader from '../../components/loader';
 import { flowResult } from 'mobx';
@@ -13,6 +12,7 @@ import Button from '../../components/button';
 import ItemCardList from '../../components/itemCardList';
 import ExerciseModal from '../../components/exerciseModal';
 import { ExerciseCardInfo } from '../../utils/workout-types';
+import { workoutDetailStore } from '../../stores/workoutDetail.store';
 
 export interface IWorkoutRating {
   globalRating: number;
@@ -27,8 +27,6 @@ const rating = {
     'Qué gran entrenamiento. Los ejercicios fueron divertidos y me mantuvieron comprometido durante toda la sesión. Me encantó la combinación de fuerza y cardio. ¡Me siento enérgico y revitalizado!',
   ],
 };
-
-const workoutDetailStore = new WorkoutDetailStore();
 
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;

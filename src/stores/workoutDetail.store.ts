@@ -92,3 +92,5 @@ export class WorkoutDetailStore {
     }
   }
 }
+
+export const workoutDetailStore = new WorkoutDetailStore();
