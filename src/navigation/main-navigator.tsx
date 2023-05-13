@@ -15,6 +15,18 @@ const iconMap = new Map([
   ['Workouts', 'dumbbell'],
 ]);
 
+const tabBarIcon = ({
+  color,
+  size,
+  name,
+}: {
+  color: string;
+  size: number;
+  name?: string;
+}) => {
+  return <MaterialCommunityIcons name={name ?? ''} size={size} color={color} />;
+};
+
 const TabNavigator = () => {
   const appTheme = useAppTheme();
 
@@ -23,15 +35,8 @@ const TabNavigator = () => {
       initialRouteName='Home'
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarIcon: ({ color, size }) => {
-          return (
-            <MaterialCommunityIcons
-              name={iconMap.get(route.name)}
-              size={size}
-              color={color}
-            />
-          );
-        },
+        tabBarIcon: ({ color, size }) =>
+          tabBarIcon({ color, size, name: iconMap.get(route.name) }),
         tabBarActiveTintColor: appTheme.colors.onSurface,
         tabBarInactiveTintColor: appTheme.colors.secondary,
       })}>
