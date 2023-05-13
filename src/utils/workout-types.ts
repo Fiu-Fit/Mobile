@@ -53,6 +53,11 @@ export type Exercise = {
   category: CategoryType;
 };
 
+export type WorkoutRating = {
+  globalRating: number;
+  comments: string[];
+};
+
 export type ExerciseCardInfo = CardInfo & {
   exercise: Exercise;
 };
@@ -64,7 +69,7 @@ export type WorkoutProps = {
   duration: number;
   difficulty: number;
   category: CategoryType;
-  rating: number;
+  rating: WorkoutRating;
   exercises: WorkoutExercise[];
   athleteIds: number[];
   authorId: number;
@@ -75,6 +80,6 @@ export type IWorkoutHeader = {
   name: string;
   description: string;
   duration: number;
-  globalRating: number;
+  rating: WorkoutRating;
   exerciseCount: number;
 };

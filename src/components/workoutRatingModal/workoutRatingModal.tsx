@@ -1,7 +1,6 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { Modal, Portal, Divider } from 'react-native-paper';
-import { IWorkoutRating } from '../../screens/workout/workout';
 import { AirbnbRating } from 'react-native-ratings';
 import { FlatList } from 'react-native';
 import WorkoutCommentCard from '../workoutCommentCard';
@@ -9,17 +8,16 @@ import React from 'react';
 import WorkoutCommentModal from '../workoutCommentModal';
 import LoggerFactory from '../../utils/logger-utility';
 import Loader from '../loader';
+import { WorkoutRating } from '../../utils/workout-types';
 
 const logger = LoggerFactory('workoutRating');
 
 type WorkoutRatingModalProps = {
-  visible: boolean;
   onDismiss: () => void;
-  workoutRatingItem: IWorkoutRating;
+  workoutRatingItem: WorkoutRating;
 };
 
 const WorkoutRatingModal = ({
-  visible,
   onDismiss,
   workoutRatingItem,
 }: WorkoutRatingModalProps) => {
@@ -51,12 +49,14 @@ const WorkoutRatingModal = ({
   return (
     <Portal>
       <Modal
-        visible={visible}
+        visible={true}
         onDismiss={onDismiss}
         contentContainerStyle={containerStyle}>
         <View className='items-center' style={{ flex: 0.4 }}>
           {loading && <Loader />}
-          <Text className='my-5' style={{ color: appTheme.colors.text }}>
+          <Text
+            className='my-5'
+            style={{ color: appTheme.colors.onBackground }}>
             Puntúa este entrenamiento
           </Text>
           <AirbnbRating
@@ -70,7 +70,9 @@ const WorkoutRatingModal = ({
           </Text>
         </View>
         <View className='items-center mt-10' style={{ flex: 0.6 }}>
-          <Text className='text-xl' style={{ color: appTheme.colors.text }}>
+          <Text
+            className='text-xl'
+            style={{ color: appTheme.colors.onBackground }}>
             Comentarios
           </Text>
           <FlatList
@@ -82,7 +84,9 @@ const WorkoutRatingModal = ({
             )}
           />
           <TouchableOpacity className='mb-4' onPress={showCommentModal}>
-            <Text className='text-xs' style={{ color: appTheme.colors.text }}>
+            <Text
+              className='text-xs'
+              style={{ color: appTheme.colors.onBackground }}>
               Agregar
             </Text>
             <WorkoutCommentModal

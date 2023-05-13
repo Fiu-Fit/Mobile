@@ -30,7 +30,7 @@ const WorkoutInfo = ({
         <TouchableOpacity
           className='flex-row justify-center'
           onPress={onPressModal}>
-          <Text className='text-xl'>4 {globalRating}</Text>
+          <Text className='text-xl'>{globalRating}</Text>
           <Icon
             style={{
               fontSize: 30,

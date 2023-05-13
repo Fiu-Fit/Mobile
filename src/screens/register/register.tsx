@@ -36,7 +36,7 @@ const RegisterScreen = ({
       const response = await axiosClient.post('/auth/register', inputs);
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      navigation.push('Interests', { name: inputs.firstName });
+      navigation.push('InterestsScreen', { name: inputs.firstName });
     } catch (error) {
       logger.error(error as string);
     }
@@ -141,7 +141,7 @@ const RegisterScreen = ({
             )}
           </Formik>
           <Text
-            onPress={() => navigation.push('Login')}
+            onPress={() => navigation.push('LoginScreen')}
             className='font-bold text-xs text-white/70 text-center'>
             Already have account?
           </Text>

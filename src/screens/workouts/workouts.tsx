@@ -23,7 +23,7 @@ const WorkoutsScreen = ({
       <ItemCardList
         items={workoutStore.cardsInfo}
         onPress={item =>
-          navigation.push('Workout', {
+          navigation.push('WorkoutScreen', {
             itemId: item.id,
           })
         }

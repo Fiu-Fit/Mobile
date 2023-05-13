@@ -18,7 +18,7 @@ const defaultWorkout = {
   duration: 0,
   difficulty: 0,
   category: CategoryType.LEGS,
-  rating: 0,
+  rating: { globalRating: 0, comments: [] },
   exercises: [],
   athleteIds: [],
   authorId: 0,
@@ -30,21 +30,23 @@ export class WorkoutDetailStore {
   state = 'pending';
 
   get workoutHeader(): IWorkoutHeader {
-    const {
-      name,
-      description,
-      duration,
-      rating: globalRating,
-      exercises,
-    } = this.workout;
+    const { name, description, duration, exercises } = this.workout;
     return {
       name,
       description,
       duration,
-      globalRating,
+      rating: {
+        globalRating: 4,
+        comments: [
+          '¡Wow! Realmente disfruté este entrenamiento. Los ejercicios fueron desafiantes y me encantó cómo trabajaron diferentes grupos musculares. ¡Definitivamente quiero hacerlo de nuevo!',
+          '¡Increíble sesión de entrenamiento! Los ejercicios fueron variados y efectivos. Me encantó cómo pude sentir que mi cuerpo se fortalecía con cada movimiento. ¡Altamente recomendado!',
+          'Qué gran entrenamiento. Los ejercicios fueron divertidos y me mantuvieron comprometido durante toda la sesión. Me encantó la combinación de fuerza y cardio. ¡Me siento enérgico y revitalizado!',
+        ],
+      },
       exerciseCount: exercises.length,
     };
   }
+
   get exerciseCards(): ExerciseCardInfo[] {
     return this.workout.exercises.map((workoutExercise): ExerciseCardInfo => {
       return {

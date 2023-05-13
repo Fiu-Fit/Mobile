@@ -25,13 +25,13 @@ const GoalsScreen = ({
         <ItemCardList
           items={goalsStore.cardsInfo}
           onPress={item =>
-            navigation.push('Goal', {
+            navigation.push('GoalScreen', {
               itemId: item.id,
             })
           }
         />
       </View>
-      <AddButton onPress={() => navigation.push('CreateGoal')} />
+      <AddButton onPress={() => navigation.push('CreateGoalScreen')} />
     </View>
   );
 };

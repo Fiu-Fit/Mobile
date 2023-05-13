@@ -13,10 +13,14 @@ const WorkoutHeader = ({ name, description }: WorkoutHeaderProps) => {
     <View
       className='items-center justify-center'
       style={{ backgroundColor: appTheme.colors.background, flex: 0.2 }}>
-      <Text className='text-4xl mt-10' style={{ color: appTheme.colors.onBackground }}>
+      <Text
+        className='text-4xl mt-10'
+        style={{ color: appTheme.colors.onBackground }}>
         {name}
       </Text>
-      <Text className='text-lg' style={{ color: appTheme.colors.onSurfaceVariant }}>
+      <Text
+        className='text-lg'
+        style={{ color: appTheme.colors.onSurfaceVariant }}>
         {description}
       </Text>
     </View>

@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
-import { HomeScreenNavigationProp } from '../../navigation/navigation-props';
 import { useAppTheme } from '../../App';
 import WorkoutCardList from '../../components/itemCardList';
 import MetricCard from '../../components/metricCard';
@@ -9,12 +8,9 @@ import React from 'react';
 import Button from '../../components/button';
 import { workoutStore } from '../../stores/workout.store';
 import { useEffect } from 'react';
+import { HomeNavigationProp } from '../../navigation/navigation-props';
 
-const HomeScreen = ({
-  navigation,
-}: {
-  navigation: HomeScreenNavigationProp;
-}) => {
+const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
   useEffect(() => {
     workoutStore.fetchWorkouts();
@@ -54,7 +50,7 @@ const HomeScreen = ({
             </Text>
             <Button
               title='Empezar a buscar'
-              onPress={() => navigation.push('Workouts')}
+              onPress={() => navigation.navigate('Workouts')}
             />
           </View>
         )}

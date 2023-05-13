@@ -1,5 +1,6 @@
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import AuthStack from './navigation/auth-navigator';
+import TabNavigator from './navigation/main-navigator';
 import {
   Provider as PaperProvider,
   MD3DarkTheme,

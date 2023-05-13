@@ -67,7 +67,7 @@ const UserProfile = ({
 
   const handleSignOut = async () => {
     await auth().signOut();
-    navigation.push('Login');
+    navigation.push('LoginScreen');
   };
 
   if (isEditing) {

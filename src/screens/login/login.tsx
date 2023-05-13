@@ -49,7 +49,7 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      navigation.push('Tab');
+      navigation.push('HomeTab');
     } catch (error) {
       logger.error('Error while logging in: ', error);
     }
@@ -103,7 +103,7 @@ const LoginScreen = ({
 
       await createNewUser(user);
 
-      navigation.push('Home');
+      navigation.push('HomeTab');
     } catch (error) {
       logger.error('Error while logging in with google: ', error);
     }
@@ -185,12 +185,12 @@ const LoginScreen = ({
         </TouchableOpacity>
 
         <Text
-          onPress={() => navigation.push('Register')}
+          onPress={() => navigation.push('RegisterScreen')}
           className='font-bold text-center'>
           Don't have an account?
         </Text>
         <Button
-          onPress={() => navigation.push('PasswordRecovery')}
+          onPress={() => navigation.push('PasswordRecoveryScreen')}
           title='Olvidaste tu contraseña?'
         />
       </View>
