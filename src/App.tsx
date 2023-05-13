@@ -1,6 +1,5 @@
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import AuthStack from './navigation/auth-navigator';
-import TabNavigator from './navigation/main-navigator';
 import {
   Provider as PaperProvider,
   MD3DarkTheme,
@@ -9,6 +8,8 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
+import { createContext, useContext } from 'react';
+import { Role, User } from './utils/custom-types';
 
 if (
   !new (class {
@@ -113,6 +114,14 @@ export type AppTheme = typeof customLightTheme;
 
 export const useAppTheme = () => useTheme<AppTheme>();
 
+const UserContext = createContext<User>({
+  email: '',
+  name: '',
+  surname: '',
+  role: Role.Athlete,
+});
+export const useUserContext = () => useContext(UserContext);
+
 const App = () => {
   const colorScheme = useColorScheme();
   const { DarkTheme } = adaptNavigationTheme({
@@ -128,7 +137,15 @@ const App = () => {
   return (
     <PaperProvider theme={paperTheme}>
       <NavigationContainer theme={rNavTheme}>
-        <AuthStack />
+        <UserContext.Provider
+          value={{
+            email: '',
+            name: '',
+            surname: '',
+            role: Role.Athlete,
+          }}>
+          <AuthStack />
+        </UserContext.Provider>
       </NavigationContainer>
     </PaperProvider>
   );
