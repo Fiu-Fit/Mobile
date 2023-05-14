@@ -36,7 +36,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
         <Text className='self-center text-xl my-10'>
           Entrenamientos favoritos
         </Text>
-        {true ? (
+        {workoutStore.workoutCount > 0 ? (
           <ItemCardList
             items={workoutStore.cardsInfo}
             onPress={item =>
