@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, KeyboardTypeOptions } from 'react-native';
 import COLORS from '../../constants/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -14,6 +14,7 @@ type InputProps = {
   iconName: string;
   error: string | undefined;
   password: boolean;
+  keyboardType?: KeyboardTypeOptions;
   onFocus?: () => void;
 };
 
@@ -22,6 +23,7 @@ const Input = ({
   iconName,
   error,
   password,
+  keyboardType,
   onFocus = () => {},
   ...props
 }: InputProps) => {
@@ -52,6 +54,7 @@ const Input = ({
           name={iconName}
         />
         <TextInput
+          keyboardType={keyboardType ?? 'default'}
           secureTextEntry={hidePassword}
           autoCorrect={false}
           onFocus={() => {
