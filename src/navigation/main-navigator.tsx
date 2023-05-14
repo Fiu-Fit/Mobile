@@ -9,33 +9,38 @@ import GoalStack from './goal-navigator';
 const Tab = createBottomTabNavigator();
 
 const iconMap = new Map([
-  ['Home', 'home'],
+  ['HomeTab', 'home'],
   ['Profile', 'account'],
   ['Goals', 'trophy'],
   ['Workouts', 'dumbbell'],
 ]);
+
+const tabBarIcon = ({
+  color,
+  size,
+  name,
+}: {
+  color: string;
+  size: number;
+  name?: string;
+}) => {
+  return <MaterialCommunityIcons name={name ?? ''} size={size} color={color} />;
+};
 
 const TabNavigator = () => {
   const appTheme = useAppTheme();
 
   return (
     <Tab.Navigator
-      initialRouteName='Home'
+      initialRouteName='HomeTab'
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarIcon: ({ color, size }) => {
-          return (
-            <MaterialCommunityIcons
-              name={iconMap.get(route.name)}
-              size={size}
-              color={color}
-            />
-          );
-        },
+        tabBarIcon: ({ color, size }) =>
+          tabBarIcon({ color, size, name: iconMap.get(route.name) }),
         tabBarActiveTintColor: appTheme.colors.onSurface,
         tabBarInactiveTintColor: appTheme.colors.secondary,
       })}>
-      <Tab.Screen name='Home' component={HomeScreen} />
+      <Tab.Screen name='HomeTab' component={HomeScreen} />
       <Tab.Screen name='Profile' component={UserProfile} />
       <Tab.Screen name='Goals' component={GoalStack} />
       <Tab.Screen name='Workouts' component={WorkoutStack} />

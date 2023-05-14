@@ -37,8 +37,8 @@ const RegisterScreen = ({
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
       navigation.push('InterestsScreen', { name: inputs.firstName });
-    } catch (error) {
-      logger.error(error as string);
+    } catch (error: any) {
+      logger.error('Error while registering user: ', error.response.data);
     }
     setLoading(false);
   };
@@ -55,6 +55,7 @@ const RegisterScreen = ({
             initialValues={{
               firstName: '',
               lastName: '',
+              bodyWeight: 0,
               email: '',
               password: '',
               role: 'Athlete',
@@ -66,6 +67,9 @@ const RegisterScreen = ({
               }
               if (!values.lastName) {
                 errors.lastName = 'Please input lastName';
+              }
+              if (!values.bodyWeight) {
+                errors.bodyWeight = 'Please input your body weight';
               }
               if (!values.email) {
                 errors.email = 'Please input email';
@@ -111,6 +115,20 @@ const RegisterScreen = ({
                   }}
                 />
                 <Input
+                  value={values.bodyWeight}
+                  placeholder='420.69'
+                  placeholderTextColor={COLORS.darkGrey}
+                  onChangeText={handleChange('bodyWeight')}
+                  labelText='Body Weight (this is used for calorie tracking)'
+                  iconName='scale-balance'
+                  error={errors.bodyWeight}
+                  password={false}
+                  onFocus={() => {
+                    errors.bodyWeight = '';
+                  }}
+                  keyboardType='numeric'
+                />
+                <Input
                   value={values.email}
                   placeholder='Enter your email'
                   placeholderTextColor={COLORS.darkGrey}
@@ -122,6 +140,7 @@ const RegisterScreen = ({
                   onFocus={() => {
                     errors.email = '';
                   }}
+                  keyboardType='email-address'
                 />
                 <Input
                   value={values.password}

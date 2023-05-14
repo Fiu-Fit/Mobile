@@ -14,13 +14,14 @@ import COLORS from '../../constants/colors';
 import LoggerFactory from '../../utils/logger-utility';
 import { Formik, FormikErrors } from 'formik';
 import { LoginScreenNavigationProp } from '../../navigation/navigation-props';
-import { ErrorInputProps, InputProps } from '../../utils/custom-types';
+import { ErrorInputProps, InputProps, User } from '../../utils/custom-types';
 import { axiosClient } from '../../utils/constants';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { Role } from '../../constants/roles';
 import { DateTime } from 'luxon';
 import FiuFitLogo from '../../components/dumb/fiuFitLogo';
+import { useUserContext } from '../../App';
 
 const logger = LoggerFactory('login');
 
@@ -30,7 +31,7 @@ const LoginScreen = ({
   navigation: LoginScreenNavigationProp;
 }) => {
   const [loading, setLoading] = React.useState(false);
-
+  const { setCurrentUser } = useUserContext();
   const saveToken = async (token: string) => {
     try {
       await AsyncStorage.setItem('UserToken', token);
@@ -49,9 +50,11 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      navigation.push('HomeTab');
-    } catch (error) {
-      logger.error('Error while logging in: ', error);
+      const { data } = await axiosClient.post('/users/me');
+      setCurrentUser(data as User);
+      navigation.push('Home');
+    } catch (error: any) {
+      logger.error('Error while logging in: ', error.response.data);
     }
     setLoading(false);
   };
@@ -103,9 +106,9 @@ const LoginScreen = ({
 
       await createNewUser(user);
 
-      navigation.push('HomeTab');
-    } catch (error) {
-      logger.error('Error while logging in with google: ', error);
+      navigation.push('Home');
+    } catch (error: any) {
+      logger.error('Error while logging in with google: ', error.response.data);
     }
   };
 
@@ -121,6 +124,7 @@ const LoginScreen = ({
             email: '',
             password: '',
             role: 'Athlete',
+            bodyWeight: 0,
           }}
           validate={values => {
             let errors: FormikErrors<ErrorInputProps> = {};

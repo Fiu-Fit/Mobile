@@ -1,21 +1,39 @@
 import { View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
-import { HomeScreenNavigationProp } from '../../navigation/navigation-props';
+import { HomeNavigationProp } from '../../navigation/navigation-props';
+import { axiosClient } from '../../utils/constants';
+import LoggerFactory from '../../utils/logger-utility';
+import { useUserContext } from '../../App';
+import { Role } from '../../constants/roles';
 
-const HomeHeader = ({
-  navigation,
-}: {
-  navigation: HomeScreenNavigationProp;
-}) => {
+const logger = LoggerFactory('home-header');
+
+const HomeHeader = ({ navigation }: { navigation: HomeNavigationProp }) => {
+  const { currentUser } = useUserContext();
   return (
     <View className='flex-row mx-5 mt-5 justify-between'>
       <Text className='text-xl mt-2'>FiuFit</Text>
-      <Button
-        icon='google-fit'
-        mode='outlined'
-        onPress={() => navigation.navigate('Login')}>
-        <Text className='text-l'>Ser entrenador</Text>
-      </Button>
+      {currentUser.role === Role.Athlete && (
+        <Button
+          icon='google-fit'
+          mode='outlined'
+          onPress={async () => {
+            try {
+              const updatedUser = { ...currentUser };
+              updatedUser.role = Role.Trainer;
+              await axiosClient.put(`/users/${currentUser.id}`, updatedUser);
+              await axiosClient.post('/auth/logout');
+              navigation.getParent()?.navigate('LoginScreen');
+            } catch (err: any) {
+              logger.error(
+                'Error while trying to make user a Trainer:',
+                err.response.data,
+              );
+            }
+          }}>
+          <Text className='text-l'>Ser entrenador</Text>
+        </Button>
+      )}
     </View>
   );
 };

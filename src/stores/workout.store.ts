@@ -51,6 +51,24 @@ export class WorkoutStore {
       });
     }
   }
+
+  *fetchFavoriteWorkouts(userId: string) {
+    this.workouts = [];
+    this.state = 'pending';
+    try {
+      logger.debug('Getting workouts...');
+      const { data } = yield axiosClient.get<WorkoutProps[]>('/workouts');
+      logger.debug(`Got data for user: ${userId}`, data);
+      runInAction(() => {
+        this.workouts = data;
+        this.state = 'done';
+      });
+    } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
 }
 
 export const workoutStore = new WorkoutStore();

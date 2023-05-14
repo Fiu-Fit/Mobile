@@ -1,6 +1,5 @@
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import AuthStack from './navigation/auth-navigator';
-import TabNavigator from './navigation/main-navigator';
 import {
   Provider as PaperProvider,
   MD3DarkTheme,
@@ -9,6 +8,9 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
+import { createContext, useContext, useState } from 'react';
+import { Role } from './constants/roles';
+import { User } from './utils/custom-types';
 
 if (
   !new (class {
@@ -113,7 +115,23 @@ export type AppTheme = typeof customLightTheme;
 
 export const useAppTheme = () => useTheme<AppTheme>();
 
+const defaultUserObject = {
+  id: 0,
+  email: '',
+  firstName: '',
+  lastName: '',
+  role: Role.Athlete,
+  bodyWeight: 0,
+};
+
+const UserContext = createContext<{
+  currentUser: User;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
+}>({ currentUser: defaultUserObject, setCurrentUser: () => {} });
+export const useUserContext = () => useContext(UserContext);
+
 const App = () => {
+  const [currentUser, setCurrentUser] = useState<User>(defaultUserObject);
   const colorScheme = useColorScheme();
   const { DarkTheme } = adaptNavigationTheme({
     reactNavigationDark: DefaultTheme,
@@ -128,7 +146,13 @@ const App = () => {
   return (
     <PaperProvider theme={paperTheme}>
       <NavigationContainer theme={rNavTheme}>
-        <AuthStack />
+        <UserContext.Provider
+          value={{
+            currentUser,
+            setCurrentUser,
+          }}>
+          <AuthStack />
+        </UserContext.Provider>
       </NavigationContainer>
     </PaperProvider>
   );

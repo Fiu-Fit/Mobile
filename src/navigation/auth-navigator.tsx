@@ -18,7 +18,7 @@ const AuthStack = () => {
         component={PasswordRecovery}
       />
       <Stack.Screen name='RegisterScreen' component={RegisterScreen} />
-      <Stack.Screen name='HomeTab' component={TabNavigator} />
+      <Stack.Screen name='Home' component={TabNavigator} />
     </Stack.Navigator>
   );
 };

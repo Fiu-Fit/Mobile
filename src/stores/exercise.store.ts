@@ -28,7 +28,6 @@ export class ExerciseStore {
       cardsInfo: computed,
       fetchExercises: flow,
     });
-    this.fetchExercises();
   }
 
   *fetchExercises() {

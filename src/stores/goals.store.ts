@@ -27,7 +27,6 @@ export class GoalStore {
       cardsInfo: computed,
       fetchGoals: flow,
     });
-    this.fetchGoals();
   }
 
   *fetchGoals() {
