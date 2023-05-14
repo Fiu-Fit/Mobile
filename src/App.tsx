@@ -8,8 +8,9 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
-import { createContext, useContext } from 'react';
-import { Role, User } from './utils/custom-types';
+import { createContext, useContext, useState } from 'react';
+import { Role } from './constants/roles';
+import { User } from './utils/custom-types';
 
 if (
   !new (class {
@@ -114,15 +115,23 @@ export type AppTheme = typeof customLightTheme;
 
 export const useAppTheme = () => useTheme<AppTheme>();
 
-const UserContext = createContext<User>({
+const defaultUserObject = {
+  id: 0,
   email: '',
-  name: '',
-  surname: '',
+  firstName: '',
+  lastName: '',
   role: Role.Athlete,
-});
+  bodyWeight: 0,
+};
+
+const UserContext = createContext<{
+  currentUser: User;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
+}>({ currentUser: defaultUserObject, setCurrentUser: () => {} });
 export const useUserContext = () => useContext(UserContext);
 
 const App = () => {
+  const [currentUser, setCurrentUser] = useState<User>(defaultUserObject);
   const colorScheme = useColorScheme();
   const { DarkTheme } = adaptNavigationTheme({
     reactNavigationDark: DefaultTheme,
@@ -139,10 +148,8 @@ const App = () => {
       <NavigationContainer theme={rNavTheme}>
         <UserContext.Provider
           value={{
-            email: '',
-            name: '',
-            surname: '',
-            role: Role.Athlete,
+            currentUser,
+            setCurrentUser,
           }}>
           <AuthStack />
         </UserContext.Provider>
