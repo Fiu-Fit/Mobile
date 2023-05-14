@@ -1,10 +1,9 @@
 import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
-import { useAppTheme } from '../../App';
-import WorkoutCardList from '../../components/itemCardList';
+import { useAppTheme, useUserContext } from '../../App';
+import ItemCardList from '../../components/itemCardList';
 import MetricCard from '../../components/metricCard';
 import HomeHeader from '../../components/homeHeader.tsx';
-import React from 'react';
 import Button from '../../components/button';
 import { workoutStore } from '../../stores/workout.store';
 import { useEffect } from 'react';
@@ -12,10 +11,11 @@ import { HomeNavigationProp } from '../../navigation/navigation-props';
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
+  const { currentUser } = useUserContext();
   useEffect(() => {
-    workoutStore.fetchWorkouts();
+    workoutStore.fetchFavoriteWorkouts(`${currentUser.id}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const [favWorkouts, setFavWorkouts] = React.useState(false);
 
   return (
     <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>
@@ -36,10 +36,14 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
         <Text className='self-center text-xl my-10'>
           Entrenamientos favoritos
         </Text>
-        {favWorkouts ? (
-          <WorkoutCardList
-            workouts={workoutStore.cardsInfo}
-            navigation={navigation}
+        {true ? (
+          <ItemCardList
+            items={workoutStore.cardsInfo}
+            onPress={item =>
+              navigation.navigate('WokoutScreen', {
+                WorkoutScreen: { itemId: item.id },
+              })
+            }
           />
         ) : (
           <View className='items-center mx-10'>
