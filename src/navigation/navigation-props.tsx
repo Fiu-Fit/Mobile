@@ -6,7 +6,7 @@ export type AuthStackParamList = {
   RegisterScreen: undefined;
   InterestsScreen: { name: string };
   PasswordRecoveryScreen: undefined;
-  HomeTab: undefined;
+  Home: undefined;
 };
 
 export type WorkoutStackParamList = {
@@ -21,10 +21,11 @@ export type GoalStackParamList = {
 };
 
 export type TabParamList = {
+  WokoutScreen: Omit<WorkoutStackParamList, 'WorkoutsScreen'>;
   Workouts: undefined;
   Goals: undefined;
   Profile: undefined;
-  Home: undefined;
+  HomeTab: undefined;
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<

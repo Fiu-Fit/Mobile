@@ -42,7 +42,7 @@ const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
       key => checkboxValues[key],
     );
     logger.info('Selected interests: ', selectedInterests);
-    navigation.navigate('HomeTab');
+    navigation.navigate('Home');
   };
 
   return (

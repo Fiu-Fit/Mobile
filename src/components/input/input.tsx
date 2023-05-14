@@ -4,7 +4,7 @@ import COLORS from '../../constants/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type InputProps = {
-  value: string;
+  value: string | number;
   placeholder: string;
   placeholderTextColor: string;
   onChangeText: (text: string) => void;
@@ -19,6 +19,7 @@ type InputProps = {
 };
 
 const Input = ({
+  value,
   labelText,
   iconName,
   error,
@@ -65,6 +66,7 @@ const Input = ({
             setIsFocused(false);
           }}
           className='flex-1 text-primary-color'
+          value={`${value}`}
           {...props}
         />
         {password && (

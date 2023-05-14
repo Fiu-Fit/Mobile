@@ -1,8 +1,11 @@
+import { Role } from '../constants/roles';
+
 export type InputProps = {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
+  bodyWeight: number;
   role: string;
 };
 
@@ -11,6 +14,7 @@ export type ErrorInputProps = {
   lastName: string;
   email: string;
   password: string;
+  bodyWeight: string;
 };
 
 export type CommentInputProps = {
@@ -27,3 +31,12 @@ export interface CardInfo {
   content: string;
   imageUrl: string;
 }
+
+export type User = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: Role;
+  bodyWeight: number;
+};
