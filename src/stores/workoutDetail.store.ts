@@ -9,7 +9,7 @@ import {
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
 
-const logger = LoggerFactory('exercise-store');
+const logger = LoggerFactory('workout-detail-store');
 
 const defaultWorkout = {
   _id: '',
@@ -78,13 +78,14 @@ export class WorkoutDetailStore {
   *fetchWorkout(workoutId: string) {
     this.state = 'pending';
     try {
-      logger.debug('Getting workouts...');
+      logger.debug('Getting workout detail...');
       const { data } = yield axiosClient.get<WorkoutProps>(
         `/workouts/${workoutId}`,
       );
       logger.debug('Got data: ', data);
       runInAction(() => {
-        this.workout = data;
+        this.workout = JSON.parse(data) as WorkoutProps;
+        logger.debug('Loaded Workout: ', this.workout);
         this.state = 'done';
       });
     } catch (e) {

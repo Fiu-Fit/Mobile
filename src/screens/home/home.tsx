@@ -8,8 +8,9 @@ import Button from '../../components/button';
 import { workoutStore } from '../../stores/workout.store';
 import { useEffect } from 'react';
 import { HomeNavigationProp } from '../../navigation/navigation-props';
+import { observer } from 'mobx-react';
 
-const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
+const HomeScreen = ({ navigation }: { navigation: any }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
   useEffect(() => {
@@ -40,8 +41,9 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
           <ItemCardList
             items={workoutStore.cardsInfo}
             onPress={item =>
-              navigation.navigate('WokoutScreen', {
-                WorkoutScreen: { itemId: item.id },
+              navigation.navigate('Workouts', {
+                screen: 'WorkoutScreen',
+                params: { itemId: item.id },
               })
             }
           />
@@ -63,4 +65,4 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   );
 };
 
-export default HomeScreen;
+export default observer(HomeScreen);

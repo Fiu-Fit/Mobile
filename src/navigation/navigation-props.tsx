@@ -21,7 +21,7 @@ export type GoalStackParamList = {
 };
 
 export type TabParamList = {
-  WokoutScreen: Omit<WorkoutStackParamList, 'WorkoutsScreen'>;
+  WorkoutScreen: Omit<WorkoutStackParamList, 'WorkoutsScreen'>;
   Workouts: undefined;
   Goals: undefined;
   Profile: undefined;
