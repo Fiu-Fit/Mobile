@@ -31,6 +31,7 @@ export class WorkoutStore {
       workoutCount: computed,
       cardsInfo: computed,
       fetchWorkouts: flow,
+      fetchFavoriteWorkouts: flow,
     });
   }
 
