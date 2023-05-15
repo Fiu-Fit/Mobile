@@ -13,6 +13,7 @@ const config = {
     'register',
     'workout-store',
     'workout-screen',
+    'upsert-workout-screen',
     'workout-comment',
     'workout-detail-store',
     'exercise-store',
