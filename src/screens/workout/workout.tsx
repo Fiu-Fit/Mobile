@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { useAppTheme } from '../../App';
+import { useAppTheme, useUserContext } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import React, { useEffect } from 'react';
 import WorkoutRatingModal from '../../components/workoutRatingModal';
@@ -13,6 +13,7 @@ import ItemCardList from '../../components/itemCardList';
 import ExerciseModal from '../../components/exerciseModal';
 import { ExerciseCardInfo } from '../../utils/workout-types';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
+import LoggerFactory from '../../utils/logger-utility';
 
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
@@ -23,8 +24,11 @@ type WorkoutScreenProps = {
   };
 };
 
+const logger = LoggerFactory('workout-screen');
+
 const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
   const appTheme = useAppTheme();
+  const { currentUser } = useUserContext();
   const [selectedExercise, setSelectedExercise] = React.useState<
     ExerciseCardInfo | undefined
   >(undefined);

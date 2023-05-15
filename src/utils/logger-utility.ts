@@ -12,6 +12,7 @@ const config = {
     'login',
     'register',
     'workout-store',
+    'workout-screen',
     'workout-comment',
     'workout-detail-store',
     'exercise-store',
