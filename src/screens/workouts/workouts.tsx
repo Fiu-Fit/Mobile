@@ -1,11 +1,13 @@
 import { View } from 'react-native';
-import { useAppTheme } from '../../App';
+import { useAppTheme, useUserContext } from '../../App';
 import ItemCardList from '../../components/itemCardList';
 import NavBar from '../../components/navBar';
 import { WorkoutsScreenNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 import { workoutStore } from '../../stores/workout.store';
 import { useEffect } from 'react';
+import FloatingActionButton from '../../components/dumb/floatingActionButton';
+import { Role } from '../../constants/roles';
 
 const WorkoutsScreen = ({
   navigation,
@@ -13,6 +15,7 @@ const WorkoutsScreen = ({
   navigation: WorkoutsScreenNavigationProp;
 }) => {
   const appTheme = useAppTheme();
+  const { currentUser } = useUserContext();
   useEffect(() => {
     workoutStore.fetchWorkouts();
   }, []);
@@ -28,6 +31,11 @@ const WorkoutsScreen = ({
           })
         }
       />
+      {currentUser.role !== Role.Athlete && (
+        <FloatingActionButton
+          onPress={() => navigation.push('UpsertWorkout')}
+        />
+      )}
     </View>
   );
 };

@@ -4,7 +4,7 @@ import { HomeScreenNavigationProp } from '../../navigation/navigation-props';
 import { useAppTheme } from '../../App';
 import { GoalStore } from '../../stores/goals.store';
 import ItemCardList from '../../components/itemCardList';
-import AddButton from '../../components/addButton';
+import FloatingActionButton from '../../components/dumb/floatingActionButton';
 
 const goalsStore = new GoalStore();
 
@@ -31,7 +31,9 @@ const GoalsScreen = ({
           }
         />
       </View>
-      <AddButton onPress={() => navigation.push('CreateGoalScreen')} />
+      <FloatingActionButton
+        onPress={() => navigation.push('CreateGoalScreen')}
+      />
     </View>
   );
 };

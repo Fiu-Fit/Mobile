@@ -1,15 +1,17 @@
 import { Button, IconButton } from 'react-native-paper';
-import { useAppTheme } from '../../App';
+import { useAppTheme } from '../../../App';
 
-interface AddButtonProps {
+interface FloatingActionButtonProps {
+  icon?: string;
   descriptive?: boolean;
   onPress?: () => void;
 }
 
-const AddButton = ({
+const FloatingActionButton = ({
+  icon = 'plus',
   descriptive = false,
   onPress = () => {},
-}: AddButtonProps) => {
+}: FloatingActionButtonProps) => {
   const theme = useAppTheme();
   return descriptive ? (
     <Button mode='contained' onPress={() => onPress()}>
@@ -18,7 +20,7 @@ const AddButton = ({
   ) : (
     <IconButton
       style={{ position: 'absolute', bottom: 20, right: 20 }}
-      icon='plus'
+      icon={icon}
       iconColor={theme.colors.onQuinary}
       containerColor={theme.colors.quinary}
       size={40}
@@ -28,4 +30,4 @@ const AddButton = ({
   );
 };
 
-export default AddButton;
+export default FloatingActionButton;
