@@ -14,8 +14,8 @@ export class ExerciseStore {
     return this.exercises.map(
       (exercise): CardInfo => ({
         id: exercise._id,
-        title: exercise.name,
-        content: categoryMap.get(exercise.category) || '',
+        title: exercise.name ?? 'Name missing',
+        content: categoryMap.get(exercise.category ?? '') || '',
         imageUrl:
           'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
       }),

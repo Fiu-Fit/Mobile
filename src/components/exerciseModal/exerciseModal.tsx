@@ -50,7 +50,7 @@ const ExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                   color: appTheme.colors.onSurfaceDisabled,
                   marginTop: 20,
                 }}>
-                {exerciseItem.exercise.description}
+                {exerciseItem.exercise?.description ?? 'Description missing'}
               </Text>
             </ScrollView>
           </View>

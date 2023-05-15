@@ -51,7 +51,7 @@ export class WorkoutDetailStore {
     return this.workout.exercises.map((workoutExercise): ExerciseCardInfo => {
       return {
         id: workoutExercise.exerciseId,
-        title: workoutExercise.exercise.name,
+        title: workoutExercise.exercise?.name ?? 'Name missing',
         content: `${workoutExercise.sets} x ${workoutExercise.reps}`,
         exercise: workoutExercise.exercise,
         imageUrl:
@@ -84,7 +84,7 @@ export class WorkoutDetailStore {
       );
       logger.debug('Got data: ', data);
       runInAction(() => {
-        this.workout = JSON.parse(data) as WorkoutProps;
+        this.workout = data;
         logger.debug('Loaded Workout: ', this.workout);
         this.state = 'done';
       });
