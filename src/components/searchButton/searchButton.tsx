@@ -20,7 +20,7 @@ const SearchButton = ({
       icon='magnify'
       iconColor={theme.colors.onQuinary}
       containerColor={theme.colors.quinary}
-      size={20}
+      size={25}
       onPress={() => onPress()}
       mode='contained'
     />
