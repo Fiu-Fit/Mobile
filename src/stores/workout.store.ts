@@ -24,8 +24,12 @@ export class WorkoutStore {
   showingAllWorkouts: boolean = false;
   state = 'pending';
 
-  get workoutCount() {
+  get allWorkoutCount() {
     return this.allWorkouts.length;
+  }
+
+  get favouriteWorkoutCount() {
+    return this.favouriteWorkouts.length;
   }
 
   get isShowingAllWorkouts(): boolean {
@@ -53,7 +57,8 @@ export class WorkoutStore {
       favouriteWorkouts: observable,
       showingAllWorkouts: observable,
       isShowingAllWorkouts: computed,
-      workoutCount: computed,
+      allWorkoutCount: computed,
+      favouriteWorkoutCount: computed,
       workoutCardsInfo: computed,
       fetchWorkouts: flow,
       fetchFavoriteWorkouts: flow,
