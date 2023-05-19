@@ -8,6 +8,7 @@ import {
 } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
+import { dumpWorkout2 } from '../utils/dump-workouts';
 
 const logger = LoggerFactory('workout-detail-store');
 
@@ -79,9 +80,10 @@ export class WorkoutDetailStore {
     this.state = 'pending';
     try {
       logger.debug('Getting workout detail...');
-      const { data } = yield axiosClient.get<WorkoutProps>(
+      /*const { data } = yield axiosClient.get<WorkoutProps>(
         `/workouts/${workoutId}`,
-      );
+      );*/
+      const data = dumpWorkout2;
       logger.debug('Got data: ', data);
       runInAction(() => {
         this.workout = data;
