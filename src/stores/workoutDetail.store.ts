@@ -8,7 +8,6 @@ import {
 } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
-import { dumpWorkout2 } from '../utils/dump-workouts';
 
 const logger = LoggerFactory('workout-detail-store');
 
@@ -17,6 +16,7 @@ const defaultWorkout = {
   name: '',
   description: '',
   duration: 0,
+  author: '',
   difficulty: 0,
   category: CategoryType.LEGS,
   rating: { globalRating: 0, comments: [] },
@@ -36,6 +36,7 @@ export class WorkoutDetailStore {
       name,
       description,
       duration,
+      author: 'Jorge',
       rating: {
         globalRating: 4,
         comments: [
@@ -73,6 +74,7 @@ export class WorkoutDetailStore {
       exerciseCards: computed,
       workoutHeader: computed,
       fetchWorkout: flow,
+      addWorkoutAsFavourite: flow,
     });
   }
 
@@ -80,16 +82,31 @@ export class WorkoutDetailStore {
     this.state = 'pending';
     try {
       logger.debug('Getting workout detail...');
-      /*const { data } = yield axiosClient.get<WorkoutProps>(
+      const { data } = yield axiosClient.get<WorkoutProps>(
         `/workouts/${workoutId}`,
-      );*/
-      const data = dumpWorkout2;
+      );
       logger.debug('Got data: ', data);
       runInAction(() => {
         this.workout = data;
         logger.debug('Loaded Workout: ', this.workout);
         this.state = 'done';
       });
+    } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
+  *addWorkoutAsFavourite(userId: number) {
+    this.state = 'pending';
+    try {
+      logger.debug('Adding workout as favourite...');
+      const { data } = yield axiosClient.put(
+        `/users/${userId}/favoriteWorkouts`,
+        this.workout._id,
+      );
+      logger.debug('Got data: ', data);
     } catch (e) {
       runInAction(() => {
         this.state = 'error';

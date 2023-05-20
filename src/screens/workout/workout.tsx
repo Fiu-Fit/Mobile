@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { useAppTheme, useUserContext } from '../../App';
+import { useAppTheme } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import React, { useEffect } from 'react';
 import WorkoutRatingModal from '../../components/workoutRatingModal';
@@ -13,7 +13,6 @@ import ItemCardList from '../../components/itemCardList';
 import ExerciseModal from '../../components/exerciseModal';
 import { ExerciseCardInfo } from '../../utils/workout-types';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
-import LoggerFactory from '../../utils/logger-utility';
 
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
@@ -24,11 +23,8 @@ type WorkoutScreenProps = {
   };
 };
 
-const logger = LoggerFactory('workout-screen');
-
 const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
   const appTheme = useAppTheme();
-  const { currentUser } = useUserContext();
   const [selectedExercise, setSelectedExercise] = React.useState<
     ExerciseCardInfo | undefined
   >(undefined);
@@ -51,14 +47,9 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
     <View
       className='flex-1'
       style={{ backgroundColor: appTheme.colors.background }}>
-      <WorkoutHeader
-        name={workoutDetailStore.workoutHeader.name}
-        description={workoutDetailStore.workoutHeader.description}
-      />
+      <WorkoutHeader workoutDetailStore={workoutDetailStore} />
       <WorkoutInfo
-        duration={workoutDetailStore.workoutHeader.duration}
-        exerciseCount={workoutDetailStore.workoutHeader.exerciseCount}
-        globalRating={workoutDetailStore.workoutHeader.rating.globalRating}
+        workoutHeader={workoutDetailStore.workoutHeader}
         onPressModal={() => setRatingModalVisible(true)}
       />
       <View

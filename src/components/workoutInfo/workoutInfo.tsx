@@ -2,20 +2,14 @@ import { TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { IWorkoutHeader } from '../../utils/workout-types';
 
 type WorkoutInfoProps = {
-  duration: number;
-  exerciseCount: number;
-  globalRating: number;
+  workoutHeader: IWorkoutHeader;
   onPressModal: () => void;
 };
 
-const WorkoutInfo = ({
-  duration,
-  exerciseCount,
-  globalRating,
-  onPressModal,
-}: WorkoutInfoProps) => {
+const WorkoutInfo = ({ workoutHeader, onPressModal }: WorkoutInfoProps) => {
   const appTheme = useAppTheme();
   return (
     <View
@@ -24,13 +18,13 @@ const WorkoutInfo = ({
       <Text
         className='text-lg ml-5'
         style={{ color: appTheme.colors.onBackground }}>
-        {duration} min - {exerciseCount} ejercicios
+        {workoutHeader.duration} min - {workoutHeader.exerciseCount} ejercicios
       </Text>
       <View className='flex-row justify-center'>
         <TouchableOpacity
           className='flex-row justify-center'
           onPress={onPressModal}>
-          <Text className='text-xl'>{globalRating}</Text>
+          <Text className='text-xl'>{workoutHeader.rating.globalRating}</Text>
           <Icon
             style={{
               fontSize: 30,
@@ -38,7 +32,7 @@ const WorkoutInfo = ({
               marginRight: 30,
               marginLeft: 5,
             }}
-            name={'star'}
+            name={'comment-outline'}
           />
         </TouchableOpacity>
       </View>

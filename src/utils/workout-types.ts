@@ -80,6 +80,7 @@ export type IWorkoutHeader = {
   name: string;
   description: string;
   duration: number;
+  author: string;
   rating: WorkoutRating;
   exerciseCount: number;
 };
