@@ -9,21 +9,13 @@ export type InputProps = {
   role: string;
 };
 
-export type ErrorInputProps = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  bodyWeight: string;
-};
+export type ErrorInputProps = Omit<InputProps, 'role'>;
 
 export type CommentInputProps = {
   comment: string;
 };
 
-export type ErrorCommentInputProps = {
-  comment: string;
-};
+export type ErrorCommentInputProps = CommentInputProps;
 
 export interface CardInfo {
   id: string;
