@@ -70,7 +70,7 @@ export type WorkoutProps = {
   difficulty: number;
   category: CategoryType;
   rating: WorkoutRating;
-  exercises: WorkoutExercise[];
+  exercises: Map<string, WorkoutExercise>;
   athleteIds: number[];
   authorId: number;
   updatedAt?: Date;
