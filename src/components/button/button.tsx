@@ -1,21 +1,40 @@
-import React from 'react';
-import {TouchableOpacity, Text} from 'react-native';
+import { Button } from 'react-native-paper';
+import { useAppTheme } from '../../App';
 
 interface ButtonProps {
-  title: string;
-  backgroundColor?: string;
+  title?: string;
+  icon?: string;
+  mode?:
+    | 'text'
+    | 'outlined'
+    | 'contained'
+    | 'elevated'
+    | 'contained-tonal'
+    | undefined;
+  buttonColor?: string;
+  textColor?: string;
   onPress?: () => void;
 }
 
-const Button = ({title, onPress = () => {}}: ButtonProps) => {
+const IconButton = ({
+  title,
+  icon,
+  mode,
+  buttonColor,
+  textColor,
+  onPress = () => {},
+}: ButtonProps) => {
+  const theme = useAppTheme();
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
+    <Button
+      icon={icon}
       onPress={onPress}
-      className="bg-primary-color h-12 w-full justify-center items-center mt-10 mb-5 rounded-md">
-      <Text className="text-white text-lg text-bold">{title}</Text>
-    </TouchableOpacity>
+      mode={mode ?? 'contained'}
+      buttonColor={buttonColor ?? theme.colors.primary}
+      textColor={textColor ?? theme.colors.onPrimary}>
+      {title}
+    </Button>
   );
 };
 
-export default Button;
+export default IconButton;
