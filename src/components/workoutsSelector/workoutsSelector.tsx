@@ -16,6 +16,7 @@ const WorkoutsSelector = ({ workoutStore }: WorkoutSelectorProps) => {
     workoutStore.fetchWorkouts();
     setShowingAllWorkouts(isShowingAllWorkouts);
   };
+
   return (
     <View
       className='flex-row justify-center items-center'

@@ -6,7 +6,6 @@ import MetricCard from '../../components/metricCard';
 import HomeHeader from '../../components/homeHeader.tsx';
 import Button from '../../components/button';
 import { workoutStore } from '../../stores/workout.store';
-import { useEffect } from 'react';
 import { HomeNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 import { useFocusEffect } from '@react-navigation/native';
@@ -16,16 +15,13 @@ import { action } from 'mobx';
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
-  useEffect(() => {
-    workoutStore.fetchFavoriteWorkouts(`${currentUser.id}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
       action(() => {
-        workoutStore.showingAllWorkouts = false;
+        workoutStore.fetchFavoriteWorkouts(`${currentUser.id}`);
       })();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
 
@@ -48,7 +44,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
         <Text className='self-center text-xl my-10'>
           Entrenamientos favoritos
         </Text>
-        {workoutStore.favouriteWorkoutCount > 0 ? (
+        {workoutStore.workoutsCount > 0 ? (
           <ItemCardList
             items={workoutStore.workoutCardsInfo}
             onPress={item =>

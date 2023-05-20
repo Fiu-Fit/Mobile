@@ -59,7 +59,9 @@ export class WorkoutStore {
     this.state = 'pending';
     try {
       logger.debug(`Getting favorite workouts for id ${userId}...`);
-      const { data } = yield axiosClient.get<WorkoutProps[]>('/workouts');
+      const { data } = yield axiosClient.get<WorkoutProps[]>(
+        `/users/${userId}/favoriteWorkouts`,
+      );
       logger.debug(`Got data for user: ${userId}`, data);
       runInAction(() => {
         this.workouts = data;
