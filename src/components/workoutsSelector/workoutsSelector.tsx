@@ -1,17 +1,21 @@
 import { TouchableOpacity, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { Text } from 'react-native-paper';
+import { WorkoutStore } from '../../stores/workout.store';
+import { useState } from 'react';
 
 interface WorkoutSelectorProps {
-  showingAllWorkouts: boolean;
-  onPress: (showAllWorkouts: boolean) => void;
+  workoutStore: WorkoutStore;
 }
 
-const WorkoutsSelector = ({
-  showingAllWorkouts,
-  onPress,
-}: WorkoutSelectorProps) => {
+const WorkoutsSelector = ({ workoutStore }: WorkoutSelectorProps) => {
   const appTheme = useAppTheme();
+  const [showingAllWorkouts, setShowingAllWorkouts] = useState(false);
+
+  const onChangeShowingAllWorkouts = (isShowingAllWorkouts: boolean) => {
+    workoutStore.fetchWorkouts();
+    setShowingAllWorkouts(isShowingAllWorkouts);
+  };
   return (
     <View
       className='flex-row justify-center items-center'
@@ -25,7 +29,7 @@ const WorkoutsSelector = ({
             ? 'transparent'
             : appTheme.colors.primary,
         }}
-        onPress={() => onPress(false)}>
+        onPress={() => onChangeShowingAllWorkouts(false)}>
         <Text>Recomendados</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -37,7 +41,7 @@ const WorkoutsSelector = ({
             ? appTheme.colors.primary
             : 'transparent',
         }}
-        onPress={() => onPress(true)}>
+        onPress={() => onChangeShowingAllWorkouts(true)}>
         <Text>Todos</Text>
       </TouchableOpacity>
     </View>

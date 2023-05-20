@@ -8,7 +8,6 @@ import { workoutStore } from '../../stores/workout.store';
 import { useEffect } from 'react';
 import FloatingActionButton from '../../components/dumb/floatingActionButton';
 import { Role } from '../../constants/roles';
-import { action } from 'mobx';
 import WorkoutsSelector from '../../components/workoutsSelector';
 
 const WorkoutsScreen = ({
@@ -19,10 +18,6 @@ const WorkoutsScreen = ({
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
 
-  const onChangeShowingAll = action((isShowingAll: boolean): void => {
-    workoutStore.showingAllWorkouts = isShowingAll;
-  });
-
   useEffect(() => {
     workoutStore.fetchWorkouts();
   }, []);
@@ -30,10 +25,7 @@ const WorkoutsScreen = ({
   return (
     <View style={{ backgroundColor: appTheme.colors.background, flex: 1 }}>
       <NavBar />
-      <WorkoutsSelector
-        showingAllWorkouts={workoutStore.showingAllWorkouts}
-        onPress={onChangeShowingAll}
-      />
+      <WorkoutsSelector workoutStore={workoutStore} />
       <View style={{ flex: 0.8 }}>
         <ItemCardList
           items={workoutStore.workoutCardsInfo}
