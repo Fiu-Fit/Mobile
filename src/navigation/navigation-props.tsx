@@ -26,6 +26,7 @@ export type TabParamList = {
   Goals: undefined;
   Profile: undefined;
   HomeTab: undefined;
+  LoginScreen: undefined;
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<
