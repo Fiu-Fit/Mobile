@@ -3,6 +3,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 
 export type AuthStackParamList = {
   LoginScreen: undefined;
+  EditProfile: undefined;
   RegisterScreen: undefined;
   InterestsScreen: { name: string };
   PasswordRecoveryScreen: undefined;
