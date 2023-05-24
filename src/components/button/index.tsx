@@ -1,3 +1,3 @@
-import IconButton from './button';
+import CustomButton from './customButton';
 
-export default IconButton;
+export default CustomButton;
