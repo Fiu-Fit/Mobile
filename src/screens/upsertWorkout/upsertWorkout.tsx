@@ -1,42 +1,51 @@
-import { View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { useAppTheme, useUserContext } from '../../App';
-import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
+import { UpsertWorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import React, { useEffect } from 'react';
-import WorkoutRatingModal from '../../components/workoutRatingModal';
 import { observer } from 'mobx-react';
 import Loader from '../../components/loader';
-import { flowResult } from 'mobx';
-import WorkoutHeader from '../../components/workoutHeader';
-import WorkoutInfo from '../../components/workoutInfo';
-import Button from '../../components/button';
-import ItemCardList from '../../components/itemCardList';
-import ExerciseModal from '../../components/exerciseModal';
-import { ExerciseCardInfo } from '../../utils/workout-types';
+import { flowResult, runInAction } from 'mobx';
+import CustomButton from '../../components/button';
+import {
+  CategoryType,
+  ExerciseCardInfo,
+  Unit,
+  WorkoutProps,
+} from '../../utils/workout-types';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
 import LoggerFactory from '../../utils/logger-utility';
+import Input from '../../components/input';
+import { FieldArray, Formik } from 'formik';
+import ItemCard from '../../components/itemCard';
+import EditExerciseModal from '../../components/editExerciseModal';
+import { workoutStore } from '../../stores/workout.store';
 
-type WorkoutScreenProps = {
-  navigation: WorkoutScreenNavigationProp;
+type UpsertWorkoutScreenProps = {
+  navigation: UpsertWorkoutScreenNavigationProp;
   route: {
     params: {
-      itemId: string;
+      itemId?: string;
     };
   };
 };
 
+type UpsertWorkoutFormValue = Omit<WorkoutProps, 'rating' | 'athleteIds'>;
+
 const logger = LoggerFactory('upsert-workout-screen');
 
-const UpsertWorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
+const UpsertWorkoutScreen = ({
+  navigation,
+  route,
+}: UpsertWorkoutScreenProps) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
   const [selectedExercise, setSelectedExercise] = React.useState<
     ExerciseCardInfo | undefined
   >(undefined);
-  const [ratingModalVisible, setRatingModalVisible] = React.useState(false);
   const { itemId } = route.params;
 
   useEffect(() => {
-    flowResult(workoutDetailStore.fetchWorkout(itemId));
+    flowResult(workoutDetailStore.fetchWorkout(itemId ?? ''));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -45,51 +54,165 @@ const UpsertWorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
     navigation.goBack();
   };
 
+  const handleSubmitWorkout = async () => {
+    workoutDetailStore.upsertStoredWorkout();
+    workoutStore.fetchWorkouts();
+    navigation.goBack();
+  };
+
   return workoutDetailStore.state === 'pending' ? (
     <Loader />
   ) : (
-    <View
+    <ScrollView
       className='flex-1'
       style={{ backgroundColor: appTheme.colors.background }}>
-      <WorkoutHeader
-        name={workoutDetailStore.workoutHeader.name}
-        description={workoutDetailStore.workoutHeader.description}
-      />
-      <WorkoutInfo
-        duration={workoutDetailStore.workoutHeader.duration}
-        exerciseCount={workoutDetailStore.workoutHeader.exerciseCount}
-        globalRating={workoutDetailStore.workoutHeader.rating.globalRating}
-        onPressModal={() => setRatingModalVisible(true)}
-      />
-      <View
-        className='mt-5'
-        style={{
-          backgroundColor: appTheme.colors.background,
-          flex: 0.62,
+      <Formik<UpsertWorkoutFormValue>
+        initialValues={{
+          _id: workoutDetailStore.workout._id,
+          name: workoutDetailStore.workout.name,
+          description: workoutDetailStore.workout.description,
+          difficulty: workoutDetailStore.workout.difficulty,
+          duration: workoutDetailStore.workout.duration,
+          category: workoutDetailStore.workout.category,
+          exercises: workoutDetailStore.workout.exercises,
+          authorId: currentUser.id,
+        }}
+        onSubmit={values => {
+          runInAction(() => {
+            workoutDetailStore.workout._id = values._id;
+            workoutDetailStore.workout.name = values.name;
+            workoutDetailStore.workout.description = values.description;
+            workoutDetailStore.workout.difficulty = Number(values.difficulty);
+            workoutDetailStore.workout.duration = Number(values.duration);
+            workoutDetailStore.workout.category = values.category;
+            workoutDetailStore.workout.authorId = currentUser.id;
+          });
+          handleSubmitWorkout();
         }}>
-        {ratingModalVisible && (
-          <WorkoutRatingModal
-            onDismiss={() => setRatingModalVisible(false)}
-            workoutRatingItem={workoutDetailStore.workoutHeader.rating}
-          />
+        {({ values, errors, handleChange, handleSubmit }) => (
+          <>
+            <Input
+              value={values.name}
+              placeholder='Workout name'
+              placeholderTextColor={appTheme.colors.background}
+              onChangeText={text => {
+                runInAction(() => {
+                  workoutDetailStore.workout.name = text;
+                  handleChange('name')(text);
+                });
+              }}
+              multiline={true}
+              labelText='Workout name'
+              iconName='comment-outline'
+              error={errors.name}
+              password={false}
+              onFocus={() => {
+                errors.name = '';
+              }}
+            />
+            <Input
+              value={values.description}
+              placeholder='Workout description'
+              placeholderTextColor={appTheme.colors.background}
+              onChangeText={text => {
+                runInAction(() => {
+                  workoutDetailStore.workout.description = text;
+                  handleChange('description')(text);
+                });
+              }}
+              multiline={true}
+              labelText='Workout description'
+              iconName='comment-outline'
+              error={errors.description}
+              password={false}
+              onFocus={() => {
+                errors.description = '';
+              }}
+            />
+            <Input
+              value={values.difficulty}
+              placeholder='Workout difficulty'
+              placeholderTextColor={appTheme.colors.background}
+              onChangeText={text => {
+                runInAction(() => {
+                  workoutDetailStore.workout.difficulty = Number(text);
+                  handleChange('difficulty')(text);
+                });
+              }}
+              multiline={true}
+              labelText='Workout difficulty'
+              iconName='comment-outline'
+              error={errors.difficulty}
+              password={false}
+              onFocus={() => {
+                errors.difficulty = '';
+              }}
+              keyboardType='numeric'
+            />
+            <FieldArray
+              name='exercises'
+              render={arrayHelpers => (
+                <>
+                  {workoutDetailStore.exerciseCards.map((exercise, index) => (
+                    <>
+                      <ItemCard<ExerciseCardInfo>
+                        key={exercise.id}
+                        item={exercise}
+                        onPress={() => {
+                          setSelectedExercise(exercise);
+                        }}
+                        onRemovePress={() =>
+                          runInAction(() => {
+                            logger.info('Removing ID: ', exercise.id);
+                            workoutDetailStore.removeExercise(exercise.id);
+                            arrayHelpers.remove(index);
+                          })
+                        }
+                      />
+                    </>
+                  ))}
+                  <CustomButton
+                    icon='plus'
+                    onPress={() => {
+                      workoutDetailStore.addNewExercise({
+                        exerciseId:
+                          workoutDetailStore.newExercises.size.toString(),
+                        sets: 0,
+                        reps: 0,
+                        unit: Unit.SECONDS,
+                        exercise: {
+                          _id: '',
+                          name: '',
+                          description: '',
+                          category: CategoryType.FULLBODY,
+                        },
+                      });
+                      setSelectedExercise(
+                        workoutDetailStore.exerciseCards.find(
+                          exerciseCard =>
+                            exerciseCard.id ===
+                            (
+                              workoutDetailStore.newExercises.size - 1
+                            ).toString(),
+                        ) as ExerciseCardInfo,
+                      );
+                      logger.info('Adding new Exercise');
+                    }}
+                  />
+                </>
+              )}
+            />
+            <CustomButton title='Enviar' onPress={handleSubmit} />
+          </>
         )}
-
-        <ItemCardList
-          items={workoutDetailStore.exerciseCards}
-          onPress={item => setSelectedExercise(item)}
+      </Formik>
+      {selectedExercise && (
+        <EditExerciseModal
+          onDismiss={() => setSelectedExercise(undefined)}
+          exerciseItem={selectedExercise}
         />
-
-        {selectedExercise && (
-          <ExerciseModal
-            onDismiss={() => setSelectedExercise(undefined)}
-            exerciseItem={selectedExercise}
-          />
-        )}
-      </View>
-      <View className='mb-10 mx-10' style={{ flex: 0.1 }}>
-        <Button title='Completar' onPress={() => handleCompletedWorkout()} />
-      </View>
-    </View>
+      )}
+    </ScrollView>
   );
 };
 
