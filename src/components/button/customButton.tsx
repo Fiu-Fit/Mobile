@@ -1,5 +1,6 @@
-import { Button } from 'react-native-paper';
+import { Button, IconButton } from 'react-native-paper';
 import { useAppTheme } from '../../App';
+import { RequireAtLeastOne } from '../../utils/custom-types';
 
 interface ButtonProps {
   title?: string;
@@ -13,19 +14,21 @@ interface ButtonProps {
     | undefined;
   buttonColor?: string;
   textColor?: string;
+  size?: number;
   onPress?: () => void;
 }
 
-const IconButton = ({
+const CustomButton = ({
   title,
   icon,
   mode,
   buttonColor,
   textColor,
+  size,
   onPress = () => {},
-}: ButtonProps) => {
+}: RequireAtLeastOne<ButtonProps, 'title' | 'icon'>) => {
   const theme = useAppTheme();
-  return (
+  return title ? (
     <Button
       icon={icon}
       onPress={onPress}
@@ -34,7 +37,9 @@ const IconButton = ({
       textColor={textColor ?? theme.colors.onPrimary}>
       {title}
     </Button>
+  ) : (
+    <IconButton icon={icon ?? 'alert'} size={size} onPress={onPress} />
   );
 };
 
-export default IconButton;
+export default CustomButton;
