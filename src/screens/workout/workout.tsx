@@ -14,6 +14,8 @@ import ExerciseModal from '../../components/exerciseModal';
 import { ExerciseCardInfo } from '../../utils/workout-types';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
 import LoggerFactory from '../../utils/logger-utility';
+import FloatingActionButton from '../../components/dumb/floatingActionButton';
+import { Role } from '../../constants/roles';
 
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
@@ -86,6 +88,12 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
           />
         )}
       </View>
+      {currentUser.role !== Role.Athlete && (
+        <FloatingActionButton
+          onPress={() => navigation.push('UpsertWorkoutScreen', { itemId })}
+          icon='pencil'
+        />
+      )}
       <View className='mb-10 mx-10' style={{ flex: 0.1 }}>
         <Button title='Completar' onPress={() => handleCompletedWorkout()} />
       </View>
