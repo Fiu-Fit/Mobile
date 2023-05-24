@@ -66,20 +66,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
   },
-  triners: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  triner: {
-    fontSize: 16,
-    marginHorizontal: 5,
-    color: 'blue',
-    textDecorationLine: 'underline',
-  },
-  input: {
-    width: '100%',
-    marginBottom: 10,
-  },
   button: {
     marginVertical: 10,
     width: '100%',

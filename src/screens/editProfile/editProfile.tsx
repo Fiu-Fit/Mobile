@@ -11,14 +11,12 @@ const EditProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
   const [editedFirstName, setEditedFirstName] = useState(currentUser.firstName);
   const [editedLastName, setEditedLastName] = useState(currentUser.lastName);
   const [editedWeight, setEditedWeight] = useState('' + currentUser.bodyWeight);
-  const [editedEmail, setEditedEmail] = useState(currentUser.email);
 
   const handleSave = async () => {
     const updatedUser = { ...currentUser };
     updatedUser.firstName = editedFirstName;
     updatedUser.lastName = editedLastName;
     updatedUser.bodyWeight = Number(editedWeight);
-    updatedUser.email = editedEmail;
     await axiosClient.put(`/users/${updatedUser.id}`, updatedUser);
     setCurrentUser(updatedUser);
     navigation.navigate('Profile');
@@ -37,27 +35,21 @@ const EditProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
         },
       ]}>
       <TextInput
-        label='Name'
+        label='First Name'
         value={editedFirstName}
         onChangeText={setEditedFirstName}
         style={styles.input}
       />
       <TextInput
-        label='Name'
+        label='Last Name'
         value={editedLastName}
         onChangeText={setEditedLastName}
         style={styles.input}
       />
       <TextInput
-        label='Personal Info'
+        label='Weigth'
         value={editedWeight}
         onChangeText={setEditedWeight}
-        style={styles.input}
-      />
-      <TextInput
-        label='Email'
-        value={editedEmail}
-        onChangeText={setEditedEmail}
         style={styles.input}
       />
       <Button mode='contained' style={styles.button} onPress={handleSave}>
@@ -75,35 +67,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     height: '100%',
-  },
-  profilePicture: {
-    width: 120,
-    height: 120,
-    borderRadius: 50,
-    marginBottom: 15,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  personalInfo: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  email: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  triners: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  triner: {
-    fontSize: 16,
-    marginHorizontal: 5,
-    color: 'blue',
-    textDecorationLine: 'underline',
   },
   input: {
     width: '100%',
