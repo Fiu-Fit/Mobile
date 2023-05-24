@@ -34,6 +34,7 @@ const defaultWorkout = {
 export class WorkoutDetailStore {
   workoutId: string | undefined;
   workout: WorkoutProps = defaultWorkout;
+  newExercises = new Map<string, WorkoutExercise>();
   state = 'pending';
 
   get workoutHeader(): IWorkoutHeader {
@@ -55,7 +56,9 @@ export class WorkoutDetailStore {
   }
 
   get exerciseCards(): ExerciseCardInfo[] {
-    return Array.from(this.workout.exercises.values()).map(
+    const oldExercises = Array.from(this.workout.exercises.values());
+    const newExercises = Array.from(this.newExercises.values());
+    return [...oldExercises, ...newExercises].map(
       (workoutExercise): ExerciseCardInfo => {
         return {
           id: workoutExercise.exerciseId,
@@ -78,11 +81,13 @@ export class WorkoutDetailStore {
       workoutId: observable,
       workout: observable,
       state: observable,
+      newExercises: observable,
       exerciseCards: computed,
       workoutHeader: computed,
-      addExercise: action,
+      addNewExercise: action,
       editExercise: action,
       removeExercise: action,
+      upsertStoredWorkout: flow,
       fetchWorkout: flow,
     });
   }
@@ -119,6 +124,7 @@ export class WorkoutDetailStore {
           map.set(exercise.exerciseId, exercise);
           return map;
         }, this.workout.exercises);
+        this.newExercises = new Map<string, WorkoutExercise>();
         logger.debug('Loaded Workout: ', this.workout);
         this.state = 'done';
       });
@@ -128,16 +134,49 @@ export class WorkoutDetailStore {
       });
     }
   }
-  addExercise(exercise: WorkoutExercise) {
-    this.workout.exercises.set(exercise.exerciseId, exercise);
+  addNewExercise(exercise: WorkoutExercise) {
+    this.newExercises.set(exercise.exerciseId, exercise);
   }
-
   editExercise(exerciseId: string, exercise: WorkoutExercise) {
-    this.workout.exercises.set(exerciseId, exercise);
+    if (this.workout.exercises.has(exerciseId)) {
+      this.workout.exercises.set(exerciseId, exercise);
+    }
+    this.newExercises.set(exerciseId, exercise);
   }
 
   removeExercise(exerciseId: string) {
-    this.workout.exercises.delete(exerciseId);
+    this.workout.exercises.delete(exerciseId) ||
+      this.newExercises.delete(exerciseId);
+  }
+  *upsertStoredWorkout() {
+    const newExercisesList = Array.from(this.newExercises.values()).map(
+      newExercise => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { exerciseId, ...exerciseToInsert } = newExercise;
+        return exerciseToInsert;
+      },
+    );
+    try {
+      const { _id, exercises, ...restOfWorkout } = this.workout;
+      const workoutPayload = {
+        ...restOfWorkout,
+        exercises: [...exercises, ...newExercisesList],
+      };
+      logger.info('Upserting workout: ', workoutPayload);
+      const { data } = yield !this.workout._id
+        ? axiosClient.post<WorkoutProps>('/workouts', workoutPayload)
+        : axiosClient.put<WorkoutProps>(`/workouts/${this.workout._id}`, {
+            _id,
+            ...workoutPayload,
+          });
+      this.workout._id = data._id;
+      logger.info('Upsert workout Data: ', data);
+    } catch (err) {
+      logger.error(
+        'Error while trying to upsert workout:',
+        (err as any).response,
+      );
+    }
   }
 }
 
