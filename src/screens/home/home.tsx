@@ -7,7 +7,6 @@ import HomeHeader from '../../components/homeHeader.tsx';
 import Button from '../../components/button';
 import { workoutStore } from '../../stores/workout.store';
 import { useEffect } from 'react';
-import { HomeNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {

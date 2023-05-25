@@ -9,21 +9,13 @@ export type InputProps = {
   role: string;
 };
 
-export type ErrorInputProps = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  bodyWeight: string;
-};
+export type ErrorInputProps = Omit<InputProps, 'role'>;
 
 export type CommentInputProps = {
   comment: string;
 };
 
-export type ErrorCommentInputProps = {
-  comment: string;
-};
+export type ErrorCommentInputProps = CommentInputProps;
 
 export interface CardInfo {
   id: string;
@@ -40,3 +32,11 @@ export type User = {
   role: Role;
   bodyWeight: number;
 };
+
+export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
+  T,
+  Exclude<keyof T, Keys>
+> &
+  {
+    [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
+  }[Keys];
