@@ -51,6 +51,7 @@ const EditProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
         value={editedWeight}
         onChangeText={setEditedWeight}
         style={styles.input}
+        keyboardType='numeric'
       />
       <Button mode='contained' style={styles.button} onPress={handleSave}>
         Save
