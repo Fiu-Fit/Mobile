@@ -160,8 +160,12 @@ export class WorkoutDetailStore {
       const { _id, exercises, ...restOfWorkout } = this.workout;
       const workoutPayload = {
         ...restOfWorkout,
-        exercises: [...exercises, ...newExercisesList],
+        exercises: [
+          ...Array.from(exercises.values()),
+          ...Array.from(newExercisesList.values()),
+        ],
       };
+      logger.info('Workout ID: ', _id);
       logger.info('Upserting workout: ', workoutPayload);
       const { data } = yield !this.workout._id
         ? axiosClient.post<WorkoutProps>('/workouts', workoutPayload)
