@@ -39,7 +39,8 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
     exerciseItem.id,
   ) ??
     workoutDetailStore.newExercises.get(exerciseItem.id) ?? {
-      exerciseId: workoutDetailStore.newExercises.size.toString(),
+      _id: workoutDetailStore.newExercises.size.toString(),
+      exerciseId: '',
       exercise: {
         _id: '',
         name: '',
@@ -104,7 +105,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
             }}>
             <Formik<UpsertExerciseFormValue>
               initialValues={{
-                exerciseId: workoutExercise?.exerciseId ?? '',
+                _id: workoutExercise?._id ?? '',
                 exercise:
                   workoutExercise?.exercise ??
                   ({
@@ -113,6 +114,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                     description: '',
                     category: '',
                   } as unknown as Exercise),
+                exerciseId: workoutExercise.exercise._id,
                 sets: workoutExercise?.sets ?? 0,
                 reps: workoutExercise?.reps ?? 0,
                 unit: (workoutExercise?.unit as Unit) ?? Unit.UNRECOGNIZED,

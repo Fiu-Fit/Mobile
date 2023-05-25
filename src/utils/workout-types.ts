@@ -45,6 +45,7 @@ export const unitMap = new Map<Unit, string>([
 ]);
 
 export type WorkoutExercise = {
+  _id: string;
   exerciseId: string;
   sets: number;
   reps: number;

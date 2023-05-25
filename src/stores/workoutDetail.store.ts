@@ -61,7 +61,7 @@ export class WorkoutDetailStore {
     return [...oldExercises, ...newExercises].map(
       (workoutExercise): ExerciseCardInfo => {
         return {
-          id: workoutExercise.exerciseId,
+          id: workoutExercise._id,
           title: workoutExercise.exercise?.name ?? 'Name missing',
           content: `${workoutExercise.sets} x ${workoutExercise.reps}`,
           exercise: workoutExercise.exercise,
@@ -118,10 +118,10 @@ export class WorkoutDetailStore {
         };
         logger.info('Workout Data:', workoutData);
         this.workout.exercises = exercisesList.reduce((map, exercise) => {
-          if (map.has(exercise.exerciseId)) {
+          if (map.has(exercise._id)) {
             return map;
           }
-          map.set(exercise.exerciseId, exercise);
+          map.set(exercise._id, exercise);
           return map;
         }, this.workout.exercises);
         this.newExercises = new Map<string, WorkoutExercise>();
@@ -135,7 +135,7 @@ export class WorkoutDetailStore {
     }
   }
   addNewExercise(exercise: WorkoutExercise) {
-    this.newExercises.set(exercise.exerciseId, exercise);
+    this.newExercises.set(exercise._id, exercise);
   }
   editExercise(exerciseId: string, exercise: WorkoutExercise) {
     if (this.workout.exercises.has(exerciseId)) {
@@ -152,8 +152,8 @@ export class WorkoutDetailStore {
     const newExercisesList = Array.from(this.newExercises.values()).map(
       newExercise => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { exerciseId, ...exerciseToInsert } = newExercise;
-        return exerciseToInsert;
+        const { _id, exerciseId, exercise, ...exerciseToInsert } = newExercise;
+        return { exerciseId: exercise._id, ...exerciseToInsert };
       },
     );
     try {

@@ -175,8 +175,8 @@ const UpsertWorkoutScreen = ({
                     icon='plus'
                     onPress={() => {
                       workoutDetailStore.addNewExercise({
-                        exerciseId:
-                          workoutDetailStore.newExercises.size.toString(),
+                        _id: workoutDetailStore.newExercises.size.toString(),
+                        exerciseId: '',
                         sets: 0,
                         reps: 0,
                         unit: Unit.SECONDS,
