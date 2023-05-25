@@ -1,142 +1,44 @@
-import { useState } from 'react';
 import { View, Image, StyleSheet, Text } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
-import { useAppTheme } from '../../App';
-import { ProfileScreenNavigationProp } from '../../navigation/navigation-props';
+import { Button } from 'react-native-paper';
+import { useAppTheme, useUserContext } from '../../App';
+import { ProfileNavigationProp } from '../../navigation/navigation-props';
 import auth from '@react-native-firebase/auth';
 
-// interface WorkoutCardProps {
-//   name: string;
-//   pictureUrl: string;
-//   personalInfo: string;
-//   email: string;
-//   triners: string[];
-//   onEdit?: (editedProfile: EditedProfile) => void;
-// }
-
-// interface EditedProfile {
-//   name: string;
-//   personalInfo: string;
-//   email: string;
-//   triners: string[];
-// }
-
-// const UserProfile = ({
-//   name,
-//   pictureUrl,
-//   personalInfo,
-//   email,
-//   triners,
-//   onEdit,
-// }: WorkoutCardProps) => {
-const UserProfile = ({
-  navigation,
-}: {
-  navigation: ProfileScreenNavigationProp;
-}) => {
+const UserProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
   const appTheme = useAppTheme();
-
-  const name = 'hola';
-  const personalInfo = 'personalInfo';
-  const pictureUrl =
-    'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80';
-  const email = 'email';
-  const triners = ['hola'];
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedName, setEditedName] = useState(name);
-  const [editedInfo, setEditedInfo] = useState(personalInfo);
-  const [editedEmail, setEditedEmail] = useState(email);
-
-  const handleSave = () => {
-    // const editedProfile = {
-    //   name: editedName,
-    //   personalInfo: editedBio,
-    //   email: editedEmail,
-    //   triners,
-    // };
-    // onEdit && onEdit(editedProfile);
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setEditedName(name);
-    setEditedInfo(personalInfo);
-    setEditedEmail(email);
-    setIsEditing(false);
-  };
 
   const handleSignOut = async () => {
     await auth().signOut();
-    navigation.push('LoginScreen');
+    navigation.getParent()?.navigate('LoginScreen');
   };
+  const { currentUser } = useUserContext();
+  const pictureUrl =
+    'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80';
 
-  if (isEditing) {
-    return (
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: appTheme.colors.surfaceVariant,
-          },
-        ]}>
-        <TextInput
-          label='Name'
-          value={editedName}
-          onChangeText={setEditedName}
-          style={styles.input}
-        />
-        <TextInput
-          label='Personal Info'
-          value={editedInfo}
-          onChangeText={setEditedInfo}
-          style={styles.input}
-        />
-        <TextInput
-          label='Email'
-          value={editedEmail}
-          onChangeText={setEditedEmail}
-          style={styles.input}
-        />
-        <Button mode='contained' style={styles.button} onPress={handleSave}>
-          Save
-        </Button>
-        <Button mode='contained' style={styles.button} onPress={handleCancel}>
-          Reset Original Values
-        </Button>
-      </View>
-    );
-  } else {
-    return (
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: appTheme.colors.surfaceVariant,
-          },
-        ]}>
-        <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
-        <Text style={styles.name}>{editedName}</Text>
-        <Text style={styles.personalInfo}>{editedInfo}</Text>
-        <Text style={styles.email}>{editedEmail}</Text>
-        <View style={styles.triners}>
-          {triners.map((triner: string) => (
-            <Text key={triner} style={styles.triner}>
-              {triner}
-            </Text>
-          ))}
-        </View>
-        <Button
-          mode='contained'
-          style={styles.button}
-          onPress={() => setIsEditing(true)}>
-          Edit
-        </Button>
-        <Button mode='contained' style={styles.button} onPress={handleSignOut}>
-          Cerrar sesion
-        </Button>
-      </View>
-    );
-  }
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: appTheme.colors.surfaceVariant,
+        },
+      ]}>
+      <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
+      <Text style={styles.name}>{currentUser.firstName}</Text>
+      <Text style={styles.name}>{currentUser.lastName}</Text>
+      <Text style={styles.personalInfo}>{currentUser.bodyWeight} kg</Text>
+      <Text style={styles.email}>{currentUser.email}</Text>
+      <Button
+        mode='contained'
+        style={styles.button}
+        onPress={() => navigation.getParent()?.navigate('EditProfile')}>
+        Edit
+      </Button>
+      <Button mode='contained' style={styles.button} onPress={handleSignOut}>
+        Cerrar sesion
+      </Button>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -162,20 +64,6 @@ const styles = StyleSheet.create({
   },
   email: {
     fontSize: 16,
-    marginBottom: 10,
-  },
-  triners: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  triner: {
-    fontSize: 16,
-    marginHorizontal: 5,
-    color: 'blue',
-    textDecorationLine: 'underline',
-  },
-  input: {
-    width: '100%',
     marginBottom: 10,
   },
   button: {
