@@ -33,6 +33,7 @@ export class WorkoutStore {
       workoutCardsInfo: computed,
       fetchWorkouts: flow,
       fetchFavoriteWorkouts: flow,
+      fetchRecommendedWorkouts: flow,
     });
   }
 
@@ -42,6 +43,34 @@ export class WorkoutStore {
     try {
       logger.debug('Getting workouts...');
       const { data } = yield axiosClient.get<WorkoutProps[]>('/workouts');
+      logger.debug('Got data: ', data);
+      runInAction(() => {
+        this.workouts = data;
+        this.state = 'done';
+      });
+    } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
+  *fetchRecommendedWorkouts(interests: number[]) {
+    this.workouts = [];
+    this.state = 'pending';
+    try {
+      const filters = {
+        category: interests,
+      };
+
+      const params = {
+        filters: JSON.stringify(filters),
+      };
+
+      logger.debug('Getting recommended workouts...');
+      const { data } = yield axiosClient.get<WorkoutProps[]>('/workouts', {
+        params,
+      });
       logger.debug('Got data: ', data);
       runInAction(() => {
         this.workouts = data;

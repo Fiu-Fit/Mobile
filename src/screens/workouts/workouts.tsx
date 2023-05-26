@@ -5,7 +5,6 @@ import NavBar from '../../components/navBar';
 import { WorkoutsScreenNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 import { workoutStore } from '../../stores/workout.store';
-import { useEffect } from 'react';
 import FloatingActionButton from '../../components/dumb/floatingActionButton';
 import { Role } from '../../constants/roles';
 import WorkoutsSelector from '../../components/workoutsSelector';
@@ -17,10 +16,6 @@ const WorkoutsScreen = ({
 }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
-
-  useEffect(() => {
-    workoutStore.fetchWorkouts();
-  }, []);
 
   return (
     <View style={{ backgroundColor: appTheme.colors.background, flex: 1 }}>

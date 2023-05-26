@@ -39,4 +39,5 @@ export type User = {
   email: string;
   role: Role;
   bodyWeight: number;
+  interests: number[];
 };

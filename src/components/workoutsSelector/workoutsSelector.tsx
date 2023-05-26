@@ -1,8 +1,11 @@
 import { TouchableOpacity, View } from 'react-native';
-import { useAppTheme } from '../../App';
+import { useAppTheme, useUserContext } from '../../App';
 import { Text } from 'react-native-paper';
 import { WorkoutStore } from '../../stores/workout.store';
 import { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
+import { action } from 'mobx';
 
 interface WorkoutSelectorProps {
   workoutStore: WorkoutStore;
@@ -10,10 +13,24 @@ interface WorkoutSelectorProps {
 
 const WorkoutsSelector = ({ workoutStore }: WorkoutSelectorProps) => {
   const appTheme = useAppTheme();
+  const { currentUser } = useUserContext();
   const [showingAllWorkouts, setShowingAllWorkouts] = useState(false);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      action(() => {
+        onChangeShowingAllWorkouts(showingAllWorkouts);
+      })();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
+
   const onChangeShowingAllWorkouts = (isShowingAllWorkouts: boolean) => {
-    workoutStore.fetchWorkouts();
+    if (isShowingAllWorkouts) {
+      workoutStore.fetchWorkouts();
+    } else {
+      workoutStore.fetchRecommendedWorkouts(currentUser.interests);
+    }
     setShowingAllWorkouts(isShowingAllWorkouts);
   };
 

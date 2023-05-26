@@ -122,6 +122,7 @@ const defaultUserObject = {
   lastName: '',
   role: Role.Athlete,
   bodyWeight: 0,
+  interests: [1, 2],
 };
 
 const UserContext = createContext<{
