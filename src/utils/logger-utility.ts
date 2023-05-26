@@ -18,6 +18,7 @@ const config = {
     'workout-comment',
     'workout-detail-store',
     'exercise-store',
+    'user-search-store',
     'interests',
     'goals',
     'create-goal',
