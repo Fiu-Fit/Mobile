@@ -44,7 +44,7 @@ export class WorkoutDetailStore {
       name,
       description,
       duration,
-      author: 'Jorge',
+      author: 'Jorge', // @TODO Backend: attach User Object in Author instead of AuthorID
       rating: {
         globalRating: 4,
         comments: [
