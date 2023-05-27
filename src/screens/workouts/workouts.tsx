@@ -20,7 +20,7 @@ const WorkoutsScreen = ({
   return (
     <View style={{ backgroundColor: appTheme.colors.background, flex: 1 }}>
       <NavBar />
-      <WorkoutsSelector workoutStore={workoutStore} />
+      <WorkoutsSelector/>
       <View style={{ flex: 0.8 }}>
         <ItemCardList
           items={workoutStore.workoutCardsInfo}

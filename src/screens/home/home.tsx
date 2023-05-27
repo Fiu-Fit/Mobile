@@ -9,15 +9,15 @@ import { workoutStore } from '../../stores/workout.store';
 import { HomeNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 import { useFocusEffect } from '@react-navigation/native';
-import React from 'react';
 import { action } from 'mobx';
+import { useCallback } from 'react';
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       action(() => {
         workoutStore.fetchFavoriteWorkouts(`${currentUser.id}`);
       })();

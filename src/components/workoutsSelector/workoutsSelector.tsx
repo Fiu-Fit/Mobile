@@ -1,23 +1,18 @@
 import { TouchableOpacity, View } from 'react-native';
 import { useAppTheme, useUserContext } from '../../App';
 import { Text } from 'react-native-paper';
-import { WorkoutStore } from '../../stores/workout.store';
-import { useState } from 'react';
+import { workoutStore } from '../../stores/workout.store';
+import { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import React from 'react';
 import { action } from 'mobx';
 
-interface WorkoutSelectorProps {
-  workoutStore: WorkoutStore;
-}
-
-const WorkoutsSelector = ({ workoutStore }: WorkoutSelectorProps) => {
+const WorkoutsSelector = () => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
   const [showingAllWorkouts, setShowingAllWorkouts] = useState(false);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       action(() => {
         onChangeShowingAllWorkouts(showingAllWorkouts);
       })();

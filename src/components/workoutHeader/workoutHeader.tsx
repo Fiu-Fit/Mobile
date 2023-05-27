@@ -3,13 +3,9 @@ import { Text } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../constants/colors';
-import { WorkoutDetailStore } from '../../stores/workoutDetail.store';
+import { workoutDetailStore } from '../../stores/workoutDetail.store';
 
-type WorkoutHeaderProps = {
-  workoutDetailStore: WorkoutDetailStore;
-};
-
-const WorkoutHeader = ({ workoutDetailStore }: WorkoutHeaderProps) => {
+const WorkoutHeader = () => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
   const workoutHeader = workoutDetailStore.workoutHeader;

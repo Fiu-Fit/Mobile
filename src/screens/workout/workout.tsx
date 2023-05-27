@@ -50,7 +50,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
     <View
       className='flex-1'
       style={{ backgroundColor: appTheme.colors.background }}>
-      <WorkoutHeader workoutDetailStore={workoutDetailStore} />
+      <WorkoutHeader/>
       <WorkoutInfo
         workoutHeader={workoutDetailStore.workoutHeader}
         onPressModal={() => setRatingModalVisible(true)}
