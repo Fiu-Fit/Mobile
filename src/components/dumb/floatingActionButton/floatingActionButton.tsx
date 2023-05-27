@@ -4,12 +4,16 @@ import { useAppTheme } from '../../../App';
 interface FloatingActionButtonProps {
   icon?: string;
   descriptive?: boolean;
+  bottom?: number;
+  right?: number;
   onPress?: () => void;
 }
 
 const FloatingActionButton = ({
   icon = 'plus',
   descriptive = false,
+  bottom = 20,
+  right = 20,
   onPress = () => {},
 }: FloatingActionButtonProps) => {
   const theme = useAppTheme();
@@ -19,7 +23,7 @@ const FloatingActionButton = ({
     </Button>
   ) : (
     <IconButton
-      style={{ position: 'absolute', bottom: 20, right: 20 }}
+      style={{ position: 'absolute', bottom, right }}
       icon={icon}
       iconColor={theme.colors.onQuinary}
       containerColor={theme.colors.quinary}

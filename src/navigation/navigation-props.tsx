@@ -3,6 +3,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 
 export type AuthStackParamList = {
   LoginScreen: undefined;
+  EditProfile: undefined;
   RegisterScreen: undefined;
   InterestsScreen: { name: string };
   PasswordRecoveryScreen: undefined;
@@ -12,6 +13,7 @@ export type AuthStackParamList = {
 export type WorkoutStackParamList = {
   WorkoutScreen: { itemId: string };
   WorkoutsScreen: undefined;
+  UpsertWorkoutScreen: { itemId?: string };
 };
 
 export type GoalStackParamList = {
@@ -26,6 +28,7 @@ export type TabParamList = {
   Goals: undefined;
   Profile: undefined;
   HomeTab: undefined;
+  LoginScreen: undefined;
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<
@@ -57,7 +60,10 @@ export type WorkoutsScreenNavigationProp = StackNavigationProp<
   WorkoutStackParamList,
   'WorkoutsScreen'
 >;
-
+export type UpsertWorkoutScreenNavigationProp = StackNavigationProp<
+  WorkoutStackParamList,
+  'UpsertWorkoutScreen'
+>;
 export type CreateGoalScreenNavigationProp = StackNavigationProp<
   GoalStackParamList,
   'CreateGoalScreen'

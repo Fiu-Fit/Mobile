@@ -33,7 +33,9 @@ const WorkoutsScreen = ({
       </View>
       {currentUser.role !== Role.Athlete && (
         <FloatingActionButton
-          onPress={() => navigation.push('UpsertWorkout')}
+          onPress={() =>
+            navigation.push('UpsertWorkoutScreen', { itemId: undefined })
+          }
         />
       )}
     </View>

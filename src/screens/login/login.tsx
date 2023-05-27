@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
   Image,
   SafeAreaView,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -113,92 +114,98 @@ const LoginScreen = ({
   };
 
   return (
-    <SafeAreaView className='flex-1 bg-black px-8 w-full'>
-      {loading && <Loader />}
-      <FiuFitLogo />
-      <View className='flex-1 py-5 w-full'>
-        <Formik
-          initialValues={{
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-            role: 'Athlete',
-            bodyWeight: 0,
-          }}
-          validate={values => {
-            let errors: FormikErrors<ErrorInputProps> = {};
-            if (!values.email) {
-              errors.email = 'Please input email';
-            } else if (!values.email.match(/\S+@\S+\.\S+/)) {
-              errors.email = 'Please input valid email';
-            }
-            if (!values.password) {
-              errors.password = 'Please input password';
-            }
-            return errors;
-          }}
-          onSubmit={handleSignIn}>
-          {({ values, errors, handleChange, handleSubmit }) => (
-            <>
-              <Input
-                value={values.email}
-                placeholder='Enter your email'
-                placeholderTextColor={COLORS.darkGrey}
-                onChangeText={handleChange('email')}
-                labelText='Email'
-                iconName='email-outline'
-                error={errors.email}
-                password={false}
-                onFocus={() => {
-                  errors.email = '';
-                }}
+    <ScrollView contentInsetAdjustmentBehavior='automatic'>
+      <SafeAreaView className='flex-1 bg-black px-8 w-full'>
+        {loading && <Loader />}
+        <FiuFitLogo />
+        <View className='flex-1 py-5 w-full'>
+          <Formik
+            initialValues={{
+              firstName: '',
+              lastName: '',
+              email: '',
+              password: '',
+              role: 'Athlete',
+              bodyWeight: 0,
+            }}
+            validate={values => {
+              let errors: FormikErrors<ErrorInputProps> = {};
+              if (!values.email) {
+                errors.email = 'Please input email';
+              } else if (!values.email.match(/\S+@\S+\.\S+/)) {
+                errors.email = 'Please input valid email';
+              }
+              if (!values.password) {
+                errors.password = 'Please input password';
+              }
+              return errors;
+            }}
+            onSubmit={handleSignIn}>
+            {({ values, errors, handleChange, handleSubmit }) => (
+              <>
+                <Input
+                  value={values.email}
+                  placeholder='Enter your email'
+                  placeholderTextColor={COLORS.darkGrey}
+                  onChangeText={handleChange('email')}
+                  labelText='Email'
+                  iconName='email-outline'
+                  error={errors.email}
+                  password={false}
+                  onFocus={() => {
+                    errors.email = '';
+                  }}
+                />
+                <Input
+                  value={values.password}
+                  placeholder='Enter your password'
+                  placeholderTextColor={COLORS.darkGrey}
+                  iconName='lock-outline'
+                  labelText='Password'
+                  onChangeText={handleChange('password')}
+                  password
+                  error={errors.password}
+                  onFocus={() => {
+                    errors.password = '';
+                  }}
+                />
+                <Button title='Login' onPress={handleSubmit} />
+              </>
+            )}
+          </Formik>
+
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={handleGoogleSignIn}
+            className='bg-primary-color h-12 w-full justify-center items-center mb-5 rounded-md'>
+            <View className='flex flex-row'>
+              <Image
+                className='h-8 w-8'
+                source={require('../../imgs/google-logo.png')}
               />
-              <Input
-                value={values.password}
-                placeholder='Enter your password'
-                placeholderTextColor={COLORS.darkGrey}
-                iconName='lock-outline'
-                labelText='Password'
-                onChangeText={handleChange('password')}
-                password
-                error={errors.password}
-                onFocus={() => {
-                  errors.password = '';
-                }}
-              />
-              <Button title='Login' onPress={handleSubmit} />
-            </>
-          )}
-        </Formik>
 
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={handleGoogleSignIn}
-          className='bg-primary-color h-12 w-full justify-center items-center mb-5 rounded-md'>
-          <View className='flex flex-row'>
-            <Image
-              className='h-8 w-8'
-              source={require('../../imgs/google-logo.png')}
-            />
-
-            <Text className='text-white text-lg text-bold align-center'>
-              {'Sign in with Google'}
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <Text
-          onPress={() => navigation.push('RegisterScreen')}
-          className='font-bold text-center'>
-          Don't have an account?
-        </Text>
-        <Button
-          onPress={() => navigation.push('PasswordRecoveryScreen')}
-          title='Olvidaste tu contraseña?'
-        />
-      </View>
-    </SafeAreaView>
+              <Text className='text-white text-lg text-bold align-center'>
+                {'Sign in with Google'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.push('RegisterScreen')}
+            className='bg-primary-color h-12 w-full justify-center items-center mb-5 rounded-md'>
+            <View className='flex flex-row'>
+              <Text className='text-white text-lg text-bold align-center'>
+                {"Don't have an account? Register"}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <Button
+            onPress={() => navigation.push('PasswordRecoveryScreen')}
+            title='Olvidaste tu contraseña?'
+          />
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 

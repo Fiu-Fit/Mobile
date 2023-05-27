@@ -37,7 +37,15 @@ export enum Unit {
   UNRECOGNIZED = -1,
 }
 
+export const unitMap = new Map<Unit, string>([
+  [Unit.SECONDS, 'Seconds'],
+  [Unit.REPETITIONS, 'Repetitions'],
+  [Unit.METERS, 'Meters'],
+  [Unit.UNRECOGNIZED, 'None apply'],
+]);
+
 export type WorkoutExercise = {
+  _id: string;
   exerciseId: string;
   sets: number;
   reps: number;
@@ -70,7 +78,7 @@ export type WorkoutProps = {
   difficulty: number;
   category: CategoryType;
   rating: WorkoutRating;
-  exercises: WorkoutExercise[];
+  exercises: Map<string, WorkoutExercise>;
   athleteIds: number[];
   authorId: number;
   updatedAt?: Date;

@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { useAppTheme } from '../../App';
+import { useAppTheme, useUserContext } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import React, { useEffect } from 'react';
 import WorkoutRatingModal from '../../components/workoutRatingModal';
@@ -13,6 +13,8 @@ import ItemCardList from '../../components/itemCardList';
 import ExerciseModal from '../../components/exerciseModal';
 import { ExerciseCardInfo } from '../../utils/workout-types';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
+import FloatingActionButton from '../../components/dumb/floatingActionButton';
+import { Role } from '../../constants/roles';
 
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
@@ -25,6 +27,7 @@ type WorkoutScreenProps = {
 
 const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
   const appTheme = useAppTheme();
+  const { currentUser } = useUserContext();
   const [selectedExercise, setSelectedExercise] = React.useState<
     ExerciseCardInfo | undefined
   >(undefined);
@@ -77,6 +80,12 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
           />
         )}
       </View>
+      {currentUser.role !== Role.Athlete && (
+        <FloatingActionButton
+          onPress={() => navigation.push('UpsertWorkoutScreen', { itemId })}
+          icon='pencil'
+        />
+      )}
       <View className='mb-10 mx-10' style={{ flex: 0.1 }}>
         <Button title='Completar' onPress={() => handleCompletedWorkout()} />
       </View>

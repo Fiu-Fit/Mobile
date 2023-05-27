@@ -4,10 +4,13 @@ import { useAppTheme } from '../../App';
 import { observer } from 'mobx-react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { CardInfo } from '../../utils/custom-types';
+import IconButton from '../button';
 
 interface ItemCardProps<T extends CardInfo> {
   item: T;
   onPress?: () => void;
+  onEditPress?: () => void;
+  onRemovePress?: () => void;
 }
 
 const styles = StyleSheet.create({
@@ -26,7 +29,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const ItemCard = <T extends CardInfo>({ item, onPress }: ItemCardProps<T>) => {
+const ItemCard = <T extends CardInfo>({
+  item,
+  onPress,
+  onEditPress,
+  onRemovePress,
+}: ItemCardProps<T>) => {
   const appTheme = useAppTheme();
 
   return (
@@ -56,6 +64,12 @@ const ItemCard = <T extends CardInfo>({ item, onPress }: ItemCardProps<T>) => {
             <Paragraph style={{ color: appTheme.colors.onSurfaceVariant }}>
               {item.content}
             </Paragraph>
+            {onEditPress && (
+              <IconButton icon={'pencil-outline'} onPress={onEditPress} />
+            )}
+            {onRemovePress && (
+              <IconButton icon={'minus-circle'} onPress={onRemovePress} />
+            )}
           </View>
         </Card.Content>
       </Card>
