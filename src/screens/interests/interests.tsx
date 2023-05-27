@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { InterestsScreenNavigationProp } from '../../navigation/navigation-props';
-import { useAppTheme } from '../../App';
+import { useAppTheme, useUserContext } from '../../App';
 import Button from '../../components/button';
 import LoggerFactory from '../../utils/logger-utility';
 import {
@@ -10,6 +10,8 @@ import {
   CheckboxRow,
   checkboxOptions,
 } from '../../components/checkboxRow';
+import { axiosClient } from '../../utils/constants';
+import { User } from '../../utils/custom-types';
 
 const logger = LoggerFactory('interests');
 
@@ -24,24 +26,33 @@ type InterestsScreenProps = {
 
 const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
   const appTheme = useAppTheme();
-  //const { name } = route.params;
-  const name = 'Ian';
+  const { currentUser } = useUserContext();
+  const { name } = route.params;
   const [checkboxValues, setCheckboxValues] = React.useState<CheckboxValues>(
     {},
   );
 
-  const handleCheckboxPress = (key: string) => {
+  const handleCheckboxPress = (key: number) => {
     setCheckboxValues(prevValues => ({
       ...prevValues,
       [key]: !prevValues[key],
     }));
   };
 
-  const handleInterestsSubmit = () => {
+  const handleInterestsSubmit = async () => {
     const selectedInterests = Object.keys(checkboxValues).filter(
       key => checkboxValues[key],
     );
-    logger.info('Selected interests: ', selectedInterests);
+    try {
+      logger.debug('Adding interests to user...');
+      const { data } = await axiosClient.put<User>(
+        `/users/${currentUser.id}`,
+        selectedInterests.map(str => parseInt(str, 10)),
+      );
+      logger.debug(`User updated: ${currentUser.id}`, data);
+    } catch (e) {
+      logger.error('Error while saving user interests: ', e);
+    }
     navigation.navigate('Home');
   };
 
