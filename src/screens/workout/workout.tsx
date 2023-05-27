@@ -13,7 +13,6 @@ import ItemCardList from '../../components/itemCardList';
 import ExerciseModal from '../../components/exerciseModal';
 import { ExerciseCardInfo } from '../../utils/workout-types';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
-import LoggerFactory from '../../utils/logger-utility';
 import FloatingActionButton from '../../components/dumb/floatingActionButton';
 import { Role } from '../../constants/roles';
 
@@ -25,8 +24,6 @@ type WorkoutScreenProps = {
     };
   };
 };
-
-const logger = LoggerFactory('workout-screen');
 
 const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
   const appTheme = useAppTheme();
@@ -53,14 +50,9 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
     <View
       className='flex-1'
       style={{ backgroundColor: appTheme.colors.background }}>
-      <WorkoutHeader
-        name={workoutDetailStore.workoutHeader.name}
-        description={workoutDetailStore.workoutHeader.description}
-      />
+      <WorkoutHeader/>
       <WorkoutInfo
-        duration={workoutDetailStore.workoutHeader.duration}
-        exerciseCount={workoutDetailStore.workoutHeader.exerciseCount}
-        globalRating={workoutDetailStore.workoutHeader.rating.globalRating}
+        workoutHeader={workoutDetailStore.workoutHeader}
         onPressModal={() => setRatingModalVisible(true)}
       />
       <View

@@ -23,6 +23,7 @@ const defaultWorkout = {
   name: '',
   description: '',
   duration: 0,
+  author: '',
   difficulty: 0,
   category: CategoryType.FULLBODY,
   rating: { globalRating: 0, comments: [] },
@@ -43,6 +44,7 @@ export class WorkoutDetailStore {
       name,
       description,
       duration,
+      author: 'Jorge', // @TODO Backend: attach User Object in Author instead of AuthorID
       rating: {
         globalRating: 4,
         comments: [
@@ -89,6 +91,7 @@ export class WorkoutDetailStore {
       removeExercise: action,
       upsertStoredWorkout: flow,
       fetchWorkout: flow,
+      addWorkoutAsFavourite: flow,
     });
   }
 
@@ -134,6 +137,23 @@ export class WorkoutDetailStore {
       });
     }
   }
+
+  *addWorkoutAsFavourite(userId: number) {
+    this.state = 'pending';
+    try {
+      logger.debug('Adding workout as favourite...');
+      const { data } = yield axiosClient.put(
+        `/users/${userId}/favoriteWorkouts`,
+        this.workout._id,
+      );
+      logger.debug('Got data: ', data);
+    } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
   addNewExercise(exercise: WorkoutExercise) {
     this.newExercises.set(exercise._id, exercise);
   }

@@ -16,18 +16,18 @@ export enum CategoryType {
 }
 
 export const categoryMap = new Map<number, string>([
-  [CategoryType.LEGS, 'Legs'],
-  [CategoryType.CHEST, 'Chest'],
-  [CategoryType.BACK, 'Back'],
-  [CategoryType.SHOULDERS, 'Shoulders'],
-  [CategoryType.ARMS, 'Arms'],
-  [CategoryType.CORE, 'Core'],
-  [CategoryType.CARDIO, 'Cardio'],
-  [CategoryType.FULLBODY, 'Full Body'],
-  [CategoryType.FREEWEIGHT, 'Free Weight'],
-  [CategoryType.STRETCHING, 'Stretching'],
-  [CategoryType.STRENGTH, 'Strength'],
-  [CategoryType.UNRECOGNIZED, 'Unrecognized'],
+  [0, 'Legs'],
+  [1, 'Chest'],
+  [2, 'Back'],
+  [3, 'Shoulders'],
+  [4, 'Arms'],
+  [5, 'Core'],
+  [6, 'Cardio'],
+  [7, 'Full Body'],
+  [8, 'Free Weight'],
+  [9, 'Stretching'],
+  [10, 'Strength'],
+  [-1, 'Unrecognized'],
 ]);
 
 export enum Unit {
@@ -88,6 +88,7 @@ export type IWorkoutHeader = {
   name: string;
   description: string;
   duration: number;
+  author: string;
   rating: WorkoutRating;
   exerciseCount: number;
 };

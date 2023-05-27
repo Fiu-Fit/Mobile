@@ -1,35 +1,26 @@
 import React from 'react';
-import { Appbar, TextInput, Avatar, TouchableRipple } from 'react-native-paper';
+import { Appbar, TextInput } from 'react-native-paper';
 import SearchButton from '../searchButton';
-import { Image } from 'react-native';
+import { useAppTheme } from '../../App';
+import { View } from 'react-native';
 
-const NavBar = ({ navigation }) => {
+const NavBar = () => {
+  const appTheme = useAppTheme();
   const [filterText, setFilterText] = React.useState('');
   const onChangeSearch = (userInput: string): void => setFilterText(userInput);
-  const onProfilePress = () => navigation.navigate('Profile');
-  const generateImg = () => {
-    return (
-      <Image
-        source={{
-          uri: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80',
-        }}
-        resizeMode='cover'
-      />
-    );
-  };
+
   return (
-    <Appbar.Header>
-      <TouchableRipple onPress={onProfilePress}>
-        <Avatar.Image size={40} source={generateImg} />
-      </TouchableRipple>
+    <View
+      className='flex-row justify-center items-center'
+      style={{ flex: 0.1, backgroundColor: appTheme.colors.scrim }}>
       <TextInput
-        placeholder='Search'
+        placeholder='Filtrar por tipo'
         value={filterText}
         onChangeText={onChangeSearch}
-        style={{ flex: 2, marginLeft: 16, marginRight: 16 }}
+        className='my-2 mx-2 w-9/12'
       />
       <SearchButton />
-    </Appbar.Header>
+    </View>
   );
 };
 

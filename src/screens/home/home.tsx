@@ -6,16 +6,24 @@ import MetricCard from '../../components/metricCard';
 import HomeHeader from '../../components/homeHeader.tsx';
 import Button from '../../components/button';
 import { workoutStore } from '../../stores/workout.store';
-import { useEffect } from 'react';
+import { HomeNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
+import { useFocusEffect } from '@react-navigation/native';
+import { action } from 'mobx';
+import { useCallback } from 'react';
 
-const HomeScreen = ({ navigation }: { navigation: any }) => {
+const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
-  useEffect(() => {
-    workoutStore.fetchFavoriteWorkouts(`${currentUser.id}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      action(() => {
+        workoutStore.fetchFavoriteWorkouts(`${currentUser.id}`);
+      })();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
 
   return (
     <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>
@@ -36,9 +44,9 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         <Text className='self-center text-xl my-10'>
           Entrenamientos favoritos
         </Text>
-        {workoutStore.workoutCount > 0 ? (
+        {workoutStore.workoutsCount > 0 ? (
           <ItemCardList
-            items={workoutStore.cardsInfo}
+            items={workoutStore.workoutCardsInfo}
             onPress={item =>
               navigation.navigate('Workouts', {
                 screen: 'WorkoutScreen',

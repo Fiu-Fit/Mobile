@@ -31,6 +31,7 @@ export type User = {
   email: string;
   role: Role;
   bodyWeight: number;
+  interests: number[];
 };
 
 export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
