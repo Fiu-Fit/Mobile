@@ -1,4 +1,10 @@
-import { makeObservable, observable, action, computed } from 'mobx';
+import {
+  makeObservable,
+  observable,
+  action,
+  computed,
+  runInAction,
+} from 'mobx';
 // import { observer } from 'mobx-react-lite';
 import debounce from 'lodash.debounce';
 import { axiosClient } from '../utils/constants';
@@ -9,16 +15,14 @@ import { CardInfo, User } from '../utils/custom-types';
 const logger = LoggerFactory('user-search-store');
 class SearchStore {
   query: string = '';
-  results: Array<User> = [];
+  results: User[] = [];
   isLoading: boolean = false;
-  cancelTokenSource: CancelTokenSource | null = null;
+  cancelTokenSource: CancelTokenSource | undefined = undefined;
 
   constructor() {
     makeObservable(this, {
       query: observable,
       results: observable,
-      searchResults: computed,
-      searchQuery: computed,
       cardsInfo: computed,
       isLoading: observable,
       setSearchQuery: action,
@@ -30,16 +34,9 @@ class SearchStore {
     this.query = query;
   }
 
-  get searchResults(): Array<User> {
-    return this.results;
-  }
-
-  get searchQuery(): string {
-    return this.query;
-  }
-
   get cardsInfo(): CardInfo[] {
-    return this.results.map(
+    logger.info('Results in getCardsInfo: ', this.results);
+    return this.results?.map(
       (result): CardInfo => ({
         id: result.id.toString(),
         title: `${result.firstName} ${result.lastName}`,
@@ -52,7 +49,9 @@ class SearchStore {
 
   search = debounce(async () => {
     if (!this.query) {
-      this.results = [];
+      runInAction(() => {
+        this.results = [];
+      });
       return;
     }
 
@@ -60,22 +59,35 @@ class SearchStore {
       this.cancelTokenSource.cancel('Request canceled');
     }
 
-    this.isLoading = true;
+    runInAction(() => {
+      this.isLoading = true;
+    });
     this.cancelTokenSource = axios.CancelToken.source();
     this.results = [];
-    // try {
-    //   const response = await axiosClient.get(`/users?params=${this.query}`, {
-    //     cancelToken: this.cancelTokenSource?.token,
-    //   });
-    //   this.results = response.data;
-    // } catch (error) {
-    //   if (!axios.isCancel(error)) {
-    //     logger.error('Error occurred while searching:', error);
-    //   }
-    // } finally {
-    //   this.isLoading = false;
-    //   this.cancelTokenSource = null;
-    // }
+    try {
+      const response = await axiosClient.get(`/users?params=${this.query}`, {
+        cancelToken: this.cancelTokenSource?.token,
+      });
+      logger.info('Response: ', response);
+
+      runInAction(() => {
+        logger.info('Setting: ', response.data);
+        this.results = response?.data.rows ?? [];
+      });
+    } catch (error) {
+      if (!axios.isCancel(error)) {
+        logger.error('Error occurred while searching:', error);
+        runInAction(() => {
+          logger.info('Setting: ', []);
+          this.results = [];
+        });
+      }
+    } finally {
+      runInAction(() => {
+        this.isLoading = false;
+        this.cancelTokenSource = undefined;
+      });
+    }
   }, 500);
 }
 

@@ -13,12 +13,12 @@ const ProfileSearchScreen = () => {
   const appTheme = useAppTheme();
 
   useFocusEffect(() => {
-    // searchStore.search();
+    searchStore.search();
   });
 
   const handleSearch = (query: string) => {
     searchStore.setSearchQuery(query);
-    // searchStore.search();
+    searchStore.search();
   };
 
   return (
