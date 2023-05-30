@@ -11,6 +11,7 @@ const config = {
   enabledExtensions: [
     'login',
     'register',
+    'profile-search-screen',
     'workout-store',
     'workout-screen',
     'upsert-workout-screen',
