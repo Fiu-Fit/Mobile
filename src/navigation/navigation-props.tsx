@@ -28,6 +28,7 @@ export type TabParamList = {
   Goals: undefined;
   Profile: undefined;
   HomeTab: undefined;
+  UserSearch: undefined;
   LoginScreen: undefined;
 };
 
@@ -91,4 +92,9 @@ export type GoalsNavigationProp = BottomTabNavigationProp<
 export type HomeNavigationProp = BottomTabNavigationProp<
   TabParamList,
   'HomeTab'
+>;
+
+export type UserSearchNavigationProp = BottomTabNavigationProp<
+  TabParamList,
+  'UserSearch'
 >;
