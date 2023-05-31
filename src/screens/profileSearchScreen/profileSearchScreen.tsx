@@ -1,15 +1,18 @@
-import { StyleSheet, View, FlatList, ActivityIndicator } from 'react-native';
-import { Appbar, Searchbar, Text } from 'react-native-paper';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { Appbar, Searchbar } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 import { observer } from 'mobx-react';
 import { searchStore } from '../../stores/userSearch.store';
-import UserCard from '../../components/userCard';
 import ItemCardList from '../../components/itemCardList';
-import LoggerFactory from '../../utils/logger-utility';
 import { useFocusEffect } from '@react-navigation/native';
+import { UserSearchNavigationProp } from '../../navigation/navigation-props';
 
-const logger = LoggerFactory('profile-search-screen');
-const ProfileSearchScreen = () => {
+// const logger = LoggerFactory('profile-search-screen');
+const ProfileSearchScreen = ({
+  navigation,
+}: {
+  navigation: UserSearchNavigationProp;
+}) => {
   const appTheme = useAppTheme();
 
   useFocusEffect(() => {
@@ -29,16 +32,19 @@ const ProfileSearchScreen = () => {
       <Searchbar
         placeholder='Search'
         onChangeText={handleSearch}
-        value={searchStore.searchQuery}
+        value={searchStore.query}
         style={styles.searchBar}
       />
       {searchStore.isLoading ? (
         <ActivityIndicator size='large' color='#0000ff' />
       ) : (
-        // <Text>hola</Text>
         <ItemCardList
           items={searchStore.cardsInfo ?? []}
-          onPress={item => logger.info('clicked on:', item.id)}
+          onPress={item => {
+            navigation
+              .getParent()
+              ?.navigate('Profile', { givenUser: item, canEdit: false });
+          }}
         />
       )}
     </View>
