@@ -15,6 +15,7 @@ import { CardInfo, User } from '../utils/custom-types';
 const logger = LoggerFactory('user-search-store');
 class SearchStore {
   query: string = '';
+  lastQuery: string | undefined = undefined;
   results: User[] = [];
   isLoading: boolean = false;
   cancelTokenSource: CancelTokenSource | undefined = undefined;
@@ -55,12 +56,17 @@ class SearchStore {
       return;
     }
 
+    if (this.lastQuery && this.lastQuery === this.query) {
+      return;
+    }
+
     if (this.cancelTokenSource) {
       this.cancelTokenSource.cancel('Request canceled');
     }
 
     runInAction(() => {
       this.isLoading = true;
+      this.lastQuery = this.query;
     });
     this.cancelTokenSource = axios.CancelToken.source();
     this.results = [];
