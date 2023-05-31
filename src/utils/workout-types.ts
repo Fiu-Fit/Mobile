@@ -30,6 +30,28 @@ export const categoryMap = new Map<number, string>([
   [-1, 'Unrecognized'],
 ]);
 
+export const workoutCategoryOptions = [
+  { label: 'Piernas', key: 0 },
+  { label: 'Pecho', key: 1 },
+  { label: 'Espalda', key: 2 },
+  { label: 'Hombros', key: 3 },
+  { label: 'Brazos', key: 4 },
+  { label: 'Core', key: 5 },
+  { label: 'Cardio', key: 6 },
+  { label: 'Fullbody', key: 7 },
+  { label: 'Peso libre', key: 8 },
+  { label: 'Estiramiento', key: 9 },
+  { label: 'Fuerza', key: 10 },
+];
+
+export const workoutDifficultyOptions = [
+  { label: 'Muy fácil', key: 1 },
+  { label: 'Fácil', key: 2 },
+  { label: 'Intermedio', key: 3 },
+  { label: 'Difícil', key: 4 },
+  { label: 'Muy difícil', key: 5 },
+];
+
 export enum Unit {
   SECONDS = 0,
   REPETITIONS = 1,

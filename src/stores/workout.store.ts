@@ -34,6 +34,7 @@ export class WorkoutStore {
       fetchWorkouts: flow,
       fetchFavoriteWorkouts: flow,
       fetchRecommendedWorkouts: flow,
+      fetchFilteredWorkouts: flow,
     });
   }
 
@@ -92,6 +93,35 @@ export class WorkoutStore {
         `/users/${userId}/favoriteWorkouts`,
       );
       logger.debug(`Got data for user: ${userId}`, data);
+      runInAction(() => {
+        this.workouts = data;
+        this.state = 'done';
+      });
+    } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
+  *fetchFilteredWorkouts(workoutType: number, workoutDifficulty: number) {
+    this.workouts = [];
+    this.state = 'pending';
+    try {
+      const filters = {
+        category: workoutType,
+        difficulty: workoutDifficulty,
+      };
+
+      const params = {
+        filters: JSON.stringify(filters),
+      };
+
+      logger.debug('Getting filtered workouts...');
+      const { data } = yield axiosClient.get<WorkoutProps[]>('/workouts', {
+        params,
+      });
+      logger.debug('Got data: ', data);
       runInAction(() => {
         this.workouts = data;
         this.state = 'done';
