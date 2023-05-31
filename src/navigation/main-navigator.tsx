@@ -1,6 +1,6 @@
 import { useAppTheme } from '../App';
 import HomeScreen from '../screens/home';
-import UserProfile from '../screens/userProfile';
+import UserProfileScreen from '../screens/userProfile';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import WorkoutStack from './workout-navigator';
@@ -43,7 +43,7 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: appTheme.colors.secondary,
       })}>
       <Tab.Screen name='HomeTab' component={HomeScreen} />
-      <Tab.Screen name='Profile' component={UserProfile} />
+      <Tab.Screen name='Profile' component={UserProfileScreen} />
       <Tab.Screen name='Goals' component={GoalStack} />
       <Tab.Screen name='Workouts' component={WorkoutStack} />
       <Tab.Screen name='Search' component={ProfileSearchScreen} />
