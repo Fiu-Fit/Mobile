@@ -41,9 +41,10 @@ const ProfileSearchScreen = ({
         <ItemCardList
           items={searchStore.cardsInfo ?? []}
           onPress={item => {
-            navigation
-              .getParent()
-              ?.navigate('Profile', { givenUser: item, canEdit: false });
+            navigation.getParent()?.navigate('Profile', {
+              givenUserId: Number(item.id),
+              canEdit: false,
+            });
           }}
         />
       )}

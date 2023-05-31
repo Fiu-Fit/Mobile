@@ -1,23 +1,34 @@
 import { useUserContext } from '../../App';
 import { ProfileNavigationProp } from '../../navigation/navigation-props';
-import { User } from '../../utils/custom-types';
 import UserProfile from '../../components/userProfile';
+import LoggerFactory from '../../utils/logger-utility';
+import { searchStore } from '../../stores/userSearch.store';
+import { observer } from 'mobx-react';
 
-const UserProfileScreen = ({
-  navigation,
-  givenUser,
-  canEdit = true,
-}: {
+const logger = LoggerFactory('user-profile-screen');
+type UserProfileScreenProps = {
   navigation: ProfileNavigationProp;
-  givenUser?: User;
-  canEdit?: boolean;
-}) => {
+  route: {
+    params: {
+      givenUserId: number;
+      canEdit: boolean;
+    };
+  };
+};
+const UserProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
   const { currentUser } = useUserContext();
-  const user = givenUser ?? currentUser;
+  const { givenUserId, canEdit } = route.params;
+  const user = givenUserId
+    ? searchStore.results.find(loadedUser => loadedUser.id === givenUserId)
+    : currentUser;
 
   return (
-    <UserProfile navigation={navigation} currentUser={user} canEdit={canEdit} />
+    <UserProfile
+      navigation={navigation}
+      currentUser={user ?? currentUser}
+      canEdit={canEdit}
+    />
   );
 };
 
-export default UserProfileScreen;
+export default observer(UserProfileScreen);

@@ -1,9 +1,11 @@
 import { View, Image, StyleSheet, Text } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useAppTheme } from '../../App';
+import { useAppTheme, useUserContext } from '../../App';
 import { ProfileNavigationProp } from '../../navigation/navigation-props';
 import auth from '@react-native-firebase/auth';
 import { User } from '../../utils/custom-types';
+import { useFocusEffect } from '@react-navigation/native';
+import { observer } from 'mobx-react';
 
 interface UserProfileProps {
   currentUser: User;
@@ -17,7 +19,12 @@ const UserProfile = ({
   canEdit = true,
 }: UserProfileProps) => {
   const appTheme = useAppTheme();
-
+  const { currentUser: loggedInUser } = useUserContext();
+  useFocusEffect(() => {
+    if (canEdit) {
+      currentUser = loggedInUser;
+    }
+  });
   const handleSignOut = async () => {
     await auth().signOut();
     navigation?.getParent()?.navigate('LoginScreen');
@@ -90,4 +97,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserProfile;
+export default observer(UserProfile);

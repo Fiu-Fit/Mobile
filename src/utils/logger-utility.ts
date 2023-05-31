@@ -12,6 +12,7 @@ const config = {
     'login',
     'register',
     'profile-search-screen',
+    'user-profile-screen',
     'workout-store',
     'workout-screen',
     'upsert-workout-screen',

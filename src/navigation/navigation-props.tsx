@@ -26,7 +26,7 @@ export type TabParamList = {
   WorkoutScreen: Omit<WorkoutStackParamList, 'WorkoutsScreen'>;
   Workouts: undefined;
   Goals: undefined;
-  Profile: undefined;
+  Profile: { givenUserId: number; canEdit: boolean };
   HomeTab: undefined;
   UserSearch: undefined;
   LoginScreen: undefined;
