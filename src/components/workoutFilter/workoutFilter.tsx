@@ -7,12 +7,14 @@ import { useAppTheme } from '../../App';
 type WorkoutFilterProps = {
   iconName: string;
   text: string;
+  selectedFilter: string;
   onPress: () => void;
 };
 
 export const WorkoutFilter = ({
   iconName,
   text,
+  selectedFilter,
   onPress,
 }: WorkoutFilterProps) => {
   const appTheme = useAppTheme();
@@ -46,7 +48,9 @@ export const WorkoutFilter = ({
             alignItems: 'center',
             flexDirection: 'row',
           }}>
-          <Text style={{ color: appTheme.colors.primary }}>Cualquiera</Text>
+          <Text style={{ color: appTheme.colors.primary }}>
+            {selectedFilter}
+          </Text>
           <Icon
             style={{
               fontSize: 22,
