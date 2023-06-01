@@ -6,9 +6,9 @@ export type CheckboxValues = {
 };
 
 type CheckboxRowProps = {
-  options: { label: string; key: number }[];
+  options: { label: string; key: number | undefined }[];
   checkboxValues: CheckboxValues;
-  handleCheckboxPress: (key: number) => void;
+  handleCheckboxPress: (key: number | undefined) => void;
 };
 
 export const CheckboxRow = ({
@@ -18,14 +18,19 @@ export const CheckboxRow = ({
 }: CheckboxRowProps) => {
   return (
     <View className='flex-row my-2'>
-      {options.map(option => (
-        <Checkbox.Item
-          key={option.key}
-          label={option.label}
-          status={checkboxValues[option.key] ? 'checked' : 'unchecked'}
-          onPress={() => handleCheckboxPress(option.key)}
-        />
-      ))}
+      {options.map(option => {
+        if (option.key === undefined) {
+          return null;
+        }
+        return (
+          <Checkbox.Item
+            key={option.key}
+            label={option.label}
+            status={checkboxValues[option.key] ? 'checked' : 'unchecked'}
+            onPress={() => handleCheckboxPress(option.key)}
+          />
+        );
+      })}
     </View>
   );
 };

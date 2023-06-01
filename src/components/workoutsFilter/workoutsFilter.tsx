@@ -27,7 +27,7 @@ const WorkoutsFilter = () => {
       {workoutTypeFilterModalVisible && (
         <WorkoutFilterModal
           onDismiss={() => setWorkoutTypeFilterModalVisible(false)}
-          onSelect={(filter: number) => {
+          onSelect={(filter: number | undefined) => {
             workoutStore.selectedTypeFilter = filter;
             workoutStore.fetchWorkouts();
           }}
@@ -37,7 +37,7 @@ const WorkoutsFilter = () => {
       {workoutDifficultyFilterModalVisible && (
         <WorkoutFilterModal
           onDismiss={() => setWorkoutDifficultyFilterModalVisible(false)}
-          onSelect={(filter: number) => {
+          onSelect={(filter: number | undefined) => {
             workoutStore.selectedDifficultyFilter = filter;
             workoutStore.fetchWorkouts();
           }}
@@ -48,7 +48,8 @@ const WorkoutsFilter = () => {
         iconName='dumbbell'
         text='Tipo de entrenamiento'
         selectedFilter={
-          categoryMap.get(workoutStore.selectedTypeFilter ?? -1) || 'Cualquiera'
+          categoryMap.get(workoutStore.selectedTypeFilter ?? -1) ||
+          'Desconocido'
         }
         onPress={() => setWorkoutTypeFilterModalVisible(true)}
       />
@@ -57,7 +58,7 @@ const WorkoutsFilter = () => {
         text='Tipo de dificultad'
         selectedFilter={
           difficultyMap.get(workoutStore.selectedDifficultyFilter ?? -1) ||
-          'Cualquiera'
+          'Desconocido'
         }
         onPress={() => setWorkoutDifficultyFilterModalVisible(true)}
       />
