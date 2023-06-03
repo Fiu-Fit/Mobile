@@ -50,7 +50,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
     <View
       className='flex-1'
       style={{ backgroundColor: appTheme.colors.background }}>
-      <WorkoutHeader/>
+      <WorkoutHeader />
       <WorkoutInfo
         workoutHeader={workoutDetailStore.workoutHeader}
         onPressModal={() => setRatingModalVisible(true)}
@@ -80,12 +80,13 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
           />
         )}
       </View>
-      {currentUser.role !== Role.Athlete && (
-        <FloatingActionButton
-          onPress={() => navigation.push('UpsertWorkoutScreen', { itemId })}
-          icon='pencil'
-        />
-      )}
+      {currentUser.role !== Role.Athlete &&
+        currentUser.id === workoutDetailStore.workout.authorId && (
+          <FloatingActionButton
+            onPress={() => navigation.push('UpsertWorkoutScreen', { itemId })}
+            icon='pencil'
+          />
+        )}
       <View className='mb-10 mx-10' style={{ flex: 0.1 }}>
         <Button title='Completar' onPress={() => handleCompletedWorkout()} />
       </View>

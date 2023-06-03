@@ -16,18 +16,51 @@ export enum CategoryType {
 }
 
 export const categoryMap = new Map<number, string>([
-  [0, 'Legs'],
-  [1, 'Chest'],
-  [2, 'Back'],
-  [3, 'Shoulders'],
-  [4, 'Arms'],
+  [0, 'Piernas'],
+  [1, 'Pecho'],
+  [2, 'Espalda'],
+  [3, 'Hombros'],
+  [4, 'Brazos'],
   [5, 'Core'],
   [6, 'Cardio'],
-  [7, 'Full Body'],
-  [8, 'Free Weight'],
-  [9, 'Stretching'],
-  [10, 'Strength'],
-  [-1, 'Unrecognized'],
+  [7, 'Fullbody'],
+  [8, 'Peso Libre'],
+  [9, 'Estiramiento'],
+  [10, 'Fuerza'],
+  [-1, 'Cualquiera'],
+]);
+
+export const workoutCategoryOptions = [
+  { label: 'Piernas', key: 0 },
+  { label: 'Pecho', key: 1 },
+  { label: 'Espalda', key: 2 },
+  { label: 'Hombros', key: 3 },
+  { label: 'Brazos', key: 4 },
+  { label: 'Core', key: 5 },
+  { label: 'Cardio', key: 6 },
+  { label: 'Fullbody', key: 7 },
+  { label: 'Peso libre', key: 8 },
+  { label: 'Estiramiento', key: 9 },
+  { label: 'Fuerza', key: 10 },
+  { label: 'Cualquiera', key: undefined },
+];
+
+export const workoutDifficultyOptions = [
+  { label: 'Muy fácil', key: 1 },
+  { label: 'Fácil', key: 2 },
+  { label: 'Intermedio', key: 3 },
+  { label: 'Difícil', key: 4 },
+  { label: 'Muy difícil', key: 5 },
+  { label: 'Cualquiera', key: undefined },
+];
+
+export const difficultyMap = new Map<number, string>([
+  [1, 'Muy fácil'],
+  [2, 'Fácil'],
+  [3, 'Intermedio'],
+  [4, 'Difícil'],
+  [5, 'Muy difícil'],
+  [-1, 'Cualquiera'],
 ]);
 
 export enum Unit {

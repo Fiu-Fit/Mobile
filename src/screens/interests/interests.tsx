@@ -5,13 +5,10 @@ import { InterestsScreenNavigationProp } from '../../navigation/navigation-props
 import { useAppTheme, useUserContext } from '../../App';
 import Button from '../../components/button';
 import LoggerFactory from '../../utils/logger-utility';
-import {
-  CheckboxValues,
-  CheckboxRow,
-  checkboxOptions,
-} from '../../components/checkboxRow';
+import { CheckboxValues, CheckboxRow } from '../../components/checkboxRow';
 import { axiosClient } from '../../utils/constants';
 import { User } from '../../utils/custom-types';
+import { workoutCategoryOptions } from '../../utils/workout-types';
 
 const logger = LoggerFactory('interests');
 
@@ -32,7 +29,10 @@ const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
     {},
   );
 
-  const handleCheckboxPress = (key: number) => {
+  const handleCheckboxPress = (key: number | undefined) => {
+    if (key === undefined) {
+      return;
+    }
     setCheckboxValues(prevValues => ({
       ...prevValues,
       [key]: !prevValues[key],
@@ -70,7 +70,7 @@ const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
         {[0, 3, 6, 9].map((start, index) => (
           <CheckboxRow
             key={index}
-            options={checkboxOptions.slice(start, start + 3)}
+            options={workoutCategoryOptions.slice(start, start + 3)}
             checkboxValues={checkboxValues}
             handleCheckboxPress={handleCheckboxPress}
           />

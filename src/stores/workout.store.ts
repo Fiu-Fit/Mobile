@@ -9,6 +9,8 @@ const logger = LoggerFactory('workout-store');
 export class WorkoutStore {
   workouts: WorkoutProps[] = [];
   state = 'pending';
+  selectedTypeFilter: number | undefined = undefined;
+  selectedDifficultyFilter: number | undefined = undefined;
 
   get workoutsCount() {
     return this.workouts.length;
@@ -29,6 +31,8 @@ export class WorkoutStore {
   constructor() {
     makeObservable(this, {
       workouts: observable,
+      selectedTypeFilter: observable,
+      selectedDifficultyFilter: observable,
       workoutsCount: computed,
       workoutCardsInfo: computed,
       fetchWorkouts: flow,
@@ -41,8 +45,18 @@ export class WorkoutStore {
     this.workouts = [];
     this.state = 'pending';
     try {
+      const filters = {
+        category: this.selectedTypeFilter,
+        difficulty: this.selectedDifficultyFilter,
+      };
+
+      const params = {
+        filters: JSON.stringify(filters),
+      };
       logger.debug('Getting workouts...');
-      const { data } = yield axiosClient.get<WorkoutProps[]>('/workouts');
+      const { data } = yield axiosClient.get<WorkoutProps[]>('/workouts', {
+        params,
+      });
       logger.debug('Got data: ', data);
       runInAction(() => {
         this.workouts = data;
