@@ -80,7 +80,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
           />
         )}
       </View>
-      {currentUser.role === Role.Athlete && (
+      {currentUser.role !== Role.Athlete && (
         <FloatingActionButton
           onPress={() => navigation.push('UpsertWorkoutScreen', { itemId })}
           icon='pencil'
