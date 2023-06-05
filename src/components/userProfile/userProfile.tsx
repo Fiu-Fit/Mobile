@@ -3,15 +3,11 @@ import { Button } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import { ProfileNavigationProp } from '../../navigation/navigation-props';
 import auth from '@react-native-firebase/auth';
-import { User } from '../../utils/custom-types';
+import { UserProfileProps } from '../../utils/custom-types';
 import { useFocusEffect } from '@react-navigation/native';
 import { observer } from 'mobx-react';
 
-interface UserProfileProps {
-  currentUser: User;
-  navigation?: ProfileNavigationProp;
-  canEdit?: boolean;
-}
+
 
 const UserProfile = ({
   currentUser,
@@ -41,10 +37,10 @@ const UserProfile = ({
         },
       ]}>
       <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
-      <Text style={styles.name}>{currentUser.firstName}</Text>
-      <Text style={styles.name}>{currentUser.lastName}</Text>
-      <Text style={styles.personalInfo}>{currentUser.bodyWeight} kg</Text>
-      <Text style={styles.email}>{currentUser.email}</Text>
+      <Text style={styles.name}>{currentUser?.firstName}</Text>
+      <Text style={styles.name}>{currentUser?.lastName}</Text>
+      <Text style={styles.personalInfo}>{currentUser?.bodyWeight} kg</Text>
+      <Text style={styles.email}>{currentUser?.email}</Text>
       {canEdit && (
         <>
           <Button

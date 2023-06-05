@@ -1,9 +1,11 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { UserProfileProps } from '../utils/custom-types';
 
 export type AuthStackParamList = {
   LoginScreen: undefined;
   EditProfile: undefined;
+  SearchedProfile: UserProfileProps;
   RegisterScreen: undefined;
   InterestsScreen: { name: string };
   PasswordRecoveryScreen: undefined;
@@ -26,7 +28,7 @@ export type TabParamList = {
   WorkoutScreen: Omit<WorkoutStackParamList, 'WorkoutsScreen'>;
   Workouts: undefined;
   Goals: undefined;
-  Profile: { givenUserId: number; canEdit: boolean };
+  Profile: undefined;
   HomeTab: undefined;
   UserSearch: undefined;
   LoginScreen: undefined;

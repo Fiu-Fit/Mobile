@@ -1,4 +1,5 @@
 import { Role } from '../constants/roles';
+import { ProfileNavigationProp } from '../navigation/navigation-props';
 
 export type InputProps = {
   firstName: string;
@@ -8,6 +9,12 @@ export type InputProps = {
   bodyWeight: number;
   role: string;
 };
+
+export interface UserProfileProps {
+  currentUser?: User;
+  navigation?: ProfileNavigationProp;
+  canEdit?: boolean;
+}
 
 export type ErrorInputProps = Omit<InputProps, 'role'>;
 
