@@ -1,4 +1,5 @@
-import { View } from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import { PermissionsAndroid, View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import ItemCardList from '../../components/itemCardList';
@@ -11,10 +12,37 @@ import { observer } from 'mobx-react';
 import { useFocusEffect } from '@react-navigation/native';
 import { action } from 'mobx';
 import { useCallback } from 'react';
+import { axiosClient } from '../../utils/constants';
+import LoggerFactory from '../../utils/logger-utility';
+import messaging from '@react-native-firebase/messaging';
+
+const logger = LoggerFactory('home');
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
+
+  const requestNotificationsPermission = async (userId: number) => {
+    try {
+      const granted = PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      );
+      if ((await granted) === PermissionsAndroid.RESULTS.GRANTED) {
+        logger.info('User granted permission');
+        const token = await messaging().getToken();
+
+        await axiosClient.patch(`/users/${userId}/token`, { token });
+
+        logger.debug('Device token: ', token);
+      } else {
+        logger.info('User declined permission');
+      }
+    } catch (error) {
+      logger.error('Error while requesting permission: ', error);
+    }
+  };
+
+  requestNotificationsPermission(currentUser.id);
 
   useFocusEffect(
     useCallback(() => {

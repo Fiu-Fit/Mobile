@@ -29,6 +29,7 @@ export type TabParamList = {
   Profile: undefined;
   HomeTab: undefined;
   LoginScreen: undefined;
+  Notifications: undefined;
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<
@@ -91,4 +92,9 @@ export type GoalsNavigationProp = BottomTabNavigationProp<
 export type HomeNavigationProp = BottomTabNavigationProp<
   TabParamList,
   'HomeTab'
+>;
+
+export type NotificationsNavigationProp = BottomTabNavigationProp<
+  TabParamList,
+  'Notifications'
 >;
