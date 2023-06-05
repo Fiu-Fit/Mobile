@@ -14,6 +14,7 @@ const config = {
     'workout-store',
     'workout-screen',
     'upsert-workout-screen',
+    'user-profile',
     'edit-exercise-modal',
     'workout-comment',
     'workout-detail-store',
