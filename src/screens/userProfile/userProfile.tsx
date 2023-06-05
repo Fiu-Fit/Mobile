@@ -1,8 +1,30 @@
-import { View, Image, StyleSheet, Text } from 'react-native';
+import { View, Image, StyleSheet, Text, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import { ProfileNavigationProp } from '../../navigation/navigation-props';
 import auth from '@react-native-firebase/auth';
+import Geolocation, {
+  GeolocationResponse,
+} from '@react-native-community/geolocation';
+import { axiosClient } from '../../utils/constants';
+import LoggerFactory from '../../utils/logger-utility';
+import { User } from '../../utils/custom-types';
+
+const logger = LoggerFactory('user-profile');
+
+const updateUserPositionCallback = async (
+  position: GeolocationResponse,
+  currentUser: User,
+) => {
+  const updatedUser = { ...currentUser };
+  const { latitude, longitude } = position.coords;
+  logger.info('Updating with info:', {
+    latitude,
+    longitude,
+  });
+  updatedUser.coordinates = [longitude, latitude];
+  await axiosClient.put(`/users/${updatedUser.id}`, updatedUser);
+};
 
 const UserProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
   const appTheme = useAppTheme();
@@ -28,6 +50,41 @@ const UserProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
       <Text style={styles.name}>{currentUser.lastName}</Text>
       <Text style={styles.personalInfo}>{currentUser.bodyWeight} kg</Text>
       <Text style={styles.email}>{currentUser.email}</Text>
+      <Button
+        mode='contained'
+        style={styles.button}
+        onPress={() => {
+          Geolocation.getCurrentPosition(
+            async position =>
+              await updateUserPositionCallback(position, currentUser),
+            async error => {
+              if (error.PERMISSION_DENIED) {
+                Geolocation.requestAuthorization(
+                  () => {
+                    logger.info('Geolocation permission accepted!');
+                    Geolocation.getCurrentPosition(
+                      async positionOnError =>
+                        await updateUserPositionCallback(
+                          positionOnError,
+                          currentUser,
+                        ),
+                    );
+                  },
+                  errorRequest => {
+                    if (errorRequest.PERMISSION_DENIED) {
+                      Alert.alert(
+                        'Missing Permission',
+                        'The Geolocation permission is needed to update the user location.',
+                      );
+                    }
+                  },
+                );
+              }
+            },
+          );
+        }}>
+        Update Location
+      </Button>
       <Button
         mode='contained'
         style={styles.button}
