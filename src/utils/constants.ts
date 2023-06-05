@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const API_URL = 'localhost:7071';
+export const API_URL = 'https://api-gateway-production.up.railway.app';
 
 export const axiosClient = axios.create({ baseURL: API_URL });
 
