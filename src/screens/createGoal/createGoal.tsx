@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, SafeAreaView, ScrollView, View } from 'react-native';
 import Input from '../../components/input';
 import Button from '../../components/button';
@@ -6,14 +6,15 @@ import Loader from '../../components/loader';
 import LoggerFactory from '../../utils/logger-utility';
 import { CreateGoalScreenNavigationProp } from '../../navigation/navigation-props';
 import { Formik, FormikErrors } from 'formik';
-import { ExerciseStore } from '../../stores/exercise.store';
 import { GoalInputProps } from '../../utils/goal-types';
-import { useAppTheme } from '../../App';
+import { useAppTheme, useUserContext } from '../../App';
 import ItemCardList from '../../components/itemCardList/itemCardList';
 import { Divider } from 'react-native-paper';
 import { CardInfo } from '../../utils/custom-types';
+import { exerciseStore } from '../../stores/exercise.store';
+import { flowResult } from 'mobx';
+import { goalStore } from '../../stores/goal.store';
 
-const execisesStore = new ExerciseStore();
 const logger = LoggerFactory('create-goal');
 
 const CreateGoalScreen = ({
@@ -21,25 +22,29 @@ const CreateGoalScreen = ({
 }: {
   navigation: CreateGoalScreenNavigationProp;
 }) => {
+  const appTheme = useAppTheme();
+  const { currentUser } = useUserContext();
   const [loading, setLoading] = React.useState(false);
   const [showExerciseList, setShowExerciseList] = React.useState(true);
   const [selectedExercise, setSelectedExercise] = React.useState<
     CardInfo | undefined
   >();
 
-  const appTheme = useAppTheme();
   const handleNewGoal = async (inputs: GoalInputProps) => {
     setLoading(true);
     try {
-      logger.info('Inputs: ', inputs);
-      logger.info('Exercise ID: ', selectedExercise?.id);
-      //const response = await axiosClient.post('/goals', inputs);
+      inputs.exerciseId = selectedExercise?.id;
+      flowResult(goalStore.createGoal(inputs, currentUser.id));
       navigation.push('GoalsScreen');
     } catch (error) {
       logger.error(error as string);
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    flowResult(exerciseStore.fetchExercises());
+  }, []);
 
   return (
     <SafeAreaView className='flex-1 bg-black'>
@@ -58,7 +63,7 @@ const CreateGoalScreen = ({
       {showExerciseList ? (
         <View className='mt-5'>
           <ItemCardList
-            items={execisesStore.cardsInfo}
+            items={exerciseStore.cardsInfo}
             onPress={item => {
               setSelectedExercise(item);
               setShowExerciseList(false);

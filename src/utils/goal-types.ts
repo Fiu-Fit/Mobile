@@ -10,15 +10,15 @@ export type GoalsProps = {
   description: string;
   userId: number;
   targetValue: number;
-  deadline: Date;
+  deadline?: Date;
   exerciseId: string;
-  status: string;
+  status: GoalStatus;
 };
 
 export type GoalInputProps = {
   title: string;
   description: string;
-  exerciseId: string;
+  exerciseId: string | number | undefined;
   targetValue: string;
   deadline?: string;
 };

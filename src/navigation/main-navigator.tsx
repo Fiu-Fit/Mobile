@@ -6,6 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import WorkoutStack from './workout-navigator';
 import GoalStack from './goal-navigator';
 import NotificationStack from './notification-navigator';
+import NotificactionsScreen from '../screens/notifications';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,7 +47,7 @@ const TabNavigator = () => {
       <Tab.Screen name='Profile' component={UserProfile} />
       <Tab.Screen name='Goals' component={GoalStack} />
       <Tab.Screen name='Workouts' component={WorkoutStack} />
-      <Tab.Screen name='Notifications' component={NotificationStack} />
+      <Tab.Screen name='Notifications' component={NotificactionsScreen} />
     </Tab.Navigator>
   );
 };

@@ -202,6 +202,22 @@ export class WorkoutDetailStore {
       );
     }
   }
+
+  *completeWorkout(userId: number) {
+    this.state = 'pending';
+    try {
+      logger.debug('Marking workout as completed...');
+      const { data } = yield axiosClient.post('/progress/complete-workout', {
+        workoutId: this.workoutId,
+        userId: userId,
+      });
+      logger.debug('Got data: ', data);
+    } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
 }
 
 export const workoutDetailStore = new WorkoutDetailStore();

@@ -1,17 +1,15 @@
 import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
-import { HomeScreenNavigationProp } from '../../navigation/navigation-props';
+import { GoalsScreenNavigationProp } from '../../navigation/navigation-props';
 import { useAppTheme } from '../../App';
-import { GoalStore } from '../../stores/goals.store';
 import ItemCardList from '../../components/itemCardList';
 import FloatingActionButton from '../../components/dumb/floatingActionButton';
-
-const goalsStore = new GoalStore();
+import { goalStore } from '../../stores/goal.store';
 
 const GoalsScreen = ({
   navigation,
 }: {
-  navigation: HomeScreenNavigationProp;
+  navigation: GoalsScreenNavigationProp;
 }) => {
   const appTheme = useAppTheme();
 
@@ -23,7 +21,7 @@ const GoalsScreen = ({
       <View style={{ flex: 0.8, backgroundColor: appTheme.colors.background }}>
         <Divider />
         <ItemCardList
-          items={goalsStore.cardsInfo}
+          items={goalStore.cardsInfo}
           onPress={item =>
             navigation.push('GoalScreen', {
               itemId: item.id,

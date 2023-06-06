@@ -11,14 +11,14 @@ export type AuthStackParamList = {
 };
 
 export type WorkoutStackParamList = {
-  WorkoutScreen: { itemId: string };
+  WorkoutScreen: { itemId: string | number };
   WorkoutsScreen: undefined;
-  UpsertWorkoutScreen: { itemId?: string };
+  UpsertWorkoutScreen: { itemId?: string | number };
 };
 
 export type GoalStackParamList = {
   CreateGoalScreen: undefined;
-  GoalScreen: { itemId: string };
+  GoalScreen: { itemId: string | number };
   GoalsScreen: undefined;
 };
 
@@ -76,6 +76,11 @@ export type CreateGoalScreenNavigationProp = StackNavigationProp<
 export type GoalScreenNavigationProp = StackNavigationProp<
   GoalStackParamList,
   'GoalScreen'
+>;
+
+export type GoalsScreenNavigationProp = StackNavigationProp<
+  GoalStackParamList,
+  'GoalsScreen'
 >;
 
 export type NotificationsScreenNavigationProp = StackNavigationProp<

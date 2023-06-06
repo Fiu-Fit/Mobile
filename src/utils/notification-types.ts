@@ -1,13 +1,7 @@
-export type GoalNotificationProps = {
+export interface NotificationProps {
   _id: number;
-  goalId: string;
-  userId: number;
+  athleteId: number;
+  messageId?: string;
+  goalId?: string;
   receivedAt: Date;
-};
-
-export type MessageNotificationProps = {
-  _id: string;
-  messageId: string;
-  userId: number;
-  receivedAt: Date;
-};
+}

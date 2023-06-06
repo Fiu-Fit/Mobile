@@ -2,10 +2,11 @@ import { Image, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { GoalScreenNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
-import { Divider, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-// const goalDetailStore = new GoalDetailStore();
+import { flowResult } from 'mobx';
+import { useEffect } from 'react';
+import { goalStore } from '../../stores/goal.store';
 
 type GoalScreenProps = {
   navigation: GoalScreenNavigationProp;
@@ -20,11 +21,10 @@ const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
   const appTheme = useAppTheme();
   const { itemId } = route.params;
 
-  /*
   useEffect(() => {
-    flowResult(goalDetailStore.fetchGoal(itemId));
+    flowResult(goalStore.fetchGoal(itemId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);*/
+  }, []);
 
   return (
     <View
@@ -34,18 +34,20 @@ const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
         <Text
           style={{ color: appTheme.colors.onBackground }}
           className='text-3xl self-center'>
-          Hacer abdominales
+          {goalStore.currentGoal?.title}
         </Text>
         <Text
           className='text-lg'
           style={{ color: appTheme.colors.onSurfaceVariant }}>
-          Descripción
+          {goalStore.currentGoal?.description}
         </Text>
       </View>
       <View
         className='items-center justify-around'
         style={{ backgroundColor: appTheme.colors.backdrop, flex: 0.6 }}>
-        <Text className='text-xl text-red-400'>Pendiente</Text>
+        <Text className='text-xl text-red-400'>
+          {goalStore.currentGoal?.status}
+        </Text>
         <Image
           className='h-20 w-80'
           source={{

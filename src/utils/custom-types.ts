@@ -18,10 +18,11 @@ export type CommentInputProps = {
 export type ErrorCommentInputProps = CommentInputProps;
 
 export interface CardInfo {
-  id: string;
+  id: string | number;
   title: string;
   content: string;
   imageUrl: string;
+  onPressScreen?: string;
 }
 
 export type User = {
