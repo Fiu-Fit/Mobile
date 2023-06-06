@@ -24,6 +24,7 @@ const config = {
     'password-recovery',
     'home-header',
     'push-notification-manager',
+    'notification',
   ],
   transportOptions: {
     colors: {
