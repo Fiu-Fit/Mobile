@@ -23,6 +23,7 @@ const config = {
     'create-goal',
     'password-recovery',
     'home-header',
+    'push-notification-manager',
   ],
   transportOptions: {
     colors: {
