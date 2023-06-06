@@ -1,17 +1,8 @@
-import { useUserContext } from '../../App';
 import UserProfile from '../../components/userProfile';
 import { observer } from 'mobx-react';
 
-const MyProfileScreen = (navigation: any) => {
-  const { currentUser } = useUserContext();
-
-  return (
-    <UserProfile
-      navigation={navigation}
-      currentUser={currentUser}
-      canEdit={true}
-    />
-  );
+const MyProfileScreen = ({ navigation }: any) => {
+  return <UserProfile navigation={navigation} myProfile />;
 };
 
 export default observer(MyProfileScreen);

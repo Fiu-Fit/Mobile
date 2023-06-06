@@ -1,29 +1,33 @@
 import { View, Image, StyleSheet, Text } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
-import { ProfileNavigationProp } from '../../navigation/navigation-props';
 import auth from '@react-native-firebase/auth';
-import { UserProfileProps } from '../../utils/custom-types';
+import { User, UserProfileProps } from '../../utils/custom-types';
 import { useFocusEffect } from '@react-navigation/native';
 import { observer } from 'mobx-react';
+import LoggerFactory from '../../utils/logger-utility';
+import { searchStore } from '../../stores/userSearch.store';
+import { useState } from 'react';
 
+const logger = LoggerFactory('user-profile');
 
-
-const UserProfile = ({
-  currentUser,
-  navigation,
-  canEdit = true,
-}: UserProfileProps) => {
+const UserProfile = (props: UserProfileProps) => {
   const appTheme = useAppTheme();
-  const { currentUser: loggedInUser } = useUserContext();
+  const { currentUser } = useUserContext();
+  const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
   useFocusEffect(() => {
-    if (canEdit) {
-      currentUser = loggedInUser;
-    }
+    logger.info(`Selected User: ${props.route?.params.givenUserId}`);
+    setSelectedUser(
+      props.myProfile
+        ? currentUser
+        : searchStore.results.find(
+            user => user.id === props.route?.params.givenUserId,
+          ),
+    );
   });
   const handleSignOut = async () => {
     await auth().signOut();
-    navigation?.getParent()?.navigate('LoginScreen');
+    props.navigation?.getParent()?.navigate('LoginScreen');
   };
   const pictureUrl =
     'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80';
@@ -37,16 +41,19 @@ const UserProfile = ({
         },
       ]}>
       <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
-      <Text style={styles.name}>{currentUser?.firstName}</Text>
-      <Text style={styles.name}>{currentUser?.lastName}</Text>
-      <Text style={styles.personalInfo}>{currentUser?.bodyWeight} kg</Text>
-      <Text style={styles.email}>{currentUser?.email}</Text>
-      {canEdit && (
+      <Text style={styles.name}>{selectedUser?.firstName}</Text>
+      <Text style={styles.name}>{selectedUser?.lastName}</Text>
+      <Text style={styles.personalInfo}>{selectedUser?.bodyWeight} kg</Text>
+      <Text style={styles.email}>{selectedUser?.email}</Text>
+      {props.myProfile && (
         <>
           <Button
             mode='contained'
             style={styles.button}
-            onPress={() => navigation?.getParent()?.navigate('EditProfile')}>
+            onPress={() => {
+              logger.info('Navigation:', props.navigation);
+              props.navigation?.getParent()?.navigate('EditProfile');
+            }}>
             Edit
           </Button>
           <Button

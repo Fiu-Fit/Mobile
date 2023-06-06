@@ -11,9 +11,13 @@ export type InputProps = {
 };
 
 export interface UserProfileProps {
-  currentUser?: User;
+  route?: {
+    key: string;
+    name: string;
+    params: { givenUserId: number };
+  };
   navigation?: ProfileNavigationProp;
-  canEdit?: boolean;
+  myProfile?: boolean;
 }
 
 export type ErrorInputProps = Omit<InputProps, 'role'>;
