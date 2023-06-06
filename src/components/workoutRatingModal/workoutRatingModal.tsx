@@ -66,7 +66,7 @@ const WorkoutRatingModal = ({
             onFinishRating={ratingCompleted}
           />
           <Text className='mt-5'>
-            Valoración global: {workoutRatingItem.globalRating}
+            Valoración global: {workoutRatingItem.averageRating}
           </Text>
         </View>
         <View className='items-center mt-10' style={{ flex: 0.6 }}>

@@ -64,7 +64,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
         {ratingModalVisible && (
           <WorkoutRatingModal
             onDismiss={() => setRatingModalVisible(false)}
-            workoutRatingItem={workoutDetailStore.workoutHeader.rating}
+            workoutRatingItem={workoutDetailStore.workoutHeader.averageRating}
           />
         )}
 

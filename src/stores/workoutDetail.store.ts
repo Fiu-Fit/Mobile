@@ -12,6 +12,7 @@ import {
   IWorkoutHeader,
   WorkoutExercise,
   WorkoutProps,
+  WorkoutRatingProps,
 } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
@@ -26,7 +27,7 @@ const defaultWorkout = {
   author: '',
   difficulty: 0,
   category: CategoryType.FULLBODY,
-  rating: { globalRating: 0, comments: [] },
+  averageRating: 0,
   exercises: new Map<string, WorkoutExercise>(),
   athleteIds: [],
   authorId: 0,
@@ -36,23 +37,18 @@ export class WorkoutDetailStore {
   workoutId: string | undefined;
   workout: WorkoutProps = defaultWorkout;
   newExercises = new Map<string, WorkoutExercise>();
+  ratings: WorkoutRatingProps[] = [];
   state = 'pending';
 
   get workoutHeader(): IWorkoutHeader {
-    const { name, description, duration, exercises } = this.workout;
+    const { name, description, duration, exercises, averageRating } =
+      this.workout;
     return {
       name,
       description,
       duration,
       author: 'Jorge', // @TODO Backend: attach User Object in Author instead of AuthorID
-      rating: {
-        globalRating: 4,
-        comments: [
-          '¡Wow! Realmente disfruté este entrenamiento. Los ejercicios fueron desafiantes y me encantó cómo trabajaron diferentes grupos musculares. ¡Definitivamente quiero hacerlo de nuevo!',
-          '¡Increíble sesión de entrenamiento! Los ejercicios fueron variados y efectivos. Me encantó cómo pude sentir que mi cuerpo se fortalecía con cada movimiento. ¡Altamente recomendado!',
-          'Qué gran entrenamiento. Los ejercicios fueron divertidos y me mantuvieron comprometido durante toda la sesión. Me encantó la combinación de fuerza y cardio. ¡Me siento enérgico y revitalizado!',
-        ],
-      },
+      averageRating,
       exerciseCount: exercises.size,
     };
   }
@@ -200,6 +196,34 @@ export class WorkoutDetailStore {
         'Error while trying to upsert workout:',
         (err as any).response,
       );
+    }
+  }
+
+  *fetchWorkoutRatings() {
+    this.ratings = [];
+    this.state = 'pending';
+    try {
+      const filters = {
+        workout: this.workoutId,
+      };
+
+      const params = {
+        filters: JSON.stringify(filters),
+      };
+
+      logger.debug(`Getting ratings for workout id ${this.workoutId}...`);
+      const { data } = yield axiosClient.get<WorkoutRatingProps[]>('/ratings', {
+        params,
+      });
+      logger.debug(`Got data for workout: ${this.workoutId}`, data);
+      runInAction(() => {
+        this.ratings = data;
+        this.state = 'done';
+      });
+    } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
     }
   }
 }

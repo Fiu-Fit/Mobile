@@ -15,7 +15,7 @@ const WorkoutHeader = () => {
       style={{ backgroundColor: appTheme.colors.background, flex: 0.2 }}>
       <View
         className='flex-row items-around justify-around mt-10'
-        style={{ width: '50%' }}>
+        style={{ width: '100%' }}>
         <Text
           className='text-4xl'
           style={{ color: appTheme.colors.onBackground }}>
