@@ -26,7 +26,6 @@ class SearchStore {
   lastDistance: number | undefined = undefined;
   filterOption: FilterOprions = 'name';
 
-
   constructor() {
     makeObservable(this, {
       query: observable,
@@ -46,21 +45,21 @@ class SearchStore {
     this.query = query;
   }
 
-  setDistanceSearch(distance: number){
+  setDistanceSearch(distance: number) {
     this.distance = distance;
   }
 
-  switchSearchCriteria(criteria: FilterOprions){
-      if(criteria === 'name'){
-        this.lastDistance = undefined;
-        this.distance = undefined;
-      }
-      if(criteria === 'distance'){
-        this.query = '';
-        this.lastQuery = undefined;
-      }
-      this.filterOption = criteria;
-
+  switchSearchCriteria(criteria: FilterOprions) {
+    if (criteria === 'name') {
+      this.lastDistance = undefined;
+      this.distance = undefined;
+    }
+    if (criteria === 'distance') {
+      this.distance = 1000;
+      this.query = '';
+      this.lastQuery = undefined;
+    }
+    this.filterOption = criteria;
   }
 
   get cardsInfo(): CardInfo[] {
@@ -77,8 +76,10 @@ class SearchStore {
   }
 
   searchByName = debounce(async () => {
-    if (!this.query || (this.lastQuery && this.lastQuery === this.query)) return;
-    
+    if (!this.query || (this.lastQuery && this.lastQuery === this.query)) {
+      return;
+    }
+
     if (this.cancelTokenSource) {
       this.cancelTokenSource.cancel('Request canceled');
     }
@@ -116,8 +117,12 @@ class SearchStore {
   }, 500);
 
   searchByDistance = debounce(async (id: number) => {
-    
-    if (!this.distance || (this.lastDistance && this.lastDistance === this.distance)) return;
+    if (
+      !this.distance ||
+      (this.lastDistance && this.lastDistance === this.distance)
+    ) {
+      return;
+    }
 
     if (this.cancelTokenSource) {
       this.cancelTokenSource.cancel('Request canceled');
@@ -130,14 +135,17 @@ class SearchStore {
     this.cancelTokenSource = axios.CancelToken.source();
     this.results = [];
     try {
-      const response = await axiosClient.get(`/users/${id}/nearest-trainers?radius=${this.distance}`, {
-        cancelToken: this.cancelTokenSource?.token,
-      });
+      const response = await axiosClient.get(
+        `/users/${id}/nearest-trainers?radius=${this.distance}`,
+        {
+          cancelToken: this.cancelTokenSource?.token,
+        },
+      );
       logger.info('Response: ', response);
 
       runInAction(() => {
         logger.info('Setting: ', response.data);
-        this.results = response?.data.rows ?? [];
+        this.results = response?.data ?? [];
       });
     } catch (error) {
       if (!axios.isCancel(error)) {

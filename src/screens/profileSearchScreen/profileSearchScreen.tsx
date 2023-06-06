@@ -1,10 +1,15 @@
-import { StyleSheet, View, ActivityIndicator, Switch } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Switch,
+  Text,
+} from 'react-native';
 import { Appbar, Searchbar } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import { observer } from 'mobx-react';
 import { searchStore } from '../../stores/userSearch.store';
 import ItemCardList from '../../components/itemCardList';
-import { useFocusEffect } from '@react-navigation/native';
 import { UserSearchNavigationProp } from '../../navigation/navigation-props';
 import { useState } from 'react';
 
@@ -23,7 +28,7 @@ const ProfileSearchScreen = ({
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => {
-    setIsEnabled(previousState => !previousState)
+    setIsEnabled(previousState => !previousState);
     searchStore.switchSearchCriteria(isEnabled ? 'distance' : 'name');
   };
 
@@ -41,25 +46,31 @@ const ProfileSearchScreen = ({
       <Appbar.Header style={{ backgroundColor: appTheme.colors.primary }}>
         <Appbar.Content title='Profile Search' />
       </Appbar.Header>
+      <Text>Search By Distance:</Text>
       <Switch
-        trackColor={{false: '#767577', true: '#81b0ff'}}
+        trackColor={{ false: '#767577', true: '#81b0ff' }}
         thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-        ios_backgroundColor="#3e3e3e"
+        ios_backgroundColor='#3e3e3e'
         onValueChange={toggleSwitch}
         value={isEnabled}
       />
-        { isEnabled ? (<Searchbar
+      {isEnabled ? (
+        <Searchbar
           placeholder='Distance'
           onChangeText={handleSearchByDistance}
+          value={searchStore.distance ? `${searchStore.distance}` : ''}
+          style={styles.searchBar}
+          keyboardType='numeric'
+          inputMode='numeric'
+        />
+      ) : (
+        <Searchbar
+          placeholder='Name'
+          onChangeText={handleSearchByName}
           value={searchStore.query}
           style={styles.searchBar}
-        />) :
-      (<Searchbar
-        placeholder='Name'
-        onChangeText={handleSearchByName}
-        value={searchStore.query}
-        style={styles.searchBar}
-      />)}
+        />
+      )}
       {searchStore.isLoading ? (
         <ActivityIndicator size='large' color='#0000ff' />
       ) : (
@@ -87,4 +98,3 @@ const styles = StyleSheet.create({
 });
 
 export default observer(ProfileSearchScreen);
-
