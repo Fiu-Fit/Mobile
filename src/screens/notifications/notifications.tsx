@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import { NotificationsNavigationProp } from '../../navigation/navigation-props';
+import { useAppTheme } from '../../App';
+import { Text } from 'react-native-paper';
 
 const NotificactionsScreen = ({
   navigation,
@@ -9,6 +11,7 @@ const NotificactionsScreen = ({
   navigation: NotificationsNavigationProp;
 }) => {
   const [_, setLoading] = useState(true);
+  const appTheme = useAppTheme();
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -42,6 +45,12 @@ const NotificactionsScreen = ({
       }
       setLoading(false);
     });
+
+  return (
+    <View style={{ backgroundColor: appTheme.colors.background, flex: 1 }}>
+      <Text>Notifications</Text>
+    </View>
+  );
 };
 
 export default NotificactionsScreen;
