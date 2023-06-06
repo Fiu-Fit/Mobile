@@ -6,6 +6,7 @@ import InterestsScreen from '../screens/interests';
 import PasswordRecovery from '../screens/password-recovery';
 import TabNavigator from './main-navigator';
 import EditProfile from '../screens/editProfile';
+import UserProfile from '../components/userProfile';
 
 const Stack = createStackNavigator<AuthStackParamList>();
 
@@ -21,6 +22,7 @@ const AuthStack = () => {
       />
       <Stack.Screen name='RegisterScreen' component={RegisterScreen} />
       <Stack.Screen name='EditProfile' component={EditProfile} />
+      <Stack.Screen name='SearchedProfile' component={UserProfile} />
     </Stack.Navigator>
   );
 };
