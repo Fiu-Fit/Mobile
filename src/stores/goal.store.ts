@@ -28,6 +28,8 @@ export class GoalStore {
       goals: observable,
       cardsInfo: computed,
       fetchGoals: flow,
+      fetchGoal: flow,
+      createGoal: flow,
     });
   }
 
@@ -70,7 +72,6 @@ export class GoalStore {
   }
 
   *createGoal(input: GoalInputProps, userId: number) {
-    console.log('HOLAAA');
     this.state = 'pending';
     try {
       logger.debug('Creating goal');
