@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { CardInfo } from '../../utils/custom-types';
 import IconButton from '../button';
+import SocialShare from '../socialShare';
 
 interface ItemCardProps<T extends CardInfo> {
   item: T;
@@ -64,6 +65,12 @@ const ItemCard = <T extends CardInfo>({
             <Paragraph style={{ color: appTheme.colors.onSurfaceVariant }}>
               {item.content}
             </Paragraph>
+            <SocialShare
+              content={{
+                title: item.title,
+                message: item.content,
+              }}
+            />
             {onEditPress && (
               <IconButton icon={'pencil-outline'} onPress={onEditPress} />
             )}
