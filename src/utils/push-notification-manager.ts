@@ -2,9 +2,8 @@ import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert, PermissionsAndroid } from 'react-native';
 import LoggerFactory from './logger-utility';
-// import { PushNotification } from 'react-native-push-notification';
-// import { useEffect } from 'react';
 import { axiosClient } from './constants';
+import { NotificationType } from './notification-types';
 
 const logger = LoggerFactory('push-notification-manager');
 
@@ -17,7 +16,6 @@ export const requestPermissions = async (userId: number) => {
       logger.info('User granted permission');
 
       const token = await getFCMToken();
-      logger.info('Token:', token);
       await axiosClient.patch(`/users/${userId}/token`, { token });
 
       logger.info('Device token: ', token);
@@ -28,18 +26,6 @@ export const requestPermissions = async (userId: number) => {
     logger.error('Error while requesting permission: ', error);
   }
 };
-
-// PushNotification.createChannel(
-//   {
-//     channelId: 'default-channel-id', // (required)
-//     channelName: 'Default channel', // (required)
-//     playSound: false,
-//     vibrate: true,
-//     importance: 4,
-//   },
-//   (created: any) =>
-//     logger.info(`createChannel 'default-channel-id' returned '${created}'`),
-// );
 
 const getFCMToken = async (): Promise<string> => {
   let fcmtoken: string = (await AsyncStorage.getItem('fcmtoken')) ?? '';
@@ -56,20 +42,58 @@ const getFCMToken = async (): Promise<string> => {
   return fcmtoken;
 };
 
-export const NotificationListener = () => {
-  // useEffect(() => {
-  // PushNotification.localNotification({
-  //   message: remoteMessage.notification.body,
-  //   title: remoteMessage.notification.title,
-  //   channelId: remoteMessage.notification.android.channelId,
-  // });
-  // return unsubscribe;
-  // }, []);
+const notificationType = (remoteMessage: any) => {
+  // Verificar que la notificación tenga la propiedad "notification" con un objeto
+  if (
+    !remoteMessage.notification ||
+    typeof remoteMessage.notification !== 'object'
+  ) {
+    return null;
+  }
 
+  if (!remoteMessage.data || typeof remoteMessage.data !== 'object') {
+    return null;
+  }
+
+  if (
+    !remoteMessage.notification.title ||
+    !remoteMessage.notification.body ||
+    !remoteMessage.data.type
+  ) {
+    return null;
+  }
+
+  remoteMessage.data.type === NotificationType.GoalCompleted.toString()
+    ? remoteMessage.data.goalId
+      ? NotificationType.GoalCompleted
+      : null
+    : remoteMessage.data.type === NotificationType.NewMessage.toString()
+    ? remoteMessage.data.messageId
+      ? NotificationType.NewMessage
+      : null
+    : null;
+};
+
+export const NotificationListener = () => {
   messaging().onMessage(remoteMessage => {
     logger.info('remote message on foreground!', JSON.stringify(remoteMessage));
 
-    Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    const type = notificationType(remoteMessage);
+
+    if (!type) {
+      return;
+    }
+
+    Alert.alert(
+      remoteMessage.notification?.title ?? '',
+      remoteMessage.notification?.body ?? '',
+    );
+
+    if (type === NotificationType.GoalCompleted) {
+      // navigate to goal detail
+    } else {
+      // navigate to chat
+    }
   });
 
   messaging().onNotificationOpenedApp(remoteMessage => {

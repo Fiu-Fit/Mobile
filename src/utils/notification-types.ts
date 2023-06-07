@@ -11,3 +11,8 @@ export type MessageNotificationProps = {
   userId: number;
   receivedAt: Date;
 };
+
+export enum NotificationType {
+  GoalCompleted = 0,
+  NewMessage = 1,
+}
