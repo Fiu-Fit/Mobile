@@ -16,7 +16,6 @@ import {
   NotificationListener,
   requestPermissions,
 } from '../../utils/push-notification-manager';
-import { axiosClient } from '../../utils/constants';
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();

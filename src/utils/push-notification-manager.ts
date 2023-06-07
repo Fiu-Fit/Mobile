@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert, PermissionsAndroid } from 'react-native';
 import LoggerFactory from './logger-utility';
 // import { PushNotification } from 'react-native-push-notification';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { axiosClient } from './constants';
 
 const logger = LoggerFactory('push-notification-manager');
