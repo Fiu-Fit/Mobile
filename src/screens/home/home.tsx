@@ -30,7 +30,8 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   useEffect(() => {
     console.log('user fetched!');
     requestPermissions(currentUser.id);
-  }, [currentUser.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>
