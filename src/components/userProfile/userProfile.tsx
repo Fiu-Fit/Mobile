@@ -33,6 +33,7 @@ const UserProfile = (props: UserProfileProps) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
+  const [amFollowing, setAmFollowing] = useState(false)
   useFocusEffect(() => {
     logger.info(`Selected User: ${props.route?.params.givenUserId}`);
     setSelectedUser(
@@ -42,10 +43,30 @@ const UserProfile = (props: UserProfileProps) => {
             user => user.id === props.route?.params.givenUserId,
           ),
     );
+    setAmFollowing(currentUser.followedUsers?.find( user => {
+      return user.id === selectedUser?.id;
+    }) ? true : false);
   });
+
   const handleSignOut = async () => {
     await auth().signOut();
     props.navigation?.getParent()?.navigate('LoginScreen');
+  };
+
+  const handleFollow = async () => {
+    try {
+      await axiosClient.post(`/followers/follow?userId=${currentUser.id}&userIdToFollow=${selectedUser?.id}`);
+    } catch (error) {
+      logger.error("An error ocurred while trying to follow this user: ", error);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    try {
+      await axiosClient.post(`/followers/unfollow?userId=${currentUser.id}&followerId=${selectedUser?.id}`);
+    } catch (error) {
+      logger.error("An error ocurred while trying to follow this user: ", error);
+    }
   };
   const pictureUrl =
     'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80';
@@ -117,6 +138,19 @@ const UserProfile = (props: UserProfileProps) => {
           </Button>
         </>
       )}
+          {!props.myProfile && (amFollowing ?
+            <Button
+              mode='contained'
+              style={styles.button}
+              onPress={handleUnfollow}>
+              Unfollow
+            </Button> :
+            <Button
+              mode='contained'
+              style={styles.button}
+              onPress={handleFollow}>
+              Follow
+            </Button>)}
     </View>
   );
 };
