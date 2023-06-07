@@ -125,6 +125,7 @@ const defaultUserObject = {
   interests: [],
   favoriteWorkouts: [],
   coordinates: [0, 0],
+  followedUsers: [],
 };
 
 const UserContext = createContext<{
