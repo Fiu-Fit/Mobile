@@ -34,6 +34,7 @@
     "react-native": "0.71.5",
     "react-native-biometrics": "^3.0.1",
     "react-native-calendars": "^1.1275.0",
+    "react-native-fingerprint-scanner": "^6.0.0",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-gradle-plugin": "^0.71.17",

@@ -23,6 +23,8 @@ import { Role } from '../../constants/roles';
 import { DateTime } from 'luxon';
 import FiuFitLogo from '../../components/dumb/fiuFitLogo';
 import { useUserContext } from '../../App';
+import FingerprintScanner from 'react-native-fingerprint-scanner';
+import Biometrics from 'react-native-biometrics';
 
 const logger = LoggerFactory('login');
 
@@ -113,6 +115,22 @@ const LoginScreen = ({
     }
   };
 
+  const fingerprintLogin = async () => {
+    try {
+      await FingerprintScanner.authenticate({ description: 'Scan your fingerprint to login.' });
+  
+      const response = await axiosClient.post('/auth/biometric-login');
+  
+      // Once authenticated, navigate to the home screen
+      navigation.push('Home');
+    } catch (error) {
+      // Fingerprint authentication failed or was canceled
+      // Handle it accordingly, such as showing an error message or falling back to password login
+      console.log('Fingerprint authentication failed or was canceled:', error);
+    }
+  };
+  
+
   return (
     <ScrollView contentInsetAdjustmentBehavior='automatic'>
       <SafeAreaView className='flex-1 bg-black px-8 w-full'>
@@ -202,6 +220,11 @@ const LoginScreen = ({
           <Button
             onPress={() => navigation.push('PasswordRecoveryScreen')}
             title='Olvidaste tu contraseña?'
+          />
+
+          <Button
+            title='Biometric Login'
+            onPress={fingerprintLogin}
           />
         </View>
       </SafeAreaView>
