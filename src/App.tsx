@@ -11,6 +11,7 @@ import { useColorScheme } from 'react-native';
 import { createContext, useContext, useState } from 'react';
 import { Role } from './constants/roles';
 import { User } from './utils/custom-types';
+import { NotificationListener } from './utils/push-notification-manager';
 
 if (
   !new (class {
@@ -19,6 +20,7 @@ if (
 ) {
   throw new Error('Transpiler is not configured correctly');
 }
+NotificationListener();
 
 const customLightTheme = {
   ...MD3LightTheme,
