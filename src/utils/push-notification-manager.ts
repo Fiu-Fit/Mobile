@@ -16,8 +16,8 @@ export const requestPermissions = async (userId: number) => {
     if ((await granted) === PermissionsAndroid.RESULTS.GRANTED) {
       logger.info('User granted permission');
 
-      const token = getFCMToken();
-
+      const token = await getFCMToken();
+      logger.info('Token:', token);
       await axiosClient.patch(`/users/${userId}/token`, { token });
 
       logger.info('Device token: ', token);
@@ -41,18 +41,19 @@ export const requestPermissions = async (userId: number) => {
 //     logger.info(`createChannel 'default-channel-id' returned '${created}'`),
 // );
 
-const getFCMToken = async () => {
-  let fcmtoken = AsyncStorage.getItem('fcmtoken');
+const getFCMToken = async (): Promise<string> => {
+  let fcmtoken: string = (await AsyncStorage.getItem('fcmtoken')) ?? '';
   if (!fcmtoken) {
     try {
-      let fcmtoken = await messaging().getToken();
+      fcmtoken = await messaging().getToken();
       if (fcmtoken) {
         await AsyncStorage.setItem('fcmtoken', fcmtoken);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      logger.error(error);
     }
   }
+  return fcmtoken;
 };
 
 export const NotificationListener = () => {
