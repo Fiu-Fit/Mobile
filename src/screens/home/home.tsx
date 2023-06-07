@@ -12,10 +12,7 @@ import { observer } from 'mobx-react';
 import { useFocusEffect } from '@react-navigation/native';
 import { action } from 'mobx';
 import { useCallback, useEffect } from 'react';
-import {
-  NotificationListener,
-  requestPermissions,
-} from '../../utils/push-notification-manager';
+import { requestPermissions } from '../../utils/push-notification-manager';
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
@@ -33,7 +30,6 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   useEffect(() => {
     console.log('user fetched!');
     requestPermissions(currentUser.id);
-    NotificationListener();
   }, [currentUser.id]);
 
   return (
