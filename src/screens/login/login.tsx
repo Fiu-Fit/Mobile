@@ -32,7 +32,7 @@ const LoginScreen = ({
   navigation: LoginScreenNavigationProp;
 }) => {
   const [loading, setLoading] = React.useState(false);
-  const { setCurrentUser } = useUserContext();
+  const { currentUser, setCurrentUser } = useUserContext();
   const saveToken = async (token: string) => {
     try {
       await AsyncStorage.setItem('UserToken', token);
@@ -51,8 +51,10 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      const { data } = await axiosClient.post('/users/me');
+      const { data } = (await axiosClient.post('/users/me'));
       setCurrentUser(data as User);
+      const {data: followedUsers} = await axiosClient.get(`/followers/following?userId=${currentUser.id}`)
+      setCurrentUser({ ...currentUser, followedUsers } as User);
       navigation.push('Home');
     } catch (error: any) {
       logger.error('Error while logging in: ', error.response.data);
