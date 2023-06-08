@@ -25,6 +25,7 @@ const config = {
     'home-header',
     'push-notification-manager',
     'notification',
+    'goal-store',
   ],
   transportOptions: {
     colors: {
