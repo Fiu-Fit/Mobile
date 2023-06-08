@@ -33,7 +33,7 @@ const UserProfile = (props: UserProfileProps) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
-  const [amFollowing, setAmFollowing] = useState(false)
+  const [amFollowing, setAmFollowing] = useState(false);
   useFocusEffect(() => {
     logger.info(`Selected User: ${props.route?.params.givenUserId}`);
     setSelectedUser(
@@ -43,9 +43,10 @@ const UserProfile = (props: UserProfileProps) => {
             user => user.id === props.route?.params.givenUserId,
           ),
     );
-    setAmFollowing(currentUser.followedUsers?.find( user => {
-      return user.id === selectedUser?.id;
-    }) ? true : false);
+    const isAlreadyFollowing = Boolean(
+      currentUser.followedUsers?.find(user => user.id === selectedUser?.id),
+    );
+    setAmFollowing(isAlreadyFollowing);
   });
 
   const handleSignOut = async () => {
@@ -55,17 +56,36 @@ const UserProfile = (props: UserProfileProps) => {
 
   const handleFollow = async () => {
     try {
-      await axiosClient.post(`/followers/follow?userId=${currentUser.id}&userIdToFollow=${selectedUser?.id}`);
+      logger.info(
+        `Trying to follow user ${selectedUser?.id} as user ${currentUser.id}`,
+      );
+      await axiosClient.post(`/followers/follow?userId=${currentUser.id}`, {
+        userIdToFollow: selectedUser?.id,
+      });
+      if (selectedUser) currentUser.followedUsers?.push(selectedUser);
+      setAmFollowing(!amFollowing);
     } catch (error) {
-      logger.error("An error ocurred while trying to follow this user: ", error);
+      logger.error(
+        'An error ocurred while trying to follow this user: ',
+        error,
+      );
     }
   };
 
   const handleUnfollow = async () => {
     try {
-      await axiosClient.post(`/followers/unfollow?userId=${currentUser.id}&followerId=${selectedUser?.id}`);
+      logger.info(
+        `Trying to unfollow user ${selectedUser?.id} as user ${currentUser.id}`,
+      );
+      await axiosClient.delete(
+        `/followers/unfollow?userId=${currentUser.id}&followerId=${selectedUser?.id}`,
+      );
+      setAmFollowing(!amFollowing);
     } catch (error) {
-      logger.error("An error ocurred while trying to follow this user: ", error);
+      logger.error(
+        'An error ocurred while trying to follow this user: ',
+        error,
+      );
     }
   };
   const pictureUrl =
@@ -138,19 +158,19 @@ const UserProfile = (props: UserProfileProps) => {
           </Button>
         </>
       )}
-          {!props.myProfile && (amFollowing ?
-            <Button
-              mode='contained'
-              style={styles.button}
-              onPress={handleUnfollow}>
-              Unfollow
-            </Button> :
-            <Button
-              mode='contained'
-              style={styles.button}
-              onPress={handleFollow}>
-              Follow
-            </Button>)}
+      {!props.myProfile &&
+        (amFollowing ? (
+          <Button
+            mode='contained'
+            style={styles.button}
+            onPress={handleUnfollow}>
+            Unfollow
+          </Button>
+        ) : (
+          <Button mode='contained' style={styles.button} onPress={handleFollow}>
+            Follow
+          </Button>
+        ))}
     </View>
   );
 };

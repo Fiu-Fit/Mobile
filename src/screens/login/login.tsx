@@ -51,10 +51,16 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      const { data } = (await axiosClient.post('/users/me'));
-      setCurrentUser(data as User);
-      const {data: followedUsers} = await axiosClient.get(`/followers/following?userId=${currentUser.id}`)
-      setCurrentUser({ ...currentUser, followedUsers } as User);
+      const { data } = await axiosClient.post('/users/me');
+      logger.info('Got User ID: ', data.id);
+      const { data: followedUsers } = await axiosClient.get(
+        `/followers/following?userId=${data.id}`,
+      );
+      logger.info('Got followedUsers: ', followedUsers);
+      setCurrentUser({
+        ...data,
+        followedUsers: followedUsers.rows,
+      } as User);
       navigation.push('Home');
     } catch (error: any) {
       logger.error('Error while logging in: ', error.response.data);
