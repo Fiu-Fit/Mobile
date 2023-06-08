@@ -63,6 +63,7 @@ export class WorkoutStore {
         this.state = 'done';
       });
     } catch (e) {
+      logger.error('Error while fetching all workouts:', e);
       runInAction(() => {
         this.state = 'error';
       });
@@ -91,6 +92,7 @@ export class WorkoutStore {
         this.state = 'done';
       });
     } catch (e) {
+      logger.error('Error while fetching recommended workouts:', e);
       runInAction(() => {
         this.state = 'error';
       });
@@ -111,6 +113,7 @@ export class WorkoutStore {
         this.state = 'done';
       });
     } catch (e) {
+      logger.error('Error while fetching favorite workouts:', e);
       runInAction(() => {
         this.state = 'error';
       });
