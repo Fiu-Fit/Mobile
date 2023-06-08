@@ -4,6 +4,7 @@ import { Alert, PermissionsAndroid } from 'react-native';
 import LoggerFactory from './logger-utility';
 import { axiosClient } from './constants';
 import { NotificationType } from './notification-types';
+// import { HomeNavigationProp } from '../navigation/navigation-props';
 
 const logger = LoggerFactory('push-notification-manager');
 
@@ -43,16 +44,15 @@ const getFCMToken = async (): Promise<string> => {
 };
 
 const notificationType = (remoteMessage: any) => {
-  // Verificar que la notificación tenga la propiedad "notification" con un objeto
   if (
     !remoteMessage.notification ||
     typeof remoteMessage.notification !== 'object'
   ) {
-    return null;
+    throw Error('Invalid notification');
   }
 
   if (!remoteMessage.data || typeof remoteMessage.data !== 'object') {
-    return null;
+    throw Error('Invalid notification');
   }
 
   if (
@@ -60,39 +60,52 @@ const notificationType = (remoteMessage: any) => {
     !remoteMessage.notification.body ||
     !remoteMessage.data.type
   ) {
-    return null;
+    throw Error('Invalid notification');
   }
 
-  remoteMessage.data.type === NotificationType.GoalCompleted.toString()
-    ? remoteMessage.data.goalId
-      ? NotificationType.GoalCompleted
-      : null
-    : remoteMessage.data.type === NotificationType.NewMessage.toString()
-    ? remoteMessage.data.messageId
-      ? NotificationType.NewMessage
-      : null
-    : null;
+  if (remoteMessage.data.type === NotificationType.GoalCompleted) {
+    if (remoteMessage.data.goalId) {
+      return {
+        type: NotificationType.GoalCompleted,
+        id: remoteMessage.data.goalId,
+      };
+    } else {
+      throw Error('Invalid notification');
+    }
+  }
+
+  if (remoteMessage.data.type === NotificationType.NewMessage) {
+    if (remoteMessage.data.chatId) {
+      return {
+        type: NotificationType.NewMessage,
+        id: remoteMessage.data.messageId,
+      };
+    } else {
+      throw Error('Invalid notification');
+    }
+  }
 };
 
 export const NotificationListener = () => {
   messaging().onMessage(remoteMessage => {
     logger.info('remote message on foreground!', JSON.stringify(remoteMessage));
 
-    const type = notificationType(remoteMessage);
+    try {
+      const result = notificationType(remoteMessage);
+      Alert.alert(
+        remoteMessage.notification?.title ?? '',
+        remoteMessage.notification?.body ?? '',
+      );
 
-    if (!type) {
-      return;
-    }
-
-    Alert.alert(
-      remoteMessage.notification?.title ?? '',
-      remoteMessage.notification?.body ?? '',
-    );
-
-    if (type === NotificationType.GoalCompleted) {
-      // navigate to goal detail
-    } else {
-      // navigate to chat
+      if (result?.type === NotificationType.GoalCompleted) {
+        logger.info('Navigating to goal screen..');
+        // navigate to goal
+      } else {
+        logger.info('Navigating to chat screen..');
+        // navigate to chat
+      }
+    } catch (error) {
+      logger.error('Error while getting notification type: ', error);
     }
   });
 
