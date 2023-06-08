@@ -1,7 +1,7 @@
 export enum GoalStatus {
-  INPROGRESS = 'En progreso',
-  COMPLETED = 'Completado',
-  COMPLETEDLATE = 'Completado tarde',
+  INPROGRESS = 'InProgress',
+  COMPLETED = 'Completed',
+  COMPLETEDLATE = 'CompletedLate',
 }
 
 export type GoalsProps = {

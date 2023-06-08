@@ -14,6 +14,7 @@ import { CardInfo } from '../../utils/custom-types';
 import { exerciseStore } from '../../stores/exercise.store';
 import { flowResult } from 'mobx';
 import { goalStore } from '../../stores/goal.store';
+import { observer } from 'mobx-react';
 
 const logger = LoggerFactory('create-goal');
 
@@ -138,6 +139,7 @@ const CreateGoalScreen = ({
                       onFocus={() => {
                         errors.targetValue = '';
                       }}
+                      keyboardType='numeric'
                     />
                     <Input
                       value={values.deadline}
@@ -161,4 +163,4 @@ const CreateGoalScreen = ({
   );
 };
 
-export default CreateGoalScreen;
+export default observer(CreateGoalScreen);

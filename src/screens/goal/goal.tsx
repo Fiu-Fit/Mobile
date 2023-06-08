@@ -4,9 +4,10 @@ import { GoalScreenNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 import { Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { flowResult } from 'mobx';
-import { useEffect } from 'react';
+import { action } from 'mobx';
+import { useCallback } from 'react';
 import { goalStore } from '../../stores/goal.store';
+import { useFocusEffect } from '@react-navigation/native';
 
 type GoalScreenProps = {
   navigation: GoalScreenNavigationProp;
@@ -21,10 +22,14 @@ const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
   const appTheme = useAppTheme();
   const { itemId } = route.params;
 
-  useEffect(() => {
-    flowResult(goalStore.fetchGoal(itemId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      action(() => {
+        goalStore.fetchGoal(itemId);
+      })();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
 
   return (
     <View

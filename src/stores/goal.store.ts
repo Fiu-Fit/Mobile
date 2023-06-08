@@ -1,5 +1,5 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
-import { GoalInputProps, GoalsProps } from '../utils/goal-types';
+import { GoalInputProps, GoalStatus, GoalsProps } from '../utils/goal-types';
 import LoggerFactory from '../utils/logger-utility';
 import { CardInfo } from '../utils/custom-types';
 import { axiosClient } from '../utils/constants';
@@ -74,17 +74,19 @@ export class GoalStore {
   *createGoal(input: GoalInputProps, userId: number) {
     this.state = 'pending';
     try {
-      logger.debug('Creating goal');
-      const { data } = yield axiosClient.post<GoalsProps>('/goals', {
-        title: input.title,
-        description: input.description,
-        exerciseId: input.exerciseId,
-        targetValue: input.targetValue,
-        deadline: input.deadline,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { targetValue, deadline, ...rest } = input;
+      logger.debug('Creating goal:', { ...input, userId });
+      const { data } = yield axiosClient.post('/goals', {
+        ...rest,
+        targetValue: Number(targetValue),
         userId,
+        deadline: deadline ? deadline : undefined,
+        status: GoalStatus.INPROGRESS,
       });
       logger.debug('Got data: ', data);
-    } catch (e) {
+    } catch (e: any) {
+      logger.error('Error while creating goal:', { e });
       runInAction(() => {
         this.state = 'error';
       });

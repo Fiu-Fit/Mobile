@@ -1,10 +1,14 @@
 import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { GoalsScreenNavigationProp } from '../../navigation/navigation-props';
-import { useAppTheme } from '../../App';
+import { useAppTheme, useUserContext } from '../../App';
 import ItemCardList from '../../components/itemCardList';
 import FloatingActionButton from '../../components/dumb/floatingActionButton';
 import { goalStore } from '../../stores/goal.store';
+import { useFocusEffect } from '@react-navigation/native';
+import { action } from 'mobx';
+import { observer } from 'mobx-react';
+import { useCallback } from 'react';
 
 const GoalsScreen = ({
   navigation,
@@ -12,7 +16,15 @@ const GoalsScreen = ({
   navigation: GoalsScreenNavigationProp;
 }) => {
   const appTheme = useAppTheme();
-
+  const { currentUser } = useUserContext();
+  useFocusEffect(
+    useCallback(() => {
+      action(() => {
+        goalStore.fetchGoals(currentUser.id);
+      })();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
   return (
     <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>
       <View className='justify-center' style={{ flex: 0.2 }}>
@@ -35,5 +47,4 @@ const GoalsScreen = ({
     </View>
   );
 };
-
-export default GoalsScreen;
+export default observer(GoalsScreen);
