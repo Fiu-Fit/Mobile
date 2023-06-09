@@ -4,7 +4,6 @@ import { Alert, PermissionsAndroid } from 'react-native';
 import LoggerFactory from './logger-utility';
 import { axiosClient } from './constants';
 import { NotificationType } from './notification-types';
-// import { HomeNavigationProp } from '../navigation/navigation-props';
 
 const logger = LoggerFactory('push-notification-manager');
 
