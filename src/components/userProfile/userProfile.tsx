@@ -7,14 +7,43 @@ import { useFocusEffect } from '@react-navigation/native';
 import { observer } from 'mobx-react';
 import LoggerFactory from '../../utils/logger-utility';
 import { searchStore } from '../../stores/userSearch.store';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
 import { axiosClient } from '../../utils/constants';
+import { updateCurrentUser } from '../../utils/fetch-helpers';
 
 const logger = LoggerFactory('user-profile');
 
+const handleFollow = async (selectedUserId: number, currentUserId: number) => {
+  try {
+    logger.info(
+      `Trying to follow user ${selectedUserId} as user ${currentUserId}`,
+    );
+    await axiosClient.post(`/followers/follow?userId=${currentUserId}`, {
+      userIdToFollow: selectedUserId,
+    });
+  } catch (error) {
+    logger.error('An error ocurred while trying to follow this user: ', error);
+  }
+};
+
+const handleUnfollow = async (
+  selectedUserId: number,
+  currentUserId: number,
+) => {
+  try {
+    logger.info(
+      `Trying to unfollow user ${selectedUserId} as user ${currentUserId}`,
+    );
+    await axiosClient.delete(
+      `/followers/unfollow?userId=${currentUserId}&followerId=${selectedUserId}`,
+    );
+  } catch (error) {
+    logger.error('An error ocurred while trying to follow this user: ', error);
+  }
+};
 const updateUserPositionCallback = async (
   position: GeolocationResponse,
   currentUser: User,
@@ -31,62 +60,43 @@ const updateUserPositionCallback = async (
 
 const UserProfile = (props: UserProfileProps) => {
   const appTheme = useAppTheme();
-  const { currentUser } = useUserContext();
-  const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
-  const [amFollowing, setAmFollowing] = useState(false);
-  useFocusEffect(() => {
-    logger.info(`Selected User: ${props.route?.params.givenUserId}`);
-    setSelectedUser(
-      props.myProfile
-        ? currentUser
-        : searchStore.results.find(
-            user => user.id === props.route?.params.givenUserId,
-          ),
-    );
-    const isAlreadyFollowing = Boolean(
-      currentUser.followedUsers?.find(user => user.id === selectedUser?.id),
-    );
-    setAmFollowing(isAlreadyFollowing);
-  });
+  const { currentUser, setCurrentUser } = useUserContext();
 
+  const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
+  const [followAction, setFollowAction] = useState({
+    followState: false,
+    followCallback: handleFollow,
+  });
+  useFocusEffect(
+    useCallback(() => {
+      logger.info(`Selected User: ${props.route?.params.givenUserId}`);
+      setSelectedUser(
+        props.myProfile
+          ? currentUser
+          : searchStore.results.find(
+              user => user.id === props.route?.params.givenUserId,
+            ),
+      );
+      updateCurrentUser()
+        .then(user => setCurrentUser(user))
+        .then(() => {
+          const following = Boolean(
+            currentUser.followedUsers?.find(
+              user => user.id === selectedUser?.id,
+            ),
+          );
+          setFollowAction(
+            following
+              ? { followState: following, followCallback: handleUnfollow }
+              : { followState: following, followCallback: handleFollow },
+          );
+        });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
   const handleSignOut = async () => {
     await auth().signOut();
     props.navigation?.getParent()?.navigate('LoginScreen');
-  };
-
-  const handleFollow = async () => {
-    try {
-      logger.info(
-        `Trying to follow user ${selectedUser?.id} as user ${currentUser.id}`,
-      );
-      await axiosClient.post(`/followers/follow?userId=${currentUser.id}`, {
-        userIdToFollow: selectedUser?.id,
-      });
-      if (selectedUser) currentUser.followedUsers?.push(selectedUser);
-      setAmFollowing(!amFollowing);
-    } catch (error) {
-      logger.error(
-        'An error ocurred while trying to follow this user: ',
-        error,
-      );
-    }
-  };
-
-  const handleUnfollow = async () => {
-    try {
-      logger.info(
-        `Trying to unfollow user ${selectedUser?.id} as user ${currentUser.id}`,
-      );
-      await axiosClient.delete(
-        `/followers/unfollow?userId=${currentUser.id}&followerId=${selectedUser?.id}`,
-      );
-      setAmFollowing(!amFollowing);
-    } catch (error) {
-      logger.error(
-        'An error ocurred while trying to follow this user: ',
-        error,
-      );
-    }
   };
   const pictureUrl =
     'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80';
@@ -158,19 +168,16 @@ const UserProfile = (props: UserProfileProps) => {
           </Button>
         </>
       )}
-      {!props.myProfile &&
-        (amFollowing ? (
-          <Button
-            mode='contained'
-            style={styles.button}
-            onPress={handleUnfollow}>
-            Unfollow
-          </Button>
-        ) : (
-          <Button mode='contained' style={styles.button} onPress={handleFollow}>
-            Follow
-          </Button>
-        ))}
+      {!props.myProfile && (
+        <Button
+          mode='contained'
+          style={styles.button}
+          onPress={() =>
+            followAction.followCallback(selectedUser?.id ?? 0, currentUser.id)
+          }>
+          {followAction.followState ? 'Unfollow' : 'Follow'}
+        </Button>
+      )}
     </View>
   );
 };

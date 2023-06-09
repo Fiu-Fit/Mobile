@@ -15,7 +15,7 @@ import COLORS from '../../constants/colors';
 import LoggerFactory from '../../utils/logger-utility';
 import { Formik, FormikErrors } from 'formik';
 import { LoginScreenNavigationProp } from '../../navigation/navigation-props';
-import { ErrorInputProps, InputProps, User } from '../../utils/custom-types';
+import { ErrorInputProps, InputProps } from '../../utils/custom-types';
 import { axiosClient } from '../../utils/constants';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
@@ -23,6 +23,7 @@ import { Role } from '../../constants/roles';
 import { DateTime } from 'luxon';
 import FiuFitLogo from '../../components/dumb/fiuFitLogo';
 import { useUserContext } from '../../App';
+import { updateCurrentUser } from '../../utils/fetch-helpers';
 
 const logger = LoggerFactory('login');
 
@@ -51,16 +52,8 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      const { data } = await axiosClient.post('/users/me');
-      logger.info('Got User ID: ', data.id);
-      const { data: followedUsers } = await axiosClient.get(
-        `/followers/following?userId=${data.id}`,
-      );
-      logger.info('Got followedUsers: ', followedUsers);
-      setCurrentUser({
-        ...data,
-        followedUsers: followedUsers.rows,
-      } as User);
+      const user = await updateCurrentUser();
+      setCurrentUser(user);
       navigation.push('Home');
     } catch (error: any) {
       logger.error('Error while logging in: ', error.response.data);
