@@ -96,6 +96,7 @@ const UserProfile = (props: UserProfileProps) => {
                     );
                   }
                 },
+                { enableHighAccuracy: true, timeout: 1000 },
               );
             }}>
             Update Location
