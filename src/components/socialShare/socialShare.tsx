@@ -1,12 +1,24 @@
-import { Share, View, Button, Alert, ShareContent } from 'react-native';
+import { Share, View, Button, Alert } from 'react-native';
 import LoggerFactory from '../../utils/logger-utility';
 
 const logger = LoggerFactory('social-share');
 
-const SocialShare = ({ content }: { content: ShareContent }) => {
+export type ShareTypedContent = {
+  title: string;
+  message: string;
+  type: string;
+};
+
+const SocialShare = ({ content }: { content: ShareTypedContent }) => {
   const onShare = async () => {
     try {
-      const result = await Share.share(content);
+      const { title, message, type } = content;
+      const customMessage = `Check out this ${type} from FiuFit! ${title}: ${message}`;
+      logger.info('Sharing content:', customMessage);
+      const result = await Share.share({
+        title,
+        message: customMessage,
+      });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // shared with activity type of result.activityType

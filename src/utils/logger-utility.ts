@@ -28,6 +28,7 @@ const config = {
     'create-goal',
     'password-recovery',
     'home-header',
+    'social-share',
   ],
   transportOptions: {
     colors: {
