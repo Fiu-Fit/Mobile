@@ -69,6 +69,7 @@ const ItemCard = <T extends CardInfo>({
               content={{
                 title: item.title,
                 message: item.content,
+                type: item.type,
               }}
             />
             {onEditPress && (

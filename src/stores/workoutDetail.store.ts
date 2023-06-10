@@ -66,6 +66,7 @@ export class WorkoutDetailStore {
           id: workoutExercise._id,
           title: workoutExercise.exercise?.name ?? 'Name missing',
           content: `${workoutExercise.sets} x ${workoutExercise.reps}`,
+          type: 'exercise',
           exercise: workoutExercise.exercise,
           imageUrl:
             'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
