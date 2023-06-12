@@ -88,11 +88,12 @@ const WorkoutRatingModal = ({ onDismiss }: WorkoutRatingModalProps) => {
               style={{ color: appTheme.colors.onBackground }}>
               Agregar
             </Text>
-            <WorkoutCommentModal
-              visible={commentModalVisible}
-              onDismiss={hideCommentModal}
-              onPress={ratingCompleted}
-            />
+            {commentModalVisible && (
+              <WorkoutCommentModal
+                onDismiss={hideCommentModal}
+                onPress={ratingCompleted}
+              />
+            )}
           </TouchableOpacity>
         </View>
       </Modal>

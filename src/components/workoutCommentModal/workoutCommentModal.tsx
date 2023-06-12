@@ -9,13 +9,11 @@ import Input from '../input';
 const MAX_COMMENT_LENGTH = 10;
 
 type WorkoutCommentModalProps = {
-  visible: boolean;
   onDismiss: () => void;
   onPress: (comment: string) => void;
 };
 
 const WorkoutCommentModal = ({
-  visible,
   onDismiss,
   onPress,
 }: WorkoutCommentModalProps) => {
@@ -32,7 +30,7 @@ const WorkoutCommentModal = ({
   return (
     <Portal>
       <Modal
-        visible={visible}
+        visible={true}
         onDismiss={onDismiss}
         contentContainerStyle={containerStyle}>
         <SafeAreaView className='flex-1 bg-black' style={{ borderRadius: 20 }}>
