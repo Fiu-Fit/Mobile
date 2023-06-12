@@ -28,6 +28,8 @@ const config = {
     'create-goal',
     'password-recovery',
     'home-header',
+    'workouts',
+    'workout-selector',
   ],
   transportOptions: {
     colors: {

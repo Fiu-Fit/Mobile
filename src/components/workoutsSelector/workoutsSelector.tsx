@@ -5,6 +5,9 @@ import { workoutStore } from '../../stores/workout.store';
 import { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { action } from 'mobx';
+import LoggerFactory from '../../utils/logger-utility';
+
+const logger = LoggerFactory('workout-selector');
 
 const WorkoutsSelector = () => {
   const appTheme = useAppTheme();
@@ -21,6 +24,7 @@ const WorkoutsSelector = () => {
   );
 
   const onChangeShowingAllWorkouts = (isShowingAllWorkouts: boolean) => {
+    logger.debug('hi');
     if (isShowingAllWorkouts) {
       workoutStore.fetchWorkouts();
     } else {

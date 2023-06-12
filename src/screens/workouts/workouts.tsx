@@ -22,14 +22,14 @@ const WorkoutsScreen = ({
       <WorkoutsFilter />
       <WorkoutsSelector />
       <View style={{ flex: 0.8 }}>
-        <ItemCardList
+        {/* <ItemCardList
           items={workoutStore.workoutCardsInfo}
           onPress={item =>
             navigation.push('WorkoutScreen', {
               itemId: item.id,
             })
           }
-        />
+        /> */}
       </View>
       {currentUser.role !== Role.Athlete && (
         <FloatingActionButton

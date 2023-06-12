@@ -150,7 +150,7 @@ const App = () => {
   const paperTheme =
     colorScheme === 'dark' ? customDarkTheme : customLightTheme;
   const rNavTheme = colorScheme === 'dark' ? DarkTheme : LightTheme;
-
+  console.log('HOLA DESDE APP');
   return (
     <PaperProvider theme={paperTheme}>
       <NavigationContainer theme={rNavTheme}>
