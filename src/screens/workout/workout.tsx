@@ -36,6 +36,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
 
   useEffect(() => {
     flowResult(workoutDetailStore.fetchWorkout(itemId));
+    flowResult(workoutDetailStore.fetchWorkoutRatings());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -62,10 +63,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
           flex: 0.62,
         }}>
         {ratingModalVisible && (
-          <WorkoutRatingModal
-            onDismiss={() => setRatingModalVisible(false)}
-            workoutRatingItem={workoutDetailStore.workoutHeader.averageRating}
-          />
+          <WorkoutRatingModal onDismiss={() => setRatingModalVisible(false)} />
         )}
 
         <ItemCardList

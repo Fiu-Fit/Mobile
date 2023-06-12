@@ -74,6 +74,14 @@ export class WorkoutDetailStore {
     return Array.from(this.workout.exercises.values());
   }
 
+  get workoutComments(): string[] {
+    const comments: string[] = this.ratings
+      .filter((rating: WorkoutRatingProps) => rating.comment !== undefined)
+      .map((rating: WorkoutRatingProps) => rating.comment!);
+
+    return comments;
+  }
+
   constructor() {
     makeObservable(this, {
       workoutId: observable,
@@ -82,12 +90,15 @@ export class WorkoutDetailStore {
       newExercises: observable,
       exerciseCards: computed,
       workoutHeader: computed,
+      workoutComments: computed,
       addNewExercise: action,
       editExercise: action,
       removeExercise: action,
       upsertStoredWorkout: flow,
       fetchWorkout: flow,
+      fetchWorkoutRatings: flow,
       addWorkoutAsFavourite: flow,
+      createWorkoutRating: flow,
     });
   }
 
@@ -220,6 +231,24 @@ export class WorkoutDetailStore {
         this.ratings = data;
         this.state = 'done';
       });
+    } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
+  *createWorkoutRating(userId: number, rating: number, comment?: string) {
+    this.state = 'pending';
+    try {
+      logger.debug('Creating workout rating...');
+      const { data } = yield axiosClient.post<WorkoutRatingProps>('/ratings', {
+        workoutId: this.workoutId,
+        athleteId: userId,
+        rating,
+        comment,
+      });
+      logger.debug('Got data: ', data);
     } catch (e) {
       runInAction(() => {
         this.state = 'error';

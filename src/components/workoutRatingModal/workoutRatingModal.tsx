@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
-import { useAppTheme } from '../../App';
+import { useAppTheme, useUserContext } from '../../App';
 import { Modal, Portal, Divider } from 'react-native-paper';
 import { AirbnbRating } from 'react-native-ratings';
 import { FlatList } from 'react-native';
@@ -8,24 +8,22 @@ import React from 'react';
 import WorkoutCommentModal from '../workoutCommentModal';
 import LoggerFactory from '../../utils/logger-utility';
 import Loader from '../loader';
-import { WorkoutRating } from '../../utils/workout-types';
+import { workoutDetailStore } from '../../stores/workoutDetail.store';
 
 const logger = LoggerFactory('workoutRating');
 
 type WorkoutRatingModalProps = {
   onDismiss: () => void;
-  workoutRatingItem: WorkoutRating;
 };
 
-const WorkoutRatingModal = ({
-  onDismiss,
-  workoutRatingItem,
-}: WorkoutRatingModalProps) => {
+const WorkoutRatingModal = ({ onDismiss }: WorkoutRatingModalProps) => {
   const appTheme = useAppTheme();
+  const { currentUser } = useUserContext();
   const [commentModalVisible, setCommentModalVisible] = React.useState(false);
   const showCommentModal = () => setCommentModalVisible(true);
   const hideCommentModal = () => setCommentModalVisible(false);
   const [loading, setLoading] = React.useState(false);
+  const [rating, setRating] = React.useState(0);
 
   const containerStyle = {
     backgroundColor: appTheme.colors.surface,
@@ -35,11 +33,12 @@ const WorkoutRatingModal = ({
     borderRadius: 20,
   };
 
-  const ratingCompleted = (rating: number) => {
+  const ratingCompleted = (comment: string) => {
     setLoading(true);
     try {
       logger.info('Rating: ', rating.toString());
-      //const response = await axiosClient.post('/workouts/rate/this_workout_id', rating);
+      logger.info('Comment: ', comment.toString());
+      workoutDetailStore.createWorkoutRating(currentUser.id, rating, comment);
     } catch (error) {
       logger.error(error as string);
     }
@@ -63,10 +62,10 @@ const WorkoutRatingModal = ({
             count={5}
             defaultRating={0}
             reviews={['Terrible', 'Malo', 'OK', 'Bueno', 'Muy bueno']}
-            onFinishRating={ratingCompleted}
+            onFinishRating={(newRating: number) => setRating(newRating)}
           />
           <Text className='mt-5'>
-            Valoración global: {workoutRatingItem.averageRating}
+            Valoración global: {workoutDetailStore.workout.averageRating}
           </Text>
         </View>
         <View className='items-center mt-10' style={{ flex: 0.6 }}>
@@ -77,7 +76,7 @@ const WorkoutRatingModal = ({
           </Text>
           <FlatList
             className='mx-10 mt-2 mb-2'
-            data={workoutRatingItem.comments}
+            data={workoutDetailStore.workoutComments}
             ItemSeparatorComponent={() => <Divider bold />}
             renderItem={({ item }) => (
               <WorkoutCommentCard workoutComment={item} />
@@ -92,6 +91,7 @@ const WorkoutRatingModal = ({
             <WorkoutCommentModal
               visible={commentModalVisible}
               onDismiss={hideCommentModal}
+              onPress={ratingCompleted}
             />
           </TouchableOpacity>
         </View>
