@@ -124,16 +124,22 @@ const defaultUserObject = {
   bodyWeight: 0,
   interests: [],
   favoriteWorkouts: [],
+  coordinates: [0, 0],
 };
 
 const UserContext = createContext<{
   currentUser: User;
   setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
-}>({ currentUser: defaultUserObject, setCurrentUser: () => {} });
+}>({
+  currentUser: defaultUserObject as unknown as User,
+  setCurrentUser: () => {},
+});
 export const useUserContext = () => useContext(UserContext);
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState<User>(defaultUserObject);
+  const [currentUser, setCurrentUser] = useState<User>(
+    defaultUserObject as unknown as User,
+  );
   const colorScheme = useColorScheme();
   const { DarkTheme } = adaptNavigationTheme({
     reactNavigationDark: DefaultTheme,
@@ -144,7 +150,7 @@ const App = () => {
   const paperTheme =
     colorScheme === 'dark' ? customDarkTheme : customLightTheme;
   const rNavTheme = colorScheme === 'dark' ? DarkTheme : LightTheme;
-
+  console.log('HOLA DESDE APP');
   return (
     <PaperProvider theme={paperTheme}>
       <NavigationContainer theme={rNavTheme}>
