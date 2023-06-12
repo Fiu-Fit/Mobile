@@ -1,6 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { UserProfileProps } from '../utils/custom-types';
+import { User, UserProfileProps } from '../utils/custom-types';
 
 export type AuthStackParamList = {
   LoginScreen: undefined;
@@ -32,6 +32,15 @@ export type TabParamList = {
   HomeTab: undefined;
   UserSearch: undefined;
   LoginScreen: undefined;
+  Users: undefined;
+};
+
+export type UserStackParamList = {
+  UserSearch: {
+    givenUserId: number;
+    canEdit: boolean;
+  };
+  ChatScreen: { user: User };
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<

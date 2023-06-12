@@ -6,6 +6,7 @@ import WorkoutStack from './workout-navigator';
 import GoalStack from './goal-navigator';
 import ProfileSearchScreen from '../screens/profileSearchScreen';
 import MyProfileScreen from '../screens/myProfile';
+import UserStack from './user-navigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -47,6 +48,7 @@ const TabNavigator = () => {
       <Tab.Screen name='Goals' component={GoalStack} />
       <Tab.Screen name='Workouts' component={WorkoutStack} />
       <Tab.Screen name='Search' component={ProfileSearchScreen} />
+      <Tab.Screen name='Users' component={UserStack} />
     </Tab.Navigator>
   );
 };
