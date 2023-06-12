@@ -1,13 +1,14 @@
-import { Image, View } from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { GoalScreenNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 import { Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { action } from 'mobx';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { goalStore } from '../../stores/goal.store';
 import { useFocusEffect } from '@react-navigation/native';
+import EditGoalModal from '../../components/editGoalModal';
 
 type GoalScreenProps = {
   navigation: GoalScreenNavigationProp;
@@ -21,6 +22,7 @@ type GoalScreenProps = {
 const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
   const appTheme = useAppTheme();
   const { itemId } = route.params;
+  const [showingEditGoalModal, setShowingEditGoalModal] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -60,14 +62,21 @@ const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
           }}
           resizeMode='cover'
         />
-        <Text className='text-xl'>x 10</Text>
+        <Text className='text-xl'>x {goalStore.currentGoal?.targetValue}</Text>
       </View>
       <View
         className='flex-row items-center justify-around'
         style={{ flex: 0.2 }}>
-        <Icon size={50} name={'delete'} />
-        <Icon size={50} name={'pencil'} />
+        <TouchableOpacity onPress={() => goalStore.deleteGoal()}>
+          <Icon size={50} name={'delete'} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowingEditGoalModal(true)}>
+          <Icon size={50} name={'pencil'} />
+        </TouchableOpacity>
       </View>
+      {showingEditGoalModal && (
+        <EditGoalModal onDismiss={() => setShowingEditGoalModal(false)} />
+      )}
     </View>
   );
 };

@@ -31,6 +31,7 @@ const config = {
     'push-notification-manager',
     'notification',
     'goal-store',
+    'edit-goal-modal',
   ],
   transportOptions: {
     colors: {

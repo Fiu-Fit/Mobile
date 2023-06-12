@@ -30,6 +30,8 @@ export class GoalStore {
       fetchGoals: flow,
       fetchGoal: flow,
       createGoal: flow,
+      deleteGoal: flow,
+      editGoal: flow,
     });
   }
 
@@ -74,7 +76,6 @@ export class GoalStore {
   *createGoal(input: GoalInputProps, userId: number) {
     this.state = 'pending';
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { targetValue, deadline, ...rest } = input;
       logger.debug('Creating goal:', { ...input, userId });
       const { data } = yield axiosClient.post('/goals', {
@@ -85,8 +86,44 @@ export class GoalStore {
         status: GoalStatus.INPROGRESS,
       });
       logger.debug('Got data: ', data);
-    } catch (e: any) {
+    } catch (e) {
       logger.error('Error while creating goal:', { e });
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
+  *deleteGoal() {
+    this.state = 'pending';
+    try {
+      logger.debug('Deleting goal with id:', this.currentGoal?.id);
+      yield axiosClient.delete(`/goals/${this.currentGoal?.id}`);
+      logger.debug('Deleted goal with id:', this.currentGoal?.id);
+    } catch (e) {
+      logger.error('Error while deleting goal:', { e });
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
+  *editGoal(newDescription: string) {
+    this.state = 'pending';
+    try {
+      const { id, description, ...restOfGoal } = this.currentGoal!;
+      const goalPayload = {
+        ...restOfGoal,
+        description: newDescription,
+      };
+
+      logger.debug('Old description: ', description);
+      logger.debug('Editing goal with id: ', id);
+      const { data } = yield axiosClient.post(`/goals/${id}`, {
+        goalPayload,
+      });
+      logger.debug('Got data: ', data);
+    } catch (e) {
       runInAction(() => {
         this.state = 'error';
       });

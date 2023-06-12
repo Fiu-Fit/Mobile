@@ -28,6 +28,12 @@ export type CommentInputProps = {
 
 export type ErrorCommentInputProps = CommentInputProps;
 
+export type EditGoalInputProps = {
+  description: string;
+};
+
+export type ErrorEditGoalProps = EditGoalInputProps;
+
 export interface CardInfo {
   id: string | number;
   title: string;
