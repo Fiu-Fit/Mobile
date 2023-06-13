@@ -45,6 +45,7 @@ export type User = {
   interests: number[];
   deviceToken: string;
   coordinates: [number, number];
+  phoneNumber?: string;
 };
 
 export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<

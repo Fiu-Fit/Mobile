@@ -4,10 +4,11 @@ import { Alert, PermissionsAndroid } from 'react-native';
 import LoggerFactory from './logger-utility';
 import { axiosClient } from './constants';
 import { NotificationType } from './notification-types';
+import { User } from './custom-types';
 
 const logger = LoggerFactory('push-notification-manager');
 
-export const requestPermissions = async (userId: number) => {
+export const requestPermissions = async (user: User) => {
   try {
     const granted = PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
@@ -16,7 +17,12 @@ export const requestPermissions = async (userId: number) => {
       logger.info('User granted permission');
 
       const token = await getFCMToken();
-      await axiosClient.patch(`/users/${userId}/token`, { token });
+      const updatedUser = await axiosClient.put<User>(`/users/${user.id}`, {
+        ...user,
+        deviceToken: token,
+      });
+
+      logger.debug('Updated user: ', updatedUser);
 
       logger.info('Device token: ', token);
     } else {

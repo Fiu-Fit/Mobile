@@ -31,7 +31,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   );
 
   useEffect(() => {
-    requestPermissions(currentUser.id);
+    requestPermissions(currentUser);
     NotificationListener();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
