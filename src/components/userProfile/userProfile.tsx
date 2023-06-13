@@ -1,4 +1,4 @@
-import { View, Image, StyleSheet, Text, Alert } from 'react-native';
+import { View, Image, StyleSheet, Text, Alert, ActivityIndicator } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import auth from '@react-native-firebase/auth';
@@ -12,7 +12,7 @@ import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
 import { axiosClient } from '../../utils/constants';
-import { updateCurrentUser } from '../../utils/fetch-helpers';
+import { useFetchUser } from '../../utils/fetch-helpers';
 
 const logger = LoggerFactory('user-profile');
 
@@ -67,33 +67,28 @@ const UserProfile = (props: UserProfileProps) => {
     followState: false,
     followCallback: handleFollow,
   });
-  useFocusEffect(
-    useCallback(() => {
+
       logger.info(`Selected User: ${props.route?.params.givenUserId}`);
-      setSelectedUser(
-        props.myProfile
-          ? currentUser
-          : searchStore.results.find(
-              user => user.id === props.route?.params.givenUserId,
-            ),
+      const {response: user} = props.route ? useFetchUser(props.route?.params.givenUserId) : useFetchUser();
+      if(!user){
+        logger.info(`Loading user`);
+        return <ActivityIndicator size='large' color='#0000ff' />
+      }
+      setSelectedUser(user as User);
+
+      logger.info(`Set User: ${user.id} as selected`);
+
+      const following = Boolean(
+        currentUser.followedUsers?.find(
+          user => user.id === selectedUser?.id,
+        ),
       );
-      updateCurrentUser()
-        .then(user => setCurrentUser(user))
-        .then(() => {
-          const following = Boolean(
-            currentUser.followedUsers?.find(
-              user => user.id === selectedUser?.id,
-            ),
-          );
-          setFollowAction(
-            following
-              ? { followState: following, followCallback: handleUnfollow }
-              : { followState: following, followCallback: handleFollow },
-          );
-        });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []),
-  );
+      setFollowAction(
+        following
+          ? { followState: following, followCallback: handleUnfollow }
+          : { followState: following, followCallback: handleFollow },
+      );
+
   const handleSignOut = async () => {
     await auth().signOut();
     props.navigation?.getParent()?.navigate('LoginScreen');
