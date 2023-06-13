@@ -10,11 +10,26 @@ import { HomeNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 import { useFocusEffect } from '@react-navigation/native';
 import { action } from 'mobx';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import CalendarModal from '../../components/calendarModal';
+import moment, { Moment } from 'moment';
+
+type DatesState = {
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  displayedDate: Moment;
+};
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
+  const [showingCalendarModal, setShowingCalendarModal] = useState(false);
+  const [dates, setDates] = useState<DatesState>({
+    startDate: undefined,
+    endDate: undefined,
+    displayedDate: moment(),
+  });
 
   useFocusEffect(
     useCallback(() => {
@@ -27,6 +42,13 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
 
   return (
     <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>
+      {showingCalendarModal && (
+        <CalendarModal
+          onDismiss={() => setShowingCalendarModal(false)}
+          setDates={newDates => setDates(newDates)}
+          dates={dates}
+        />
+      )}
       <View style={{ flex: 0.1 }}>
         <HomeHeader navigation={navigation} />
         <Divider className='mt-5' />
@@ -37,7 +59,15 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
         <MetricCard title={'Minutos'} value='400' />
       </View>
       <View className='justify-center items-center' style={{ flex: 0.1 }}>
-        <Text>Calendario</Text>
+        <TouchableOpacity onPress={() => setShowingCalendarModal(true)}>
+          <Text>
+            {dates.startDate !== undefined && dates.endDate !== undefined
+              ? dates.startDate.toLocaleDateString() +
+                '   ' +
+                dates.endDate.toLocaleDateString()
+              : 'Seleccionar periodo de tiempo'}
+          </Text>
+        </TouchableOpacity>
       </View>
       <View style={{ flex: 0.6, backgroundColor: appTheme.colors.background }}>
         <Divider />
