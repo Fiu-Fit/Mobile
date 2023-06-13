@@ -44,7 +44,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
     <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>
       {showingCalendarModal && (
         <CalendarModal
-          onDismiss={() => setShowingCalendarModal(false)}
+          onDismiss={() => dates.endDate && setShowingCalendarModal(false)}
           setDates={newDates => setDates(newDates)}
           dates={dates}
         />

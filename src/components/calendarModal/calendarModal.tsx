@@ -1,14 +1,14 @@
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import { Modal, Portal, Text } from 'react-native-paper';
 import { useAppTheme } from '../../App';
-import COLORS from '../../constants/colors';
 import DateRangePicker from 'react-native-daterange-picker';
 import moment from 'moment';
+import { DatesState } from '../../utils/custom-types';
 
 type CalendarModalProps = {
   onDismiss: () => void;
-  setDates: (dates: any) => void;
-  dates: any;
+  setDates: (dates: DatesState) => void;
+  dates: DatesState;
 };
 
 const CalendarModal = ({ onDismiss, setDates, dates }: CalendarModalProps) => {
@@ -29,8 +29,7 @@ const CalendarModal = ({ onDismiss, setDates, dates }: CalendarModalProps) => {
         onDismiss={onDismiss}
         contentContainerStyle={containerStyle}>
         <SafeAreaView
-          className='flex-1 justify-center'
-          style={{ borderRadius: 20 }}>
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <DateRangePicker
             onChange={(newDates: any) => {
               setDates({
@@ -51,30 +50,24 @@ const CalendarModal = ({ onDismiss, setDates, dates }: CalendarModalProps) => {
             endDate={dates?.endDate}
             startDate={dates?.startDate}
             displayedDate={dates?.displayedDate}
-            range>
-            <Text>Click me</Text>
-          </DateRangePicker>
+            range
+            open={true}
+            containerStyle={{
+              backgroundColor: appTheme.colors.surface,
+            }}
+            headerStyle={{ backgroundColor: 'yellow' }}
+            headerTextStyle={{ color: 'white' }}
+            dayTextStyle={{ color: 'white' }}
+            backdropStyle={{
+              height: 'auto',
+              width: 'auto',
+              backgroundColor: appTheme.colors.surface,
+            }}
+          />
         </SafeAreaView>
       </Modal>
     </Portal>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    margin: 50,
-  },
-  selectedDateContainerStyle: {
-    height: 35,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.blue,
-  },
-  selectedDateStyle: {
-    fontWeight: 'bold',
-    color: 'white',
-  },
-});
 
 export default CalendarModal;
