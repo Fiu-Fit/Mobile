@@ -4,6 +4,7 @@ import { useAppTheme, useUserContext } from '../../App';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../constants/colors';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
+import { observer } from 'mobx-react';
 
 const WorkoutHeader = () => {
   const appTheme = useAppTheme();
@@ -61,4 +62,4 @@ const WorkoutHeader = () => {
   );
 };
 
-export default WorkoutHeader;
+export default observer(WorkoutHeader);

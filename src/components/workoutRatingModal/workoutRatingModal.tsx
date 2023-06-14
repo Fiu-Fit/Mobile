@@ -9,6 +9,7 @@ import WorkoutCommentModal from '../workoutCommentModal';
 import LoggerFactory from '../../utils/logger-utility';
 import Loader from '../loader';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
+import { runInAction } from 'mobx';
 
 const logger = LoggerFactory('workoutRating');
 
@@ -38,7 +39,11 @@ const WorkoutRatingModal = ({ onDismiss }: WorkoutRatingModalProps) => {
     try {
       logger.info('Rating: ', rating.toString());
       logger.info('Comment: ', comment.toString());
-      workoutDetailStore.createWorkoutRating(currentUser.id, rating, comment);
+      runInAction(() => {
+        workoutDetailStore.createWorkoutRating(currentUser.id, rating, comment);
+        workoutDetailStore.fetchWorkout(workoutDetailStore.workout._id);
+        workoutDetailStore.fetchWorkoutRatings();
+      });
     } catch (error) {
       logger.error(error as string);
     }

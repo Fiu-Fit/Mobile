@@ -6,7 +6,7 @@ import { Formik, FormikErrors } from 'formik';
 import { ErrorCommentInputProps } from '../../utils/custom-types';
 import Input from '../input';
 
-const MAX_COMMENT_LENGTH = 10;
+const MAX_COMMENT_LENGTH = 50;
 
 type WorkoutCommentModalProps = {
   onDismiss: () => void;

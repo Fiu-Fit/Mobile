@@ -34,7 +34,6 @@ const defaultWorkout = {
 };
 
 export class WorkoutDetailStore {
-  workoutId: string | undefined;
   workout: WorkoutProps = defaultWorkout;
   newExercises = new Map<string, WorkoutExercise>();
   ratings: WorkoutRatingProps[] = [];
@@ -48,7 +47,7 @@ export class WorkoutDetailStore {
       description,
       duration,
       author: 'Jorge', // @TODO Backend: attach User Object in Author instead of AuthorID
-      averageRating,
+      averageRating: averageRating ?? 'No ratings!',
       exerciseCount: exercises.size,
     };
   }
@@ -84,10 +83,10 @@ export class WorkoutDetailStore {
 
   constructor() {
     makeObservable(this, {
-      workoutId: observable,
       workout: observable,
       state: observable,
       newExercises: observable,
+      ratings: observable,
       exerciseCards: computed,
       workoutHeader: computed,
       workoutComments: computed,
@@ -218,23 +217,24 @@ export class WorkoutDetailStore {
     this.state = 'pending';
     try {
       const filters = {
-        workout: this.workoutId,
+        workoutId: this.workout._id,
       };
 
       const params = {
         filters: JSON.stringify(filters),
       };
 
-      logger.debug(`Getting ratings for workout id ${this.workoutId}...`);
+      logger.debug(`Getting ratings for workout id ${this.workout._id}...`);
       const { data } = yield axiosClient.get<WorkoutRatingProps[]>('/ratings', {
         params,
       });
-      logger.debug(`Got data for workout: ${this.workoutId}`, data);
+      logger.debug(`Got data for workout: ${this.workout._id}`, data);
       runInAction(() => {
         this.ratings = data;
         this.state = 'done';
       });
     } catch (e) {
+      logger.error('Error while fetching ratings:', { e });
       runInAction(() => {
         this.state = 'error';
       });
@@ -245,14 +245,23 @@ export class WorkoutDetailStore {
     this.state = 'pending';
     try {
       logger.debug('Creating workout rating...');
-      const { data } = yield axiosClient.post<WorkoutRatingProps>('/ratings', {
-        workoutId: this.workoutId,
+      logger.debug('Creating rating: ', {
+        workoutId: this.workout._id,
         athleteId: userId,
         rating,
         comment,
       });
+      const { data } = yield axiosClient.post<WorkoutRatingProps>('/ratings', {
+        workoutId: this.workout._id,
+        athleteId: userId,
+        rating,
+        comment,
+      });
+      this.state = 'done';
       logger.debug('Got data: ', data);
-    } catch (e) {
+    } catch (e: any) {
+      logger.error('Error while creating rating: ', { e });
+
       runInAction(() => {
         this.state = 'error';
       });
