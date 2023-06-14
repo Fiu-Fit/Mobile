@@ -4,16 +4,39 @@ import { useAppTheme, useUserContext } from '../../App';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../constants/colors';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
+import { workoutStore } from '../../stores/workout.store';
 import { observer } from 'mobx-react';
+import { useState } from 'react';
+import Loader from '../loader';
+import { runInAction } from 'mobx';
+import LoggerFactory from '../../utils/logger-utility';
+
+const logger = LoggerFactory('workout-header');
 
 const WorkoutHeader = () => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
   const workoutHeader = workoutDetailStore.workoutHeader;
+  const [loading, setLoading] = useState(false);
+
+  const handleFavouriteWorkout = () => {
+    setLoading(true);
+    try {
+      runInAction(() => {
+        workoutDetailStore.addWorkoutAsFavourite(currentUser.id);
+        workoutStore.fetchFavoriteWorkouts(currentUser.id);
+      });
+    } catch (error) {
+      logger.error(error as string);
+    }
+    setLoading(false);
+  };
+
   return (
     <View
       className='items-center justify-center'
       style={{ backgroundColor: appTheme.colors.background, flex: 0.2 }}>
+      {loading && <Loader />}
       <View
         className='flex-row items-around justify-around mt-10'
         style={{ width: '100%' }}>
@@ -24,13 +47,15 @@ const WorkoutHeader = () => {
         </Text>
         <TouchableOpacity
           className='justify-center items-center'
-          onPress={() =>
-            workoutDetailStore.addWorkoutAsFavourite(currentUser.id)
-          }>
+          onPress={() => handleFavouriteWorkout()}>
           <Icon
             style={{
               fontSize: 35,
-              color: appTheme.colors.onSurface,
+              color: workoutStore.isFavoriteWorkout(
+                workoutDetailStore.workout._id,
+              )
+                ? 'yellow'
+                : appTheme.colors.onSurface,
             }}
             name={'star'}
           />

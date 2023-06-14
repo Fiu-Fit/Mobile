@@ -8,6 +8,7 @@ const logger = LoggerFactory('workout-store');
 
 export class WorkoutStore {
   workouts: WorkoutProps[] = [];
+  favoriteWorkouts: WorkoutProps[] = [];
   state = 'pending';
   selectedTypeFilter: number | undefined = undefined;
   selectedDifficultyFilter: number | undefined = undefined;
@@ -28,11 +29,18 @@ export class WorkoutStore {
     );
   }
 
+  get isFavoriteWorkout(): (id: string) => boolean {
+    return (id: string) => {
+      return this.favoriteWorkouts.some(workout => workout._id === id);
+    };
+  }
+
   constructor() {
     makeObservable(this, {
       workouts: observable,
       selectedTypeFilter: observable,
       selectedDifficultyFilter: observable,
+      isFavoriteWorkout: computed,
       workoutsCount: computed,
       workoutCardsInfo: computed,
       fetchWorkouts: flow,
@@ -97,7 +105,7 @@ export class WorkoutStore {
     }
   }
 
-  *fetchFavoriteWorkouts(userId: string) {
+  *fetchFavoriteWorkouts(userId: number) {
     this.workouts = [];
     this.state = 'pending';
     try {
@@ -108,6 +116,7 @@ export class WorkoutStore {
       logger.debug(`Got data for user: ${userId}`, data);
       runInAction(() => {
         this.workouts = data;
+        this.favoriteWorkouts = data;
         this.state = 'done';
       });
     } catch (e) {

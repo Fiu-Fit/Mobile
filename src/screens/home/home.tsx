@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   useFocusEffect(
     useCallback(() => {
       action(() => {
-        workoutStore.fetchFavoriteWorkouts(`${currentUser.id}`);
+        workoutStore.fetchFavoriteWorkouts(currentUser.id);
       })();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
