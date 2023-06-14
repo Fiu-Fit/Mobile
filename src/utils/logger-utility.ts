@@ -30,6 +30,7 @@ const config = {
     'home-header',
     'workouts',
     'workout-selector',
+    'workout-rating-modal',
   ],
   transportOptions: {
     colors: {

@@ -9,7 +9,7 @@ type InputProps = {
   placeholderTextColor: string;
   onChangeText: (text: string) => void;
   multiline?: boolean;
-  labelText: string;
+  labelText?: string;
   labelColor?: string;
   iconName: string;
   error: string | undefined;
@@ -34,7 +34,7 @@ const Input = ({
   return (
     <View className='mb-4px'>
       <View className='flex-row justify-between'>
-        <Text className='my-5 text-xm'>{labelText}</Text>
+        {labelText && <Text className='my-5 text-xm'>{labelText}</Text>}
         {error && (
           <Text className='text-error-color text-xm mt-7'>{error}</Text>
         )}

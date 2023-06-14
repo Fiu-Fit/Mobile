@@ -1,17 +1,18 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useAppTheme, useUserContext } from '../../App';
 import { Modal, Portal, Divider } from 'react-native-paper';
 import { AirbnbRating } from 'react-native-ratings';
 import { FlatList } from 'react-native';
 import WorkoutCommentCard from '../workoutCommentCard';
 import React from 'react';
-import WorkoutCommentModal from '../workoutCommentModal';
 import LoggerFactory from '../../utils/logger-utility';
 import Loader from '../loader';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
 import { runInAction } from 'mobx';
+import Input from '../input';
+import Button from '../button';
 
-const logger = LoggerFactory('workoutRating');
+const logger = LoggerFactory('workout-rating-modal');
 
 type WorkoutRatingModalProps = {
   onDismiss: () => void;
@@ -20,25 +21,29 @@ type WorkoutRatingModalProps = {
 const WorkoutRatingModal = ({ onDismiss }: WorkoutRatingModalProps) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
-  const [commentModalVisible, setCommentModalVisible] = React.useState(false);
-  const showCommentModal = () => setCommentModalVisible(true);
-  const hideCommentModal = () => setCommentModalVisible(false);
   const [loading, setLoading] = React.useState(false);
   const [rating, setRating] = React.useState(0);
+  const [comment, setComment] = React.useState<string | undefined>('');
+  const commentError = '';
 
   const containerStyle = {
+    flex: 1,
     backgroundColor: appTheme.colors.surface,
     marginHorizontal: '5%',
+    marginVertical: '5%',
     width: '90%',
-    height: '70%',
+    height: '80%',
     borderRadius: 20,
   };
 
-  const ratingCompleted = (comment: string) => {
+  const ratingCompleted = () => {
     setLoading(true);
     try {
       logger.info('Rating: ', rating.toString());
-      logger.info('Comment: ', comment.toString());
+      logger.info('Comment: ', comment!.toString());
+      if (comment === '') {
+        setComment(undefined);
+      }
       runInAction(() => {
         workoutDetailStore.createWorkoutRating(currentUser.id, rating, comment);
         workoutDetailStore.fetchWorkout(workoutDetailStore.workout._id);
@@ -73,7 +78,7 @@ const WorkoutRatingModal = ({ onDismiss }: WorkoutRatingModalProps) => {
             Valoración global: {workoutDetailStore.workout.averageRating}
           </Text>
         </View>
-        <View className='items-center mt-10' style={{ flex: 0.6 }}>
+        <View className='items-center' style={{ flex: 0.5 }}>
           <Text
             className='text-xl'
             style={{ color: appTheme.colors.onBackground }}>
@@ -81,25 +86,32 @@ const WorkoutRatingModal = ({ onDismiss }: WorkoutRatingModalProps) => {
           </Text>
           <FlatList
             className='mx-10 mt-2 mb-2'
-            data={workoutDetailStore.workoutComments}
+            data={workoutDetailStore?.workoutComments}
             ItemSeparatorComponent={() => <Divider bold />}
             renderItem={({ item }) => (
               <WorkoutCommentCard workoutComment={item} />
             )}
           />
-          <TouchableOpacity className='mb-4' onPress={showCommentModal}>
-            <Text
-              className='text-xs'
-              style={{ color: appTheme.colors.onBackground }}>
-              Agregar
-            </Text>
-            {commentModalVisible && (
-              <WorkoutCommentModal
-                onDismiss={hideCommentModal}
-                onPress={ratingCompleted}
-              />
-            )}
-          </TouchableOpacity>
+        </View>
+        <View
+          className='items-center justify-around flex-row'
+          style={{ flex: 0.1, width: '100%' }}>
+          <View className='justify-center mx-2 mb-3' style={{ flex: 0.7 }}>
+            <Input
+              value={comment!}
+              error={commentError}
+              placeholder='Escribe un comentario'
+              placeholderTextColor={appTheme.colors.background}
+              onChangeText={text => setComment(text)}
+              iconName='comment-outline'
+              password={false}
+            />
+          </View>
+          <View
+            className='items-center justify-center mb-2'
+            style={{ flex: 0.3 }}>
+            <Button title='Enviar' onPress={ratingCompleted} />
+          </View>
         </View>
       </Modal>
     </Portal>
