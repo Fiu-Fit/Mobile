@@ -16,6 +16,7 @@ import {
 } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
+import { workoutStore } from './workout.store';
 
 const logger = LoggerFactory('workout-detail-store');
 
@@ -98,6 +99,7 @@ export class WorkoutDetailStore {
       fetchWorkout: flow,
       fetchWorkoutRatings: flow,
       addWorkoutAsFavourite: flow,
+      removeWorkoutAsFavourite: flow,
       createWorkoutRating: flow,
     });
   }
@@ -155,9 +157,34 @@ export class WorkoutDetailStore {
         `/users/${userId}/favoriteWorkouts`,
         { workoutId: this.workout._id },
       );
-      logger.debug('Got data: ', data);
+      logger.debug('Got New Favorite Workout data: ', data);
+      runInAction(() => {
+        workoutStore.fetchFavoriteWorkouts(userId);
+      });
       this.state = 'done';
     } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
+  *removeWorkoutAsFavourite(userId: number) {
+    this.state = 'pending';
+    try {
+      logger.debug(
+        `Removing workout ${this.workout._id} as favourite for User ${userId}`,
+      );
+      const { data } = yield axiosClient.delete(
+        `/users/${userId}/favoriteWorkouts/${this.workout._id}`,
+      );
+      logger.debug('Got Deleted Favorite Workout data: ', data);
+      runInAction(() => {
+        workoutStore.fetchFavoriteWorkouts(userId);
+      });
+      this.state = 'done';
+    } catch (e) {
+      logger.error('Error while removing favorite workout:', { e });
       runInAction(() => {
         this.state = 'error';
       });

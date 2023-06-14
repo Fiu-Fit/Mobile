@@ -22,10 +22,19 @@ const WorkoutHeader = () => {
   const handleFavouriteWorkout = () => {
     setLoading(true);
     try {
-      runInAction(() => {
-        workoutDetailStore.addWorkoutAsFavourite(currentUser.id);
-        workoutStore.fetchFavoriteWorkouts(currentUser.id);
-      });
+      if (
+        workoutStore.favoriteWorkouts.some(
+          workout => workout._id === workoutDetailStore.workout._id,
+        )
+      ) {
+        runInAction(() => {
+          workoutDetailStore.removeWorkoutAsFavourite(currentUser.id);
+        });
+      } else {
+        runInAction(() => {
+          workoutDetailStore.addWorkoutAsFavourite(currentUser.id);
+        });
+      }
     } catch (error) {
       logger.error(error as string);
     }
@@ -49,10 +58,11 @@ const WorkoutHeader = () => {
           className='justify-center items-center'
           onPress={() => handleFavouriteWorkout()}>
           <Icon
+            // eslint-disable-next-line react-native/no-inline-styles
             style={{
               fontSize: 35,
-              color: workoutStore.isFavoriteWorkout(
-                workoutDetailStore.workout._id,
+              color: workoutStore.favoriteWorkouts.some(
+                workout => workout._id === workoutDetailStore.workout._id,
               )
                 ? 'yellow'
                 : appTheme.colors.onSurface,

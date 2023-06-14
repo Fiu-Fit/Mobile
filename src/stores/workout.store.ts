@@ -38,6 +38,7 @@ export class WorkoutStore {
   constructor() {
     makeObservable(this, {
       workouts: observable,
+      favoriteWorkouts: observable,
       selectedTypeFilter: observable,
       selectedDifficultyFilter: observable,
       isFavoriteWorkout: computed,
