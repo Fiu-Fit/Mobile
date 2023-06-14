@@ -148,12 +148,15 @@ export class WorkoutDetailStore {
   *addWorkoutAsFavourite(userId: number) {
     this.state = 'pending';
     try {
-      logger.debug('Adding workout as favourite...');
+      logger.debug(
+        `Adding workout ${this.workout._id} as favourite for User ${userId}`,
+      );
       const { data } = yield axiosClient.put(
         `/users/${userId}/favoriteWorkouts`,
-        this.workout._id,
+        { workoutId: this.workout._id },
       );
       logger.debug('Got data: ', data);
+      this.state = 'done';
     } catch (e) {
       runInAction(() => {
         this.state = 'error';
