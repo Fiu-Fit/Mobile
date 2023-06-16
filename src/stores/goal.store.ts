@@ -26,6 +26,7 @@ export class GoalStore {
   constructor() {
     makeObservable(this, {
       goals: observable,
+      currentGoal: observable,
       cardsInfo: computed,
       fetchGoals: flow,
       fetchGoal: flow,
@@ -86,6 +87,7 @@ export class GoalStore {
         status: GoalStatus.INPROGRESS,
       });
       logger.debug('Got data: ', data);
+      this.fetchGoals(userId);
     } catch (e) {
       logger.error('Error while creating goal:', { e });
       runInAction(() => {
@@ -100,6 +102,8 @@ export class GoalStore {
       logger.debug('Deleting goal with id:', this.currentGoal?.id);
       yield axiosClient.delete(`/goals/${this.currentGoal?.id}`);
       logger.debug('Deleted goal with id:', this.currentGoal?.id);
+      this.fetchGoals(this.currentGoal!.userId);
+      this.currentGoal = undefined;
     } catch (e) {
       logger.error('Error while deleting goal:', { e });
       runInAction(() => {
@@ -119,11 +123,14 @@ export class GoalStore {
 
       logger.debug('Old description: ', description);
       logger.debug('Editing goal with id: ', id);
-      const { data } = yield axiosClient.post(`/goals/${id}`, {
-        goalPayload,
+      const { data } = yield axiosClient.put(`/goals/${id}`, {
+        ...goalPayload,
       });
       logger.debug('Got data: ', data);
-    } catch (e) {
+      this.fetchGoal(this.currentGoal!.id);
+      this.fetchGoals(this.currentGoal!.userId);
+    } catch (e: any) {
+      logger.error('Got error while editing goal description:', { e });
       runInAction(() => {
         this.state = 'error';
       });

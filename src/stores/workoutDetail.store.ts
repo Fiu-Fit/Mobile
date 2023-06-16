@@ -92,6 +92,7 @@ export class WorkoutDetailStore {
       upsertStoredWorkout: flow,
       fetchWorkout: flow,
       addWorkoutAsFavourite: flow,
+      completeWorkout: flow,
     });
   }
 
@@ -207,12 +208,15 @@ export class WorkoutDetailStore {
     this.state = 'pending';
     try {
       logger.debug('Marking workout as completed...');
-      const { data } = yield axiosClient.post('/progress/complete-workout', {
-        workoutId: this.workoutId,
+      const { data } = yield axiosClient.post('/progress/complete', {
+        workoutId: this.workout._id,
         userId: userId,
       });
+      this.state = 'done';
+
       logger.debug('Got data: ', data);
-    } catch (e) {
+    } catch (e: any) {
+      logger.error('Error while completing Workout:', { e });
       runInAction(() => {
         this.state = 'error';
       });
