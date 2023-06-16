@@ -31,6 +31,8 @@ const config = {
     'workouts',
     'workout-selector',
     'workout-rating-modal',
+    'push-notification-manager',
+    'notification',
   ],
   transportOptions: {
     colors: {

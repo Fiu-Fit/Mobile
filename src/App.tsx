@@ -124,6 +124,7 @@ const defaultUserObject = {
   bodyWeight: 0,
   interests: [],
   favoriteWorkouts: [],
+  deviceToken: '',
   coordinates: [0, 0],
 };
 
