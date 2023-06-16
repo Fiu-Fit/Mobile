@@ -20,5 +20,5 @@ export type GoalInputProps = {
   description: string;
   exerciseId: string | number | undefined;
   targetValue: string;
-  deadline?: string;
+  deadline?: Date;
 };

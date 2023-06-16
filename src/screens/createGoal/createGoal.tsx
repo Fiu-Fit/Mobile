@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Text, SafeAreaView, ScrollView, View } from 'react-native';
 import Input from '../../components/input';
 import Button from '../../components/button';
@@ -10,11 +10,13 @@ import { GoalInputProps } from '../../utils/goal-types';
 import { useAppTheme, useUserContext } from '../../App';
 import ItemCardList from '../../components/itemCardList/itemCardList';
 import { Divider } from 'react-native-paper';
-import { CardInfo } from '../../utils/custom-types';
+import { CardInfo, DateState } from '../../utils/custom-types';
 import { exerciseStore } from '../../stores/exercise.store';
 import { flowResult } from 'mobx';
 import { goalStore } from '../../stores/goal.store';
 import { observer } from 'mobx-react';
+import moment from 'moment';
+import CalendarModal from '../../components/calendarModal';
 
 const logger = LoggerFactory('create-goal');
 
@@ -25,16 +27,23 @@ const CreateGoalScreen = ({
 }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
-  const [loading, setLoading] = React.useState(false);
-  const [showExerciseList, setShowExerciseList] = React.useState(true);
-  const [selectedExercise, setSelectedExercise] = React.useState<
+  const [loading, setLoading] = useState(false);
+  const [showExerciseList, setShowExerciseList] = useState(true);
+  const [selectedExercise, setSelectedExercise] = useState<
     CardInfo | undefined
   >();
+  const [showingCalendarModal, setShowingCalendarModal] = useState(false);
+  const [date, setDate] = useState<DateState>({
+    selectedDate: undefined,
+    displayedDate: moment(),
+  });
 
   const handleNewGoal = async (inputs: GoalInputProps) => {
     setLoading(true);
     try {
       inputs.exerciseId = selectedExercise?.id;
+      inputs.deadline = date.selectedDate;
+      console.log(inputs.deadline);
       flowResult(goalStore.createGoal(inputs, currentUser.id));
       navigation.push('GoalsScreen');
     } catch (error) {
@@ -50,6 +59,13 @@ const CreateGoalScreen = ({
   return (
     <SafeAreaView className='flex-1 bg-black'>
       {loading && <Loader />}
+      {showingCalendarModal && (
+        <CalendarModal
+          onDismiss={() => setShowingCalendarModal(false)}
+          setDate={newDate => setDate(newDate)}
+          date={date}
+        />
+      )}
       <View className='flex-none pt-20 items-center justify-center'>
         <Text className='text-5xl font-white text-white'>Crear Meta</Text>
       </View>
@@ -81,7 +97,6 @@ const CreateGoalScreen = ({
                   description: '',
                   exerciseId: '',
                   targetValue: '',
-                  deadline: '',
                 }}
                 validate={values => {
                   let errors: FormikErrors<GoalInputProps> = {};
@@ -141,16 +156,19 @@ const CreateGoalScreen = ({
                       }}
                       keyboardType='numeric'
                     />
-                    <Input
-                      value={values.deadline}
-                      placeholder='Ingresa un deadline (opcional)'
-                      placeholderTextColor={appTheme.colors.onPrimary}
-                      onChangeText={handleChange('deadline')}
-                      labelText='Deadline (opcional)'
-                      iconName='flag-checkered'
-                      error={errors.deadline}
-                      password={false}
-                    />
+                    <View className='my-5'>
+                      <Button
+                        title={
+                          date.selectedDate
+                            ? date.selectedDate.toLocaleDateString()
+                            : 'Seleccionar un deadline (opcional)'
+                        }
+                        onPress={() => setShowingCalendarModal(true)}
+                        buttonColor={appTheme.colors.backdrop}
+                        textColor={appTheme.colors.onBackground}
+                      />
+                    </View>
+
                     <Button title='Crear' onPress={handleSubmit} />
                   </>
                 )}

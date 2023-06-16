@@ -1,5 +1,6 @@
 import { Role } from '../constants/roles';
 import { ProfileNavigationProp } from '../navigation/navigation-props';
+import { Moment } from 'moment';
 
 export type InputProps = {
   firstName: string;
@@ -60,3 +61,8 @@ export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
   {
     [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
   }[Keys];
+
+export type DateState = {
+  selectedDate: Date | undefined;
+  displayedDate: Moment;
+};
