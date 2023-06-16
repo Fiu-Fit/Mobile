@@ -4,13 +4,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import WorkoutStack from './workout-navigator';
 import GoalStack from './goal-navigator';
-<<<<<<< HEAD
-import NotificationStack from './notification-navigator';
 import NotificactionsScreen from '../screens/notifications';
-=======
 import ProfileSearchScreen from '../screens/profileSearchScreen';
 import MyProfileScreen from '../screens/myProfile';
->>>>>>> main
 
 const Tab = createBottomTabNavigator();
 
@@ -19,11 +15,8 @@ const iconMap = new Map([
   ['Profile', 'account'],
   ['Goals', 'trophy'],
   ['Workouts', 'dumbbell'],
-<<<<<<< HEAD
   ['Notifications', 'bell'],
-=======
   ['Search', 'account-search'],
->>>>>>> main
 ]);
 
 const tabBarIcon = ({
@@ -55,11 +48,8 @@ const TabNavigator = () => {
       <Tab.Screen name='Profile' component={MyProfileScreen} />
       <Tab.Screen name='Goals' component={GoalStack} />
       <Tab.Screen name='Workouts' component={WorkoutStack} />
-<<<<<<< HEAD
       <Tab.Screen name='Notifications' component={NotificactionsScreen} />
-=======
       <Tab.Screen name='Search' component={ProfileSearchScreen} />
->>>>>>> main
     </Tab.Navigator>
   );
 };
