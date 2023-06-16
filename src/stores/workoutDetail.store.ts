@@ -75,11 +75,9 @@ export class WorkoutDetailStore {
   }
 
   get workoutComments(): string[] {
-    /*const comments: string[] = this.ratings
+    const comments: string[] = this.ratings
       .filter((rating: WorkoutRatingProps) => rating.comment !== undefined)
       .map((rating: WorkoutRatingProps) => rating.comment!);
-    */
-    const comments = ['Muy bueno', 'Jajaj'];
     return comments;
   }
 
@@ -137,6 +135,7 @@ export class WorkoutDetailStore {
           return map;
         }, this.workout.exercises);
         this.newExercises = new Map<string, WorkoutExercise>();
+        this.fetchWorkoutRatings();
         logger.debug('Loaded Workout: ', this.workout);
         this.state = 'done';
       });

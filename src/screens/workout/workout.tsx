@@ -39,7 +39,6 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
     useCallback(() => {
       action(() => {
         workoutDetailStore.fetchWorkout(itemId);
-        workoutDetailStore.fetchWorkoutRatings();
       })();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),

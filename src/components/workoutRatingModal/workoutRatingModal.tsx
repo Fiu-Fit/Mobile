@@ -11,8 +11,11 @@ import { workoutDetailStore } from '../../stores/workoutDetail.store';
 import { runInAction } from 'mobx';
 import Input from '../input';
 import Button from '../button';
+import { observer } from 'mobx-react';
 
 const logger = LoggerFactory('workout-rating-modal');
+
+const DEFAULT_RATING_VALUE = 3;
 
 type WorkoutRatingModalProps = {
   onDismiss: () => void;
@@ -22,7 +25,7 @@ const WorkoutRatingModal = ({ onDismiss }: WorkoutRatingModalProps) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
   const [loading, setLoading] = React.useState(false);
-  const [rating, setRating] = React.useState(0);
+  const [rating, setRating] = React.useState(DEFAULT_RATING_VALUE);
   const [comment, setComment] = React.useState<string | undefined>('');
   const commentError = '';
 
@@ -47,7 +50,6 @@ const WorkoutRatingModal = ({ onDismiss }: WorkoutRatingModalProps) => {
       runInAction(() => {
         workoutDetailStore.createWorkoutRating(currentUser.id, rating, comment);
         workoutDetailStore.fetchWorkout(workoutDetailStore.workout._id);
-        workoutDetailStore.fetchWorkoutRatings();
       });
     } catch (error) {
       logger.error(error as string);
@@ -70,7 +72,7 @@ const WorkoutRatingModal = ({ onDismiss }: WorkoutRatingModalProps) => {
           </Text>
           <AirbnbRating
             count={5}
-            defaultRating={0}
+            defaultRating={DEFAULT_RATING_VALUE}
             reviews={['Terrible', 'Malo', 'OK', 'Bueno', 'Muy bueno']}
             onFinishRating={(newRating: number) => setRating(newRating)}
           />
@@ -118,4 +120,4 @@ const WorkoutRatingModal = ({ onDismiss }: WorkoutRatingModalProps) => {
   );
 };
 
-export default WorkoutRatingModal;
+export default observer(WorkoutRatingModal);
