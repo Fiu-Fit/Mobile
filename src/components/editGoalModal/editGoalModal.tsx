@@ -9,15 +9,16 @@ import Input from '../input';
 import Loader from '../loader';
 import { goalStore } from '../../stores/goal.store';
 import LoggerFactory from '../../utils/logger-utility';
+import { observer } from 'mobx-react';
 
-const MAX_DESCRIPTION_LENGTH = 20;
+const MAX_DESCRIPTION_LENGTH = 100;
 const logger = LoggerFactory('edit-goal-modal');
 
 type EditGoalModalProps = {
   onDismiss: () => void;
 };
 
-const WorkoutCommentModal = ({ onDismiss }: EditGoalModalProps) => {
+const EditGoalModal = ({ onDismiss }: EditGoalModalProps) => {
   const appTheme = useAppTheme();
   const [loading, setLoading] = React.useState(false);
 
@@ -92,4 +93,4 @@ const WorkoutCommentModal = ({ onDismiss }: EditGoalModalProps) => {
   );
 };
 
-export default WorkoutCommentModal;
+export default observer(EditGoalModal);
