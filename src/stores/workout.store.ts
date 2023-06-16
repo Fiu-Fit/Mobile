@@ -29,19 +29,12 @@ export class WorkoutStore {
     );
   }
 
-  get isFavoriteWorkout(): (id: string) => boolean {
-    return (id: string) => {
-      return this.favoriteWorkouts.some(workout => workout._id === id);
-    };
-  }
-
   constructor() {
     makeObservable(this, {
       workouts: observable,
       favoriteWorkouts: observable,
       selectedTypeFilter: observable,
       selectedDifficultyFilter: observable,
-      isFavoriteWorkout: computed,
       workoutsCount: computed,
       workoutCardsInfo: computed,
       fetchWorkouts: flow,
