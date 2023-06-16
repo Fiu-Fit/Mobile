@@ -67,7 +67,11 @@ const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
       <View
         className='flex-row items-center justify-around'
         style={{ flex: 0.2 }}>
-        <TouchableOpacity onPress={() => goalStore.deleteGoal()}>
+        <TouchableOpacity
+          onPress={() => {
+            goalStore.deleteGoal();
+            navigation.push('GoalsScreen');
+          }}>
           <Icon size={50} name={'delete'} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowingEditGoalModal(true)}>
