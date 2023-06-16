@@ -24,7 +24,6 @@ const WorkoutsSelector = () => {
   );
 
   const onChangeShowingAllWorkouts = (isShowingAllWorkouts: boolean) => {
-    logger.debug('hi');
     if (isShowingAllWorkouts) {
       workoutStore.fetchWorkouts();
     } else {
