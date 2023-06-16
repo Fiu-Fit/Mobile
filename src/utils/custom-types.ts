@@ -51,7 +51,9 @@ export type User = {
   role: Role;
   bodyWeight: number;
   interests: number[];
+  deviceToken: string;
   coordinates: [number, number];
+  phoneNumber?: string;
 };
 
 export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<

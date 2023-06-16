@@ -12,9 +12,11 @@ import {
   IWorkoutHeader,
   WorkoutExercise,
   WorkoutProps,
+  WorkoutRatingProps,
 } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
+import { workoutStore } from './workout.store';
 
 const logger = LoggerFactory('workout-detail-store');
 
@@ -26,33 +28,27 @@ const defaultWorkout = {
   author: '',
   difficulty: 0,
   category: CategoryType.FULLBODY,
-  rating: { globalRating: 0, comments: [] },
+  averageRating: 0,
   exercises: new Map<string, WorkoutExercise>(),
   athleteIds: [],
   authorId: 0,
 };
 
 export class WorkoutDetailStore {
-  workoutId: string | undefined;
   workout: WorkoutProps = defaultWorkout;
   newExercises = new Map<string, WorkoutExercise>();
+  ratings: WorkoutRatingProps[] = [];
   state = 'pending';
 
   get workoutHeader(): IWorkoutHeader {
-    const { name, description, duration, exercises } = this.workout;
+    const { name, description, duration, exercises, averageRating } =
+      this.workout;
     return {
       name,
       description,
       duration,
       author: 'Jorge', // @TODO Backend: attach User Object in Author instead of AuthorID
-      rating: {
-        globalRating: 4,
-        comments: [
-          '¡Wow! Realmente disfruté este entrenamiento. Los ejercicios fueron desafiantes y me encantó cómo trabajaron diferentes grupos musculares. ¡Definitivamente quiero hacerlo de nuevo!',
-          '¡Increíble sesión de entrenamiento! Los ejercicios fueron variados y efectivos. Me encantó cómo pude sentir que mi cuerpo se fortalecía con cada movimiento. ¡Altamente recomendado!',
-          'Qué gran entrenamiento. Los ejercicios fueron divertidos y me mantuvieron comprometido durante toda la sesión. Me encantó la combinación de fuerza y cardio. ¡Me siento enérgico y revitalizado!',
-        ],
-      },
+      averageRating: averageRating ?? 'No ratings!',
       exerciseCount: exercises.size,
     };
   }
@@ -78,21 +74,32 @@ export class WorkoutDetailStore {
     return Array.from(this.workout.exercises.values());
   }
 
+  get workoutComments(): string[] {
+    const comments: string[] = this.ratings
+      .filter((rating: WorkoutRatingProps) => rating.comment !== undefined)
+      .map((rating: WorkoutRatingProps) => rating.comment!);
+    return comments;
+  }
+
   constructor() {
     makeObservable(this, {
-      workoutId: observable,
       workout: observable,
       state: observable,
       newExercises: observable,
+      ratings: observable,
       exerciseCards: computed,
       workoutHeader: computed,
+      workoutComments: computed,
       addNewExercise: action,
       editExercise: action,
       removeExercise: action,
       upsertStoredWorkout: flow,
       fetchWorkout: flow,
+      fetchWorkoutRatings: flow,
       addWorkoutAsFavourite: flow,
       completeWorkout: flow,
+      removeWorkoutAsFavourite: flow,
+      createWorkoutRating: flow,
     });
   }
 
@@ -129,6 +136,7 @@ export class WorkoutDetailStore {
           return map;
         }, this.workout.exercises);
         this.newExercises = new Map<string, WorkoutExercise>();
+        this.fetchWorkoutRatings();
         logger.debug('Loaded Workout: ', this.workout);
         this.state = 'done';
       });
@@ -142,13 +150,41 @@ export class WorkoutDetailStore {
   *addWorkoutAsFavourite(userId: number) {
     this.state = 'pending';
     try {
-      logger.debug('Adding workout as favourite...');
+      logger.debug(
+        `Adding workout ${this.workout._id} as favourite for User ${userId}`,
+      );
       const { data } = yield axiosClient.put(
         `/users/${userId}/favoriteWorkouts`,
-        this.workout._id,
+        { workoutId: this.workout._id },
       );
-      logger.debug('Got data: ', data);
+      logger.debug('Got New Favorite Workout data: ', data);
+      runInAction(() => {
+        workoutStore.fetchFavoriteWorkouts(userId);
+      });
+      this.state = 'done';
     } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
+  *removeWorkoutAsFavourite(userId: number) {
+    this.state = 'pending';
+    try {
+      logger.debug(
+        `Removing workout ${this.workout._id} as favourite for User ${userId}`,
+      );
+      const { data } = yield axiosClient.delete(
+        `/users/${userId}/favoriteWorkouts/${this.workout._id}`,
+      );
+      logger.debug('Got Deleted Favorite Workout data: ', data);
+      runInAction(() => {
+        workoutStore.fetchFavoriteWorkouts(userId);
+      });
+      this.state = 'done';
+    } catch (e) {
+      logger.error('Error while removing favorite workout:', { e });
       runInAction(() => {
         this.state = 'error';
       });
@@ -217,6 +253,61 @@ export class WorkoutDetailStore {
       logger.debug('Got data: ', data);
     } catch (e: any) {
       logger.error('Error while completing Workout:', { e });
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
+  *fetchWorkoutRatings() {
+    this.ratings = [];
+    this.state = 'pending';
+    try {
+      const filters = {
+        workoutId: this.workout._id,
+      };
+
+      const params = {
+        filters: JSON.stringify(filters),
+      };
+
+      logger.debug(`Getting ratings for workout id ${this.workout._id}...`);
+      const { data } = yield axiosClient.get<WorkoutRatingProps[]>('/ratings', {
+        params,
+      });
+      logger.debug(`Got data for workout: ${this.workout._id}`, data);
+      runInAction(() => {
+        this.ratings = data;
+        this.state = 'done';
+      });
+    } catch (e) {
+      logger.error('Error while fetching ratings:', { e });
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
+  *createWorkoutRating(userId: number, rating: number, comment?: string) {
+    this.state = 'pending';
+    try {
+      logger.debug('Creating workout rating...');
+      logger.debug('Creating rating: ', {
+        workoutId: this.workout._id,
+        athleteId: userId,
+        rating,
+        comment,
+      });
+      const { data } = yield axiosClient.post<WorkoutRatingProps>('/ratings', {
+        workoutId: this.workout._id,
+        athleteId: userId,
+        rating,
+        comment,
+      });
+      this.state = 'done';
+      logger.debug('Got data: ', data);
+    } catch (e: any) {
+      logger.error('Error while creating rating: ', { e });
       runInAction(() => {
         this.state = 'error';
       });

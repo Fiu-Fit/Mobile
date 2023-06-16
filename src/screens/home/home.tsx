@@ -11,7 +11,11 @@ import { HomeNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 import { useFocusEffect } from '@react-navigation/native';
 import { action } from 'mobx';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
+import {
+  NotificationListener,
+  requestPermissions,
+} from '../../utils/push-notification-manager';
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
@@ -20,11 +24,17 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   useFocusEffect(
     useCallback(() => {
       action(() => {
-        workoutStore.fetchFavoriteWorkouts(`${currentUser.id}`);
+        workoutStore.fetchFavoriteWorkouts(currentUser.id);
       })();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
+
+  useEffect(() => {
+    requestPermissions(currentUser);
+    NotificationListener();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>

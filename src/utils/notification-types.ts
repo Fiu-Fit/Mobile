@@ -5,3 +5,8 @@ export interface NotificationProps {
   goalId?: string;
   receivedAt: Date;
 }
+
+export enum NotificationType {
+  GoalCompleted = 0,
+  NewMessage = 1,
+}

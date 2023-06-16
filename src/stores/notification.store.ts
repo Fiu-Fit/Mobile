@@ -1,8 +1,11 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
-import { NotificationProps } from '../utils/notification-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
 import { CardInfo, RequireAtLeastOne } from '../utils/custom-types';
+import {
+  NotificationProps,
+  NotificationType,
+} from '../utils/notification-types';
 
 const logger = LoggerFactory('notification-store');
 
@@ -21,11 +24,10 @@ export class NotificationStore {
     return this.notifications.map(
       (notification): CardInfo => ({
         id: notification._id,
-        title: notification.goalId ? 'Meta Cumplida' : 'Nuevo Mensaje',
-        content: 'Detalles',
+        title: notification.name,
+        content: notification.description,
         imageUrl:
           'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
-        onPressScreen: notification.goalId ? 'GoalScreen' : 'MessageScreen',
       }),
     );
   }

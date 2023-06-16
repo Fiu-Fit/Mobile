@@ -111,13 +111,11 @@ export type HomeNavigationProp = BottomTabNavigationProp<
   'HomeTab'
 >;
 
-<<<<<<< HEAD
 export type NotificationsNavigationProp = BottomTabNavigationProp<
   TabParamList,
   'Notification'
-=======
+>;
 export type UserSearchNavigationProp = BottomTabNavigationProp<
   TabParamList,
   'UserSearch'
->>>>>>> main
 >;

@@ -1,11 +1,11 @@
 import { View } from 'react-native';
 import { useAppTheme, useUserContext } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
-import React, { useEffect } from 'react';
+import React, { useCallback } from 'react';
 import WorkoutRatingModal from '../../components/workoutRatingModal';
 import { observer } from 'mobx-react';
 import Loader from '../../components/loader';
-import { flowResult } from 'mobx';
+import { action } from 'mobx';
 import WorkoutHeader from '../../components/workoutHeader';
 import WorkoutInfo from '../../components/workoutInfo';
 import Button from '../../components/button';
@@ -16,6 +16,7 @@ import { workoutDetailStore } from '../../stores/workoutDetail.store';
 import FloatingActionButton from '../../components/dumb/floatingActionButton';
 import { Role } from '../../constants/roles';
 import WorkoutCompletedModal from '../../components/workoutCompletedModal';
+import { useFocusEffect } from '@react-navigation/native';
 
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
@@ -37,10 +38,14 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
     React.useState(false);
   const { itemId } = route.params;
 
-  useEffect(() => {
-    flowResult(workoutDetailStore.fetchWorkout(itemId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      action(() => {
+        workoutDetailStore.fetchWorkout(itemId);
+      })();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
 
   const handleCompletedWorkout = () => {
     workoutDetailStore.completeWorkout(currentUser.id);
@@ -65,10 +70,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
           flex: 0.62,
         }}>
         {ratingModalVisible && (
-          <WorkoutRatingModal
-            onDismiss={() => setRatingModalVisible(false)}
-            workoutRatingItem={workoutDetailStore.workoutHeader.rating}
-          />
+          <WorkoutRatingModal onDismiss={() => setRatingModalVisible(false)} />
         )}
 
         <ItemCardList
