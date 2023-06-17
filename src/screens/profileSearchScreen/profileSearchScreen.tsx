@@ -19,11 +19,6 @@ const ProfileSearchScreen = ({
   navigation: UserSearchNavigationProp;
 }) => {
   const appTheme = useAppTheme();
-
-  // useFocusEffect(() => {
-  //   searchStore.searchByName();
-  // });
-
   const { currentUser } = useUserContext();
 
   const [isEnabled, setIsEnabled] = useState(false);

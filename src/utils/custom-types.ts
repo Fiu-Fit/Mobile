@@ -53,6 +53,7 @@ export type User = {
   interests: number[];
   deviceToken: string;
   coordinates: [number, number];
+  followedUsers: User[];
   phoneNumber?: string;
 };
 

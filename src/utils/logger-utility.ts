@@ -31,6 +31,7 @@ const config = {
     'push-notification-manager',
     'goal-store',
     'edit-goal-modal',
+    'fetch-helpers',
     'workouts',
     'workout-selector',
     'workout-rating-modal',
