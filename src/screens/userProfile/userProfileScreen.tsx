@@ -16,18 +16,13 @@ type UserProfileScreenProps = {
   };
 };
 const UserProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
-  const { currentUser } = useUserContext();
   const { givenUserId, canEdit } = route.params;
-  const user = givenUserId
-    ? searchStore.results.find(loadedUser => loadedUser.id === givenUserId)
-    : currentUser;
-
   return (
     <UserProfile
       route={{
-          key: String(givenUserId),
-          name: String(givenUserId),
-          params: { givenUserId },
+        key: String(givenUserId),
+        name: String(givenUserId),
+        params: { givenUserId },
       }}
       navigation={navigation}
       myProfile={canEdit}
