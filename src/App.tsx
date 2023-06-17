@@ -124,6 +124,7 @@ const defaultUserObject = {
   bodyWeight: 0,
   interests: [],
   favoriteWorkouts: [],
+  deviceToken: '',
   coordinates: [0, 0],
   followedUsers: [],
 };
@@ -151,7 +152,6 @@ const App = () => {
   const paperTheme =
     colorScheme === 'dark' ? customDarkTheme : customLightTheme;
   const rNavTheme = colorScheme === 'dark' ? DarkTheme : LightTheme;
-
   return (
     <PaperProvider theme={paperTheme}>
       <NavigationContainer theme={rNavTheme}>

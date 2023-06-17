@@ -29,6 +29,11 @@ const config = {
     'password-recovery',
     'home-header',
     'fetch-helpers',
+    'workouts',
+    'workout-selector',
+    'workout-rating-modal',
+    'push-notification-manager',
+    'notification',
   ],
   transportOptions: {
     colors: {

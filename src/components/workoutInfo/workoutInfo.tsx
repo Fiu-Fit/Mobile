@@ -24,7 +24,7 @@ const WorkoutInfo = ({ workoutHeader, onPressModal }: WorkoutInfoProps) => {
         <TouchableOpacity
           className='flex-row justify-center'
           onPress={onPressModal}>
-          <Text className='text-xl'>{workoutHeader.rating.globalRating}</Text>
+          <Text className='text-xl'>{workoutHeader.averageRating}</Text>
           <Icon
             style={{
               fontSize: 30,
