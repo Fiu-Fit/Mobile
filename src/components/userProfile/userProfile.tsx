@@ -12,6 +12,7 @@ import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
 import { axiosClient } from '../../utils/constants';
+import { useFetchUser } from '../../utils/fetch-helpers';
 
 const logger = LoggerFactory('user-profile');
 
@@ -64,7 +65,7 @@ const updateUserPositionCallback = async (
 
 const UserProfile = (props: UserProfileProps) => {
   const appTheme = useAppTheme();
-  const { currentUser, setCurrentUser } = useUserContext();
+  const { currentUser } = useUserContext();
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
   const [followAction, setFollowAction] = useState({
     followState: false,
@@ -89,7 +90,6 @@ const UserProfile = (props: UserProfileProps) => {
         ? { followState: following, followCallback: handleUnfollow }
         : { followState: following, followCallback: handleFollow },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [followAction.followState, currentUser, selectedUser]);
   const handleSignOut = async () => {
     await auth().signOut();
@@ -98,6 +98,7 @@ const UserProfile = (props: UserProfileProps) => {
   const pictureUrl =
     'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80';
 
+  useFetchUser({ observables: [followAction.followState] });
   return (
     <View
       style={[
@@ -173,22 +174,6 @@ const UserProfile = (props: UserProfileProps) => {
             followAction
               .followCallback(selectedUser?.id ?? 0, currentUser.id)
               .then(() => {
-                !followAction.followState
-                  ? setCurrentUser({
-                      ...currentUser,
-                      followedUsers: currentUser.followedUsers
-                        ? [
-                            ...currentUser.followedUsers,
-                            selectedUser as unknown as User,
-                          ]
-                        : [selectedUser as unknown as User],
-                    })
-                  : setCurrentUser({
-                      ...currentUser,
-                      followedUsers: currentUser.followedUsers?.filter(
-                        follower => follower?.id !== selectedUser?.id,
-                      ),
-                    });
                 setFollowAction(
                   !followAction.followState
                     ? {
