@@ -45,7 +45,7 @@ export type User = {
   interests: number[];
   deviceToken: string;
   coordinates: [number, number];
-  followedUsers: User[] | undefined;
+  followedUsers: User[];
   phoneNumber?: string;
 };
 

@@ -83,7 +83,7 @@ const UserProfile = (props: UserProfileProps) => {
   });
   useEffect(() => {
     const following = Boolean(
-      currentUser.followedUsers?.find(user => user?.id === selectedUser?.id),
+      currentUser.followedUsers.find(user => user?.id === selectedUser?.id),
     );
     setFollowAction(
       following

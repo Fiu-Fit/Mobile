@@ -48,9 +48,9 @@ export const fetchUserData = async (id?: number) => {
     const { data: followedUsers } = await axiosClient.get(
       `/followers/following?userId=${data.id}`,
     );
-    logger.debug('followed users:', followedUsers.rows);
+    logger.debug('followed users:', followedUsers?.rows);
     return {
-      response: { ...data, followedUsers: followedUsers.rows },
+      response: { ...data, followedUsers: followedUsers?.rows ?? [] },
       error: null,
     };
   } catch (err: any) {
