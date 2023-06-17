@@ -1,4 +1,4 @@
-import { View, Image, StyleSheet, Text, Alert, ActivityIndicator } from 'react-native';
+import { View, Image, StyleSheet, Text, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import auth from '@react-native-firebase/auth';
@@ -7,12 +7,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import { observer } from 'mobx-react';
 import LoggerFactory from '../../utils/logger-utility';
 import { searchStore } from '../../stores/userSearch.store';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
 import { axiosClient } from '../../utils/constants';
-import { useFetchUser } from '../../utils/fetch-helpers';
 
 const logger = LoggerFactory('user-profile');
 
@@ -24,8 +23,11 @@ const handleFollow = async (selectedUserId: number, currentUserId: number) => {
     await axiosClient.post(`/followers/follow?userId=${currentUserId}`, {
       userIdToFollow: selectedUserId,
     });
+    logger.debug(`User ${currentUserId} now follows ${selectedUserId}`);
   } catch (error) {
-    logger.error('An error ocurred while trying to follow this user: ', error);
+    logger.error('An error ocurred while trying to follow this user: ', {
+      error,
+    });
   }
 };
 
@@ -41,7 +43,9 @@ const handleUnfollow = async (
       `/followers/unfollow?userId=${currentUserId}&followerId=${selectedUserId}`,
     );
   } catch (error) {
-    logger.error('An error ocurred while trying to follow this user: ', error);
+    logger.error('An error ocurred while trying to follow this user: ', {
+      error,
+    });
   }
 };
 const updateUserPositionCallback = async (
@@ -61,34 +65,32 @@ const updateUserPositionCallback = async (
 const UserProfile = (props: UserProfileProps) => {
   const appTheme = useAppTheme();
   const { currentUser, setCurrentUser } = useUserContext();
-
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
   const [followAction, setFollowAction] = useState({
     followState: false,
     followCallback: handleFollow,
   });
-
-      logger.info(`Selected User: ${props.route?.params.givenUserId}`);
-      const {response: user} = props.route ? useFetchUser(props.route?.params.givenUserId) : useFetchUser();
-      if(!user){
-        logger.info(`Loading user`);
-        return <ActivityIndicator size='large' color='#0000ff' />
-      }
-      setSelectedUser(user as User);
-
-      logger.info(`Set User: ${user.id} as selected`);
-
-      const following = Boolean(
-        currentUser.followedUsers?.find(
-          user => user.id === selectedUser?.id,
-        ),
-      );
-      setFollowAction(
-        following
-          ? { followState: following, followCallback: handleUnfollow }
-          : { followState: following, followCallback: handleFollow },
-      );
-
+  useFocusEffect(() => {
+    logger.info(`Selected User: ${props.route?.params.givenUserId}`);
+    setSelectedUser(
+      props.myProfile
+        ? currentUser
+        : searchStore.results.find(
+            user => user.id === props.route?.params.givenUserId,
+          ),
+    );
+  });
+  useEffect(() => {
+    const following = Boolean(
+      currentUser.followedUsers?.find(user => user?.id === selectedUser?.id),
+    );
+    setFollowAction(
+      following
+        ? { followState: following, followCallback: handleUnfollow }
+        : { followState: following, followCallback: handleFollow },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [followAction.followState, currentUser, selectedUser]);
   const handleSignOut = async () => {
     await auth().signOut();
     props.navigation?.getParent()?.navigate('LoginScreen');
@@ -168,7 +170,37 @@ const UserProfile = (props: UserProfileProps) => {
           mode='contained'
           style={styles.button}
           onPress={() =>
-            followAction.followCallback(selectedUser?.id ?? 0, currentUser.id)
+            followAction
+              .followCallback(selectedUser?.id ?? 0, currentUser.id)
+              .then(() => {
+                !followAction.followState
+                  ? setCurrentUser({
+                      ...currentUser,
+                      followedUsers: currentUser.followedUsers
+                        ? [
+                            ...currentUser.followedUsers,
+                            selectedUser as unknown as User,
+                          ]
+                        : [selectedUser as unknown as User],
+                    })
+                  : setCurrentUser({
+                      ...currentUser,
+                      followedUsers: currentUser.followedUsers?.filter(
+                        follower => follower?.id !== selectedUser?.id,
+                      ),
+                    });
+                setFollowAction(
+                  !followAction.followState
+                    ? {
+                        followState: !followAction.followState,
+                        followCallback: handleFollow,
+                      }
+                    : {
+                        followState: !followAction.followState,
+                        followCallback: handleUnfollow,
+                      },
+                );
+              })
           }>
           {followAction.followState ? 'Unfollow' : 'Follow'}
         </Button>
