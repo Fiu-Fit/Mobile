@@ -1,5 +1,5 @@
 import { View, Image, StyleSheet, Text, Alert } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Dialog, Portal, TextInput } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import auth from '@react-native-firebase/auth';
 import { User, UserProfileProps } from '../../utils/custom-types';
@@ -33,6 +33,20 @@ const UserProfile = (props: UserProfileProps) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
+  const [visible, setVisible] = useState(false);
+  const [celphone, setCelphone] = useState('');
+
+  const showDialog = () => setVisible(true);
+
+  const addNumber = async () => {
+    await axiosClient.put(`aca va tu url`);
+  }
+
+  const hideDialog = () => {
+    setVisible(false);
+    setCelphone('');
+  }
+
   useFocusEffect(() => {
     logger.info(`Selected User: ${props.route?.params.givenUserId}`);
     setSelectedUser(
@@ -58,6 +72,23 @@ const UserProfile = (props: UserProfileProps) => {
           backgroundColor: appTheme.colors.surfaceVariant,
         },
       ]}>
+        <Portal>
+          <Dialog visible={visible} onDismiss={hideDialog}>
+            <Dialog.Title>New Number</Dialog.Title>
+            <Dialog.Content>
+            <TextInput
+              label='11-2233-4455'
+              value={celphone}
+              onChangeText={setCelphone}
+              style={styles.input}
+            />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={hideDialog}>Cancel</Button>
+              <Button onPress={addNumber}>Accept</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
       <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
       <Text style={styles.name}>{selectedUser?.firstName}</Text>
       <Text style={styles.name}>{selectedUser?.lastName}</Text>
@@ -78,11 +109,13 @@ const UserProfile = (props: UserProfileProps) => {
                       () => {
                         logger.info('Geolocation permission accepted!');
                         Geolocation.getCurrentPosition(
-                          async positionOnError =>
-                            await updateUserPositionCallback(
+                          async positionOnError => {
+                              await updateUserPositionCallback(
                               positionOnError,
                               currentUser,
-                            ),
+                            )
+                            Alert.alert('Location Updated')
+                          },
                         );
                       },
                       errorRequest => {
@@ -108,6 +141,12 @@ const UserProfile = (props: UserProfileProps) => {
               props.navigation?.getParent()?.navigate('EditProfile');
             }}>
             Edit
+          </Button>
+          <Button
+            mode='contained'
+            style={styles.button}
+            onPress={showDialog}>
+            Add Number
           </Button>
           <Button
             mode='contained'
@@ -150,6 +189,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: '100%',
     borderRadius: 5,
+  },
+  input: {
+    width: '100%',
+    marginBottom: 10,
   },
 });
 
