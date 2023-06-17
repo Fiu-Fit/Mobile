@@ -34,12 +34,13 @@ const UserProfile = (props: UserProfileProps) => {
   const { currentUser } = useUserContext();
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
   const [visible, setVisible] = useState(false);
-  const [celphone, setCelphone] = useState('');
+  const [phoneNumber, setCelphone] = useState('');
 
   const showDialog = () => setVisible(true);
 
   const addNumber = async () => {
     await axiosClient.put(`aca va tu url`);
+    setCelphone('');
   }
 
   const hideDialog = () => {
@@ -78,7 +79,7 @@ const UserProfile = (props: UserProfileProps) => {
             <Dialog.Content>
             <TextInput
               label='11-2233-4455'
-              value={celphone}
+              value={phoneNumber}
               onChangeText={setCelphone}
               style={styles.input}
             />
