@@ -1,5 +1,5 @@
-import { View, Image, StyleSheet, Text, Alert } from 'react-native';
-import { Button, Dialog, Portal, TextInput } from 'react-native-paper';
+import { View, Image, StyleSheet, Text, Alert, TextInput } from 'react-native';
+import { Button, Dialog, Portal,  } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import auth from '@react-native-firebase/auth';
 import { User, UserProfileProps } from '../../utils/custom-types';
@@ -78,7 +78,8 @@ const UserProfile = (props: UserProfileProps) => {
             <Dialog.Title>New Number</Dialog.Title>
             <Dialog.Content>
             <TextInput
-              label='11-2233-4455'
+              placeholder='11-2233-4455'
+              keyboardType='numeric'
               value={phoneNumber}
               onChangeText={setCelphone}
               style={styles.input}
