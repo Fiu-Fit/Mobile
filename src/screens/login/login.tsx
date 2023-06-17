@@ -23,7 +23,7 @@ import { Role } from '../../constants/roles';
 import { DateTime } from 'luxon';
 import FiuFitLogo from '../../components/dumb/fiuFitLogo';
 import { useUserContext } from '../../App';
-import { useFetchUser } from '../../utils/fetch-helpers';
+import { fetchUserData } from '../../utils/fetch-helpers';
 
 const logger = LoggerFactory('login');
 
@@ -33,7 +33,7 @@ const LoginScreen = ({
   navigation: LoginScreenNavigationProp;
 }) => {
   const [loading, setLoading] = React.useState(false);
-  const { currentUser, setCurrentUser } = useUserContext();
+  const { setCurrentUser } = useUserContext();
   const saveToken = async (token: string) => {
     try {
       await AsyncStorage.setItem('UserToken', token);
@@ -52,9 +52,12 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      const {response: user} = useFetchUser();
-      if(user){
-        setCurrentUser(user as User)
+      const { response: user, error } = await fetchUserData();
+      if (error) {
+        logger.error('Error while logging in: ', error);
+      } else {
+        logger.debug('user: ', user);
+        setCurrentUser(user as User);
         navigation.push('Home');
       }
     } catch (error: any) {
