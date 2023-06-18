@@ -1,17 +1,16 @@
 import { SafeAreaView } from 'react-native';
-import { Modal, Portal, Text } from 'react-native-paper';
+import { Modal, Portal } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 import DateRangePicker from 'react-native-daterange-picker';
 import moment from 'moment';
-import { DatesState } from '../../utils/custom-types';
+import { progressStore } from '../../stores/progress.store';
+import { observer } from 'mobx-react';
 
-type CalendarModalProps = {
+type RangeCalendarModalProps = {
   onDismiss: () => void;
-  setDates: (dates: DatesState) => void;
-  dates: DatesState;
 };
 
-const CalendarModal = ({ onDismiss, setDates, dates }: CalendarModalProps) => {
+const RangeCalendarModal = ({ onDismiss }: RangeCalendarModalProps) => {
   const appTheme = useAppTheme();
 
   const containerStyle = {
@@ -32,24 +31,24 @@ const CalendarModal = ({ onDismiss, setDates, dates }: CalendarModalProps) => {
           style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <DateRangePicker
             onChange={(newDates: any) => {
-              setDates({
-                startDate:
-                  'startDate' in newDates
-                    ? new Date(newDates.startDate)
-                    : dates?.startDate,
-                endDate:
-                  'endDate' in newDates
-                    ? new Date(newDates.endDate)
-                    : dates?.endDate,
-                displayedDate:
-                  'displayedDate' in newDates
-                    ? moment(newDates.displayedDate)
-                    : dates?.displayedDate,
-              });
+              progressStore.startDate =
+                'startDate' in newDates
+                  ? new Date(newDates.startDate)
+                  : progressStore.startDate;
+
+              progressStore.endDate =
+                'endDate' in newDates
+                  ? new Date(newDates.endDate)
+                  : progressStore.endDate;
+
+              progressStore.displayedDate =
+                'displayedDate' in newDates
+                  ? moment(newDates.displayedDate)
+                  : progressStore.displayedDate;
             }}
-            endDate={dates?.endDate}
-            startDate={dates?.startDate}
-            displayedDate={dates?.displayedDate}
+            endDate={progressStore.endDate}
+            startDate={progressStore.startDate}
+            displayedDate={progressStore.displayedDate}
             range
             open={true}
             containerStyle={{
@@ -70,4 +69,4 @@ const CalendarModal = ({ onDismiss, setDates, dates }: CalendarModalProps) => {
   );
 };
 
-export default CalendarModal;
+export default observer(RangeCalendarModal);

@@ -60,3 +60,10 @@ export type DatesState = {
   endDate: Date | undefined;
   displayedDate: Moment;
 };
+
+export type ProgressProps = {
+  traveledDistance: number;
+  timeSpent: number;
+  burntCalories: number;
+  activityTypes: { [category: number]: number };
+};

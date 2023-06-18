@@ -28,6 +28,7 @@ const config = {
     'create-goal',
     'password-recovery',
     'home-header',
+    'progress-store',
   ],
   transportOptions: {
     colors: {
