@@ -80,7 +80,7 @@ const notificationType = (remoteMessage: any) => {
   }
 
   if (remoteMessage.data.type === NotificationType.NewMessage) {
-    if (remoteMessage.data.chatId) {
+    if (remoteMessage.data.messageId) {
       return {
         type: NotificationType.NewMessage,
         id: remoteMessage.data.messageId,
@@ -88,6 +88,16 @@ const notificationType = (remoteMessage: any) => {
     } else {
       throw Error('Invalid notification');
     }
+  }
+};
+
+const navigateToScreen = (type: NotificationType, _: any) => {
+  if (type === NotificationType.GoalCompleted) {
+    logger.info('Navigating to goal screen..');
+    // navigate to goal
+  } else {
+    logger.info('Navigating to chat screen..');
+    // navigate to chat
   }
 };
 
@@ -102,13 +112,11 @@ export const NotificationListener = () => {
         remoteMessage.notification?.body ?? '',
       );
 
-      if (result?.type === NotificationType.GoalCompleted) {
-        logger.info('Navigating to goal screen..');
-        // navigate to goal
-      } else {
-        logger.info('Navigating to chat screen..');
-        // navigate to chat
+      if (!result) {
+        throw Error('Invalid notification');
       }
+
+      navigateToScreen(result.type, result.id);
     } catch (error) {
       logger.error('Error while getting notification type: ', error);
     }
@@ -119,6 +127,18 @@ export const NotificationListener = () => {
       'Notification caused app to open from background state:',
       remoteMessage.notification,
     );
+
+    try {
+      const result = notificationType(remoteMessage);
+
+      if (!result) {
+        throw Error('Invalid notification');
+      }
+
+      navigateToScreen(result.type, result.id);
+    } catch (error) {
+      logger.error('Error while getting notification type: ', error);
+    }
   });
 
   messaging()
@@ -129,6 +149,18 @@ export const NotificationListener = () => {
           'Notification caused app to open from quit state:',
           remoteMessage.notification,
         );
+      }
+
+      try {
+        const result = notificationType(remoteMessage);
+
+        if (!result) {
+          throw Error('Invalid notification');
+        }
+
+        navigateToScreen(result.type, result.id);
+      } catch (error) {
+        logger.error('Error while getting notification type: ', error);
       }
     });
 };
