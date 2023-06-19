@@ -1,5 +1,5 @@
 import { View, Image, StyleSheet, Text, Alert, TextInput } from 'react-native';
-import { Button, Dialog, Portal,  } from 'react-native-paper';
+import { Button, Dialog, Portal } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import auth from '@react-native-firebase/auth';
 import { User, UserProfileProps } from '../../utils/custom-types';
@@ -39,14 +39,17 @@ const UserProfile = (props: UserProfileProps) => {
   const showDialog = () => setVisible(true);
 
   const addNumber = async () => {
-    await axiosClient.put(`aca va tu url`);
+    await axiosClient.put(`/users/${currentUser.id}`, {
+      phoneNumber,
+      ...currentUser,
+    });
     setCelphone('');
-  }
+  };
 
   const hideDialog = () => {
     setVisible(false);
     setCelphone('');
-  }
+  };
 
   useFocusEffect(() => {
     logger.info(`Selected User: ${props.route?.params.givenUserId}`);
@@ -73,10 +76,10 @@ const UserProfile = (props: UserProfileProps) => {
           backgroundColor: appTheme.colors.surfaceVariant,
         },
       ]}>
-        <Portal>
-          <Dialog visible={visible} onDismiss={hideDialog}>
-            <Dialog.Title>New Number</Dialog.Title>
-            <Dialog.Content>
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Title>New Number</Dialog.Title>
+          <Dialog.Content>
             <TextInput
               placeholder='11-2233-4455'
               keyboardType='numeric'
@@ -84,13 +87,13 @@ const UserProfile = (props: UserProfileProps) => {
               onChangeText={setCelphone}
               style={styles.input}
             />
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button onPress={hideDialog}>Cancel</Button>
-              <Button onPress={addNumber}>Accept</Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>Cancel</Button>
+            <Button onPress={addNumber}>Accept</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
       <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
       <Text style={styles.name}>{selectedUser?.firstName}</Text>
       <Text style={styles.name}>{selectedUser?.lastName}</Text>
@@ -112,11 +115,11 @@ const UserProfile = (props: UserProfileProps) => {
                         logger.info('Geolocation permission accepted!');
                         Geolocation.getCurrentPosition(
                           async positionOnError => {
-                              await updateUserPositionCallback(
+                            await updateUserPositionCallback(
                               positionOnError,
                               currentUser,
-                            )
-                            Alert.alert('Location Updated')
+                            );
+                            Alert.alert('Location Updated');
                           },
                         );
                       },
@@ -144,10 +147,7 @@ const UserProfile = (props: UserProfileProps) => {
             }}>
             Edit
           </Button>
-          <Button
-            mode='contained'
-            style={styles.button}
-            onPress={showDialog}>
+          <Button mode='contained' style={styles.button} onPress={showDialog}>
             Add Number
           </Button>
           <Button
