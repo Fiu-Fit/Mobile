@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
@@ -9,12 +10,16 @@ import { HomeNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 import { useFocusEffect } from '@react-navigation/native';
 import { action } from 'mobx';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import RangeCalendarModal from '../../components/rangeCalendarModal';
 import { progressStore } from '../../stores/progress.store';
 import ExerciseMetricsModal from '../../components/exerciseMetricsModal';
 import MetricPeriodSelector from '../../components/metricPeriodSelector';
 import MetricCards from '../../components/metricCards';
+import {
+  NotificationListener,
+  requestPermissions,
+} from '../../utils/push-notification-manager';
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
@@ -26,12 +31,18 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   useFocusEffect(
     useCallback(() => {
       action(() => {
-        workoutStore.fetchFavoriteWorkouts(`${currentUser.id}`);
+        workoutStore.fetchFavoriteWorkouts(currentUser.id);
         progressStore.fetchProgress(currentUser.id);
       })();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
+
+  useEffect(() => {
+    requestPermissions(currentUser);
+    NotificationListener();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>

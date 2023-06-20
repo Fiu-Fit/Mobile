@@ -51,10 +51,10 @@ export class ProgressStore {
       const endDateStr = this.endDate?.toISOString();
       logger.debug(`Getting progress from ${startDateStr} to ${endDateStr}...`);
 
-      /*const { data } = yield axiosClient.get<ProgressProps[]>(
+      const { data } = yield axiosClient.get<ProgressProps[]>(
         `/progress/user-progress/${userId}?start=${startDateStr}&end=${endDateStr}`,
-      );*/
-      const data: ProgressProps = {
+      );
+      /*const data: ProgressProps = {
         traveledDistance: 100,
         timeSpent: 400,
         burntCalories: 575,
@@ -63,7 +63,7 @@ export class ProgressStore {
           4: 1,
           5: 2,
         },
-      };
+      };*/
       logger.debug('Got data: ', data);
       runInAction(() => {
         this.progress = data;

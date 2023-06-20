@@ -23,6 +23,7 @@ import { Role } from '../../constants/roles';
 import { DateTime } from 'luxon';
 import FiuFitLogo from '../../components/dumb/fiuFitLogo';
 import { useUserContext } from '../../App';
+import { fetchUserData } from '../../utils/fetch-helpers';
 
 const logger = LoggerFactory('login');
 
@@ -51,11 +52,16 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      const { data } = await axiosClient.post('/users/me');
-      setCurrentUser(data as User);
-      navigation.push('Home');
+      const { response: user, error } = await fetchUserData();
+      if (error) {
+        logger.error('Error while logging in: ', error);
+      } else {
+        logger.debug('user: ', user);
+        setCurrentUser(user as User);
+        navigation.push('Home');
+      }
     } catch (error: any) {
-      logger.error('Error while logging in: ', error.response.data);
+      logger.error('Error while logging in: ', error);
     }
     setLoading(false);
   };
