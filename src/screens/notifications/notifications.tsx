@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import NotificationSelector from '../../components/notificationSelector';
 import ItemCardList from '../../components/itemCardList';
 import { notificationStore } from '../../stores/notification.store';
+import { observer } from 'mobx-react';
 
 const NotificactionsScreen = ({
   navigation,
@@ -12,6 +13,7 @@ const NotificactionsScreen = ({
   navigation: NotificationsNavigationProp;
 }) => {
   const appTheme = useAppTheme();
+
   return (
     <View style={{ backgroundColor: appTheme.colors.background, flex: 1 }}>
       <NotificationSelector />
@@ -19,8 +21,9 @@ const NotificactionsScreen = ({
         <ItemCardList
           items={notificationStore.notificationCardsInfo}
           onPress={item =>
-            navigation.navigate(item.onPressScreen, {
-              itemId: item.id,
+            navigation.navigate('Goals', {
+              screen: 'GoalScreen',
+              params: { itemId: item.id },
             })
           }
         />
@@ -29,4 +32,4 @@ const NotificactionsScreen = ({
   );
 };
 
-export default NotificactionsScreen;
+export default observer(NotificactionsScreen);

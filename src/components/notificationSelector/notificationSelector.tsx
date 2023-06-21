@@ -5,6 +5,7 @@ import { notificationStore } from '../../stores/notification.store';
 import { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { action } from 'mobx';
+import { observer } from 'mobx-react';
 
 const NotificationSelector = () => {
   const appTheme = useAppTheme();
@@ -64,4 +65,4 @@ const NotificationSelector = () => {
   );
 };
 
-export default NotificationSelector;
+export default observer(NotificationSelector);

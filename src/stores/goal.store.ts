@@ -68,6 +68,7 @@ export class GoalStore {
         this.state = 'done';
       });
     } catch (e) {
+      logger.debug('Error when getting goal: ', e);
       runInAction(() => {
         this.state = 'error';
       });

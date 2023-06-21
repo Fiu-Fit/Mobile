@@ -5,7 +5,7 @@ export enum GoalStatus {
 }
 
 export type GoalsProps = {
-  id: string;
+  id: number;
   title: string;
   description: string;
   userId: number;

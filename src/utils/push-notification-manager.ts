@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert, PermissionsAndroid } from 'react-native';
+import { PermissionsAndroid } from 'react-native';
 import LoggerFactory from './logger-utility';
 import { axiosClient } from './constants';
 import { NotificationType } from './notification-types';
@@ -49,52 +49,56 @@ const getFCMToken = async (): Promise<string> => {
 };
 
 const notificationType = (remoteMessage: any) => {
+  logger.debug('Message Received:', remoteMessage);
   if (
-    !remoteMessage.notification ||
-    typeof remoteMessage.notification !== 'object'
+    !remoteMessage?.notification ||
+    typeof remoteMessage?.notification !== 'object'
   ) {
-    throw Error('Invalid notification');
+    throw Error('Invalid notification: Message doesnt have notification');
   }
 
   if (!remoteMessage.data || typeof remoteMessage.data !== 'object') {
-    throw Error('Invalid notification');
+    throw Error('Invalid notification: Message doesnt have data');
   }
 
   if (
-    !remoteMessage.notification.title ||
-    !remoteMessage.notification.body ||
-    !remoteMessage.data.type
+    !remoteMessage?.notification.title ||
+    !remoteMessage?.notification.body ||
+    !remoteMessage?.data.type
   ) {
-    throw Error('Invalid notification');
+    throw Error('Invalid notification: Missing field in notification');
   }
 
-  if (remoteMessage.data.type === NotificationType.GoalCompleted) {
-    if (remoteMessage.data.goalId) {
+  if (Number(remoteMessage?.data.type) === NotificationType.GoalCompleted) {
+    if (remoteMessage?.data.goalId) {
       return {
         type: NotificationType.GoalCompleted,
         id: remoteMessage.data.goalId,
       };
     } else {
-      throw Error('Invalid notification');
+      throw Error('Invalid notification: Invalid goal notification');
     }
   }
 
-  if (remoteMessage.data.type === NotificationType.NewMessage) {
-    if (remoteMessage.data.messageId) {
+  if (Number(remoteMessage?.data.type) === NotificationType.NewMessage) {
+    if (remoteMessage?.data.messageId) {
       return {
         type: NotificationType.NewMessage,
-        id: remoteMessage.data.messageId,
+        id: remoteMessage?.data.messageId,
       };
     } else {
-      throw Error('Invalid notification');
+      throw Error('Invalid notification: Invalid message notification');
     }
   }
 };
 
-const navigateToScreen = (type: NotificationType, _: any) => {
+const navigateToScreen = (type: NotificationType, id: number) => {
   if (type === NotificationType.GoalCompleted) {
-    logger.info('Navigating to goal screen..');
-    // navigate to goal
+    logger.info('Navigating to goal screen.. ', id);
+    /*navigation.navigate('Goals', {
+      screen: 'GoalScreen',
+      params: { itemId: id },
+    })*/
   } else {
     logger.info('Navigating to chat screen..');
     // navigate to chat
@@ -107,11 +111,6 @@ export const NotificationListener = () => {
 
     try {
       const result = notificationType(remoteMessage);
-      Alert.alert(
-        remoteMessage.notification?.title ?? '',
-        remoteMessage.notification?.body ?? '',
-      );
-
       if (!result) {
         throw Error('Invalid notification');
       }

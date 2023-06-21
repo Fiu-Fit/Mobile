@@ -22,7 +22,7 @@ export interface MessageNotificationProps {
   athleteId: number;
   messageId: string;
   receivedAt: Date;
-  senderMessage: string;
+  senderName: string;
 }
 
 export enum NotificationType {

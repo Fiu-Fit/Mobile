@@ -20,7 +20,7 @@ export type WorkoutStackParamList = {
 
 export type GoalStackParamList = {
   CreateGoalScreen: undefined;
-  GoalScreen: { itemId: string | number };
+  GoalScreen: { itemId: number };
   GoalsScreen: undefined;
 };
 

@@ -14,7 +14,7 @@ type GoalScreenProps = {
   navigation: GoalScreenNavigationProp;
   route: {
     params: {
-      itemId: string;
+      itemId: number;
     };
   };
 };
