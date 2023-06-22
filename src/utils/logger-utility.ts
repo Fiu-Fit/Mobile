@@ -28,11 +28,16 @@ const config = {
     'create-goal',
     'password-recovery',
     'home-header',
+    'push-notification-manager',
+    'goal-store',
+    'edit-goal-modal',
+    'fetch-helpers',
     'workouts',
     'workout-selector',
     'workout-rating-modal',
-    'push-notification-manager',
-    'notification',
+    'notification-store',
+    'notifications-screen',
+    'goal-screen',
   ],
   transportOptions: {
     colors: {

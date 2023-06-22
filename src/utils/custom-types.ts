@@ -1,5 +1,6 @@
 import { Role } from '../constants/roles';
 import { ProfileNavigationProp } from '../navigation/navigation-props';
+import { Moment } from 'moment';
 
 export type InputProps = {
   firstName: string;
@@ -28,11 +29,18 @@ export type CommentInputProps = {
 
 export type ErrorCommentInputProps = CommentInputProps;
 
+export type EditGoalInputProps = {
+  description: string;
+};
+
+export type ErrorEditGoalProps = EditGoalInputProps;
+
 export interface CardInfo {
-  id: string;
+  id: string | number;
   title: string;
   content: string;
   imageUrl: string;
+  onPressScreen?: string;
 }
 
 export type User = {
@@ -45,6 +53,7 @@ export type User = {
   interests: number[];
   deviceToken: string;
   coordinates: [number, number];
+  followedUsers: User[];
   phoneNumber?: string;
 };
 
@@ -55,3 +64,8 @@ export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
   {
     [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
   }[Keys];
+
+export type DateState = {
+  selectedDate: Date | undefined;
+  displayedDate: Moment;
+};

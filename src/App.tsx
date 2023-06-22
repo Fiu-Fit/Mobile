@@ -11,6 +11,7 @@ import { useColorScheme } from 'react-native';
 import { createContext, useContext, useState } from 'react';
 import { Role } from './constants/roles';
 import { User } from './utils/custom-types';
+import { navigationRef } from './navigation/root-navigator';
 
 if (
   !new (class {
@@ -126,6 +127,7 @@ const defaultUserObject = {
   favoriteWorkouts: [],
   deviceToken: '',
   coordinates: [0, 0],
+  followedUsers: [],
 };
 
 const UserContext = createContext<{
@@ -153,7 +155,7 @@ const App = () => {
   const rNavTheme = colorScheme === 'dark' ? DarkTheme : LightTheme;
   return (
     <PaperProvider theme={paperTheme}>
-      <NavigationContainer theme={rNavTheme}>
+      <NavigationContainer ref={navigationRef} theme={rNavTheme}>
         <UserContext.Provider
           value={{
             currentUser,

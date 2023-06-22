@@ -7,14 +7,48 @@ import { useFocusEffect } from '@react-navigation/native';
 import { observer } from 'mobx-react';
 import LoggerFactory from '../../utils/logger-utility';
 import { searchStore } from '../../stores/userSearch.store';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
 import { axiosClient } from '../../utils/constants';
+import { useFetchUser } from '../../utils/fetch-helpers';
 
 const logger = LoggerFactory('user-profile');
 
+const handleFollow = async (selectedUserId: number, currentUserId: number) => {
+  try {
+    logger.info(
+      `Trying to follow user ${selectedUserId} as user ${currentUserId}`,
+    );
+    await axiosClient.post(`/followers/follow?userId=${currentUserId}`, {
+      userIdToFollow: selectedUserId,
+    });
+    logger.debug(`User ${currentUserId} now follows ${selectedUserId}`);
+  } catch (error) {
+    logger.error('An error ocurred while trying to follow this user: ', {
+      error,
+    });
+  }
+};
+
+const handleUnfollow = async (
+  selectedUserId: number,
+  currentUserId: number,
+) => {
+  try {
+    logger.info(
+      `Trying to unfollow user ${selectedUserId} as user ${currentUserId}`,
+    );
+    await axiosClient.delete(
+      `/followers/unfollow?userId=${currentUserId}&followerId=${selectedUserId}`,
+    );
+  } catch (error) {
+    logger.error('An error ocurred while trying to follow this user: ', {
+      error,
+    });
+  }
+};
 const updateUserPositionCallback = async (
   position: GeolocationResponse,
   currentUser: User,
@@ -51,6 +85,10 @@ const UserProfile = (props: UserProfileProps) => {
     setCelphone('');
   };
 
+  const [followAction, setFollowAction] = useState({
+    followState: false,
+    followCallback: handleFollow,
+  });
   useFocusEffect(() => {
     logger.info(`Selected User: ${props.route?.params.givenUserId}`);
     setSelectedUser(
@@ -61,6 +99,16 @@ const UserProfile = (props: UserProfileProps) => {
           ),
     );
   });
+  useEffect(() => {
+    const following = Boolean(
+      currentUser.followedUsers.find(user => user?.id === selectedUser?.id),
+    );
+    setFollowAction(
+      following
+        ? { followState: following, followCallback: handleUnfollow }
+        : { followState: following, followCallback: handleFollow },
+    );
+  }, [followAction.followState, currentUser, selectedUser]);
   const handleSignOut = async () => {
     await auth().signOut();
     props.navigation?.getParent()?.navigate('LoginScreen');
@@ -68,6 +116,7 @@ const UserProfile = (props: UserProfileProps) => {
   const pictureUrl =
     'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80';
 
+  useFetchUser({ observables: [followAction.followState] });
   return (
     <View
       style={[
@@ -157,6 +206,30 @@ const UserProfile = (props: UserProfileProps) => {
             Cerrar sesion
           </Button>
         </>
+      )}
+      {!props.myProfile && (
+        <Button
+          mode='contained'
+          style={styles.button}
+          onPress={() =>
+            followAction
+              .followCallback(selectedUser?.id ?? 0, currentUser.id)
+              .then(() => {
+                setFollowAction(
+                  !followAction.followState
+                    ? {
+                        followState: !followAction.followState,
+                        followCallback: handleFollow,
+                      }
+                    : {
+                        followState: !followAction.followState,
+                        followCallback: handleUnfollow,
+                      },
+                );
+              })
+          }>
+          {followAction.followState ? 'Unfollow' : 'Follow'}
+        </Button>
       )}
     </View>
   );
