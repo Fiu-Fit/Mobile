@@ -17,6 +17,7 @@ import {
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
 import { workoutStore } from './workout.store';
+import { goalStore } from './goal.store';
 
 const logger = LoggerFactory('workout-detail-store');
 
@@ -251,6 +252,7 @@ export class WorkoutDetailStore {
       this.state = 'done';
 
       logger.debug('Got data: ', data);
+      goalStore.fetchGoals(userId);
     } catch (e: any) {
       logger.error('Error while completing Workout:', { e });
       runInAction(() => {
