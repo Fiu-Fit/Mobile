@@ -68,21 +68,26 @@ const UserProfile = (props: UserProfileProps) => {
   const { currentUser } = useUserContext();
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
   const [visible, setVisible] = useState(false);
-  const [phoneNumber, setCelphone] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
 
   const showDialog = () => setVisible(true);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { followedUsers, ...rest } = currentUser;
+
   const addNumber = async () => {
-    await axiosClient.put(`/users/${currentUser.id}`, {
+    logger.debug('New phone number: ', phoneNumber);
+    const { data } = await axiosClient.put(`/users/${currentUser.id}`, {
+      ...rest,
       phoneNumber,
-      ...currentUser,
     });
-    setCelphone('');
+    logger.debug('Updated user: ', data);
+    hideDialog();
   };
 
   const hideDialog = () => {
     setVisible(false);
-    setCelphone('');
+    setPhoneNumber('');
   };
 
   const [followAction, setFollowAction] = useState({
@@ -133,13 +138,13 @@ const UserProfile = (props: UserProfileProps) => {
               placeholder='11-2233-4455'
               keyboardType='numeric'
               value={phoneNumber}
-              onChangeText={setCelphone}
+              onChangeText={setPhoneNumber}
               style={styles.input}
             />
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={hideDialog}>Cancel</Button>
-            <Button onPress={addNumber}>Accept</Button>
+            <Button onPress={() => hideDialog()}>Cancel</Button>
+            <Button onPress={() => addNumber()}>Accept</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
