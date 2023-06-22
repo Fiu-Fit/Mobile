@@ -64,6 +64,7 @@ const UpsertWorkoutScreen = ({
     <Loader />
   ) : (
     <ScrollView
+      key={'upsertWorkout-scrollview'}
       className='flex-1'
       style={{ backgroundColor: appTheme.colors.background }}>
       <Formik<UpsertWorkoutFormValue>
@@ -76,7 +77,9 @@ const UpsertWorkoutScreen = ({
           category: workoutDetailStore.workout.category,
           exercises: workoutDetailStore.workout.exercises,
           authorId: currentUser.id,
+          averageRating: workoutDetailStore.workout.averageRating,
         }}
+        key={'upsertWorkout-formik-form'}
         onSubmit={values => {
           runInAction(() => {
             workoutDetailStore.workout._id = values._id;
@@ -92,6 +95,7 @@ const UpsertWorkoutScreen = ({
         {({ values, errors, handleChange, handleSubmit }) => (
           <>
             <Input
+              key={'upsertWorkout-name-input'}
               value={values.name}
               placeholder='Workout name'
               placeholderTextColor={appTheme.colors.background}
@@ -111,6 +115,7 @@ const UpsertWorkoutScreen = ({
               }}
             />
             <Input
+              key={'upsertWorkout-description-input'}
               value={values.description}
               placeholder='Workout description'
               placeholderTextColor={appTheme.colors.background}
@@ -130,6 +135,7 @@ const UpsertWorkoutScreen = ({
               }}
             />
             <Input
+              key={'upsertWorkout-difficulty-input'}
               value={values.difficulty}
               placeholder='Workout difficulty'
               placeholderTextColor={appTheme.colors.background}
@@ -150,13 +156,14 @@ const UpsertWorkoutScreen = ({
               keyboardType='numeric'
             />
             <FieldArray
+              key={'upsertWorkout-fieldarray'}
               name='exercises'
               render={arrayHelpers => (
                 <>
                   {workoutDetailStore.exerciseCards.map((exercise, index) => (
                     <>
                       <ItemCard<ExerciseCardInfo>
-                        key={exercise.id}
+                        key={`upsertWorkout-itemcard-exercise-${exercise.id}`}
                         item={exercise}
                         onPress={() => {
                           setSelectedExercise(exercise);
@@ -164,7 +171,7 @@ const UpsertWorkoutScreen = ({
                         onRemovePress={() =>
                           runInAction(() => {
                             logger.info('Removing ID: ', exercise.id);
-                            workoutDetailStore.removeExercise(exercise.id);
+                            workoutDetailStore.removeExercise(`${exercise.id}`);
                             arrayHelpers.remove(index);
                           })
                         }
@@ -172,6 +179,7 @@ const UpsertWorkoutScreen = ({
                     </>
                   ))}
                   <CustomButton
+                    key={'upsertWorkout-add-exercise-button'}
                     icon='plus'
                     onPress={() => {
                       workoutDetailStore.addNewExercise({
@@ -202,12 +210,17 @@ const UpsertWorkoutScreen = ({
                 </>
               )}
             />
-            <CustomButton title='Enviar' onPress={handleSubmit} />
+            <CustomButton
+              key={'upsertWorkout-send-workout-button'}
+              title='Enviar'
+              onPress={handleSubmit}
+            />
           </>
         )}
       </Formik>
       {selectedExercise && (
         <EditExerciseModal
+          key={'edit-exercise-modal'}
           onDismiss={() => setSelectedExercise(undefined)}
           exerciseItem={selectedExercise}
         />
