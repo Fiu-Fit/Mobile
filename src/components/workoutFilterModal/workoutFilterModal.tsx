@@ -29,14 +29,18 @@ const WorkoutFilterModal = ({ onDismiss, onSelect, items }: ModalProps) => {
           {items.map(item => (
             <>
               <TouchableOpacity
+                key={`touchable-${item.key}`}
                 className='w-full items-center justify-center my-3'
                 onPress={() => {
                   onDismiss();
                   onSelect(item.key);
                 }}>
-                <Text className='text-l'>{item.label}</Text>
+                <Text key={`text-${item.key}`} className='text-l'>
+                  {item.label}
+                </Text>
               </TouchableOpacity>
               <Divider
+                key={`divider-${item.key}`}
                 style={{
                   alignSelf: 'stretch',
                   marginHorizontal: 60,

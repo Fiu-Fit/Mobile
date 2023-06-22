@@ -24,7 +24,7 @@ export class ProgressStore {
   get exerciseMetricsCardsInfo(): CardInfo[] {
     return Object.entries(this.progress.activityTypes).map(
       ([key, value]): CardInfo => ({
-        id: '0',
+        id: key,
         title: categoryMap.get(Number(key)) || 'Desconocido',
         content: value.toString(),
         imageUrl:
@@ -52,19 +52,18 @@ export class ProgressStore {
       logger.debug(`Getting progress from ${startDateStr} to ${endDateStr}...`);
 
       const { data } = yield axiosClient.get<ProgressProps[]>(
-        `/progress/user-progress/${userId}?start=${startDateStr}&end=${endDateStr}`,
-      );
-      /*const data: ProgressProps = {
-        traveledDistance: 100,
-        timeSpent: 400,
-        burntCalories: 575,
-        activityTypes: {
-          0: 1,
-          4: 1,
-          5: 2,
+        `/progress/user-progress/${userId}`,
+        {
+          params: {
+            start: startDateStr,
+            end: endDateStr,
+          },
         },
-      };*/
-      logger.debug('Got data: ', data);
+      );
+
+      logger.debug(
+        `Got data for progress from :  ${startDateStr} to ${endDateStr}... ${data}`,
+      );
       runInAction(() => {
         this.progress = data;
         this.state = 'done';

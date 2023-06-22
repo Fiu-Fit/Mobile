@@ -29,11 +29,18 @@ export type CommentInputProps = {
 
 export type ErrorCommentInputProps = CommentInputProps;
 
+export type EditGoalInputProps = {
+  description: string;
+};
+
+export type ErrorEditGoalProps = EditGoalInputProps;
+
 export interface CardInfo {
-  id: string;
+  id: string | number;
   title: string;
   content: string;
   imageUrl: string;
+  onPressScreen?: string;
 }
 
 export type User = {
@@ -58,7 +65,7 @@ export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
     [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
   }[Keys];
 
-export type DatesState = {
+export type DateRangeState = {
   startDate: Date | undefined;
   endDate: Date | undefined;
   displayedDate: Moment;
@@ -69,4 +76,8 @@ export type ProgressProps = {
   timeSpent: number;
   burntCalories: number;
   activityTypes: { [category: number]: number };
+};
+export type DateState = {
+  selectedDate: Date | undefined;
+  displayedDate: Moment;
 };

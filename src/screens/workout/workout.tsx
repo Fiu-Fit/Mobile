@@ -15,6 +15,7 @@ import { ExerciseCardInfo } from '../../utils/workout-types';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
 import FloatingActionButton from '../../components/dumb/floatingActionButton';
 import { Role } from '../../constants/roles';
+import WorkoutCompletedModal from '../../components/workoutCompletedModal';
 import { useFocusEffect } from '@react-navigation/native';
 
 type WorkoutScreenProps = {
@@ -33,6 +34,8 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
     ExerciseCardInfo | undefined
   >(undefined);
   const [ratingModalVisible, setRatingModalVisible] = React.useState(false);
+  const [completedWorkoutModalVisible, setCompletedWorkoutModalVisible] =
+    React.useState(false);
   const { itemId } = route.params;
 
   useFocusEffect(
@@ -45,8 +48,8 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
   );
 
   const handleCompletedWorkout = () => {
-    // Handle metric endpoint
-    navigation.goBack();
+    workoutDetailStore.completeWorkout(currentUser.id);
+    setCompletedWorkoutModalVisible(true);
   };
 
   return workoutDetailStore.state === 'pending' ? (
@@ -79,6 +82,16 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
           <ExerciseModal
             onDismiss={() => setSelectedExercise(undefined)}
             exerciseItem={selectedExercise}
+          />
+        )}
+
+        {completedWorkoutModalVisible && (
+          <WorkoutCompletedModal
+            onDismiss={() => {
+              setCompletedWorkoutModalVisible(false);
+              navigation.goBack();
+            }}
+            workoutItem={workoutDetailStore.workout}
           />
         )}
       </View>

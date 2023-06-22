@@ -3,15 +3,15 @@ import { Modal, Portal } from 'react-native-paper';
 import { useAppTheme } from '../../App';
 import DateRangePicker from 'react-native-daterange-picker';
 import moment from 'moment';
-import { progressStore } from '../../stores/progress.store';
-import { observer } from 'mobx-react';
-import { runInAction } from 'mobx';
+import { DateState } from '../../utils/custom-types';
 
-type RangeCalendarModalProps = {
+type CalendarModalProps = {
   onDismiss: () => void;
+  setDate: (dates: DateState) => void;
+  date: DateState;
 };
 
-const RangeCalendarModal = ({ onDismiss }: RangeCalendarModalProps) => {
+const CalendarModal = ({ onDismiss, setDate, date }: CalendarModalProps) => {
   const appTheme = useAppTheme();
 
   const containerStyle = {
@@ -31,28 +31,20 @@ const RangeCalendarModal = ({ onDismiss }: RangeCalendarModalProps) => {
         <SafeAreaView
           style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <DateRangePicker
-            onChange={(newDates: any) => {
-              runInAction(() => {
-                progressStore.startDate =
-                  'startDate' in newDates
-                    ? new Date(newDates.startDate)
-                    : progressStore.startDate;
-
-                progressStore.endDate =
-                  'endDate' in newDates
-                    ? new Date(newDates.endDate)
-                    : progressStore.endDate;
-
-                progressStore.displayedDate =
-                  'displayedDate' in newDates
-                    ? moment(newDates.displayedDate)
-                    : progressStore.displayedDate;
+            onChange={(newDate: any) => {
+              setDate({
+                selectedDate:
+                  'date' in newDate
+                    ? new Date(newDate.date)
+                    : date?.selectedDate,
+                displayedDate:
+                  'displayedDate' in newDate
+                    ? moment(newDate.displayedDate)
+                    : date?.displayedDate,
               });
             }}
-            endDate={progressStore.endDate}
-            startDate={progressStore.startDate}
-            displayedDate={progressStore.displayedDate}
-            range
+            displayedDate={date?.displayedDate}
+            date={date?.selectedDate}
             open={true}
             containerStyle={{
               backgroundColor: appTheme.colors.surface,
@@ -72,4 +64,4 @@ const RangeCalendarModal = ({ onDismiss }: RangeCalendarModalProps) => {
   );
 };
 
-export default observer(RangeCalendarModal);
+export default CalendarModal;

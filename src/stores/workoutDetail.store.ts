@@ -17,6 +17,7 @@ import {
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
 import { workoutStore } from './workout.store';
+import { goalStore } from './goal.store';
 
 const logger = LoggerFactory('workout-detail-store');
 
@@ -97,6 +98,7 @@ export class WorkoutDetailStore {
       fetchWorkout: flow,
       fetchWorkoutRatings: flow,
       addWorkoutAsFavourite: flow,
+      completeWorkout: flow,
       removeWorkoutAsFavourite: flow,
       createWorkoutRating: flow,
     });
@@ -239,6 +241,26 @@ export class WorkoutDetailStore {
     }
   }
 
+  *completeWorkout(userId: number) {
+    this.state = 'pending';
+    try {
+      logger.debug('Marking workout as completed...');
+      const { data } = yield axiosClient.post('/progress/complete', {
+        workoutId: this.workout._id,
+        userId: userId,
+      });
+      this.state = 'done';
+
+      logger.debug('Got data: ', data);
+      goalStore.fetchGoals(userId);
+    } catch (e: any) {
+      logger.error('Error while completing Workout:', { e });
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
   *fetchWorkoutRatings() {
     this.ratings = [];
     this.state = 'pending';
@@ -288,7 +310,6 @@ export class WorkoutDetailStore {
       logger.debug('Got data: ', data);
     } catch (e: any) {
       logger.error('Error while creating rating: ', { e });
-
       runInAction(() => {
         this.state = 'error';
       });
