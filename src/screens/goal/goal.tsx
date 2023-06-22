@@ -22,16 +22,15 @@ type GoalScreenProps = {
   };
 };
 
-const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
+const GoalScreen = (props: GoalScreenProps) => {
   const appTheme = useAppTheme();
-  const { itemId } = route.params;
   const [showingEditGoalModal, setShowingEditGoalModal] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
       action(() => {
-        logger.debug('Goal ID: ', itemId);
-        goalStore.fetchGoal(itemId);
+        logger.debug('Props: ', props);
+        goalStore.fetchGoal(props.route.params.itemId);
       })();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
@@ -74,7 +73,7 @@ const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
         <TouchableOpacity
           onPress={() => {
             goalStore.deleteGoal();
-            navigation.push('GoalsScreen');
+            props.navigation.push('GoalsScreen');
           }}>
           <Icon size={50} name={'delete'} />
         </TouchableOpacity>

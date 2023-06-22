@@ -5,7 +5,10 @@ import LoggerFactory from './logger-utility';
 import { axiosClient } from './constants';
 import { NotificationType } from './notification-types';
 import { User } from './custom-types';
-import PushNotification from 'react-native-push-notification';
+import PushNotification, {
+  ReceivedNotification,
+} from 'react-native-push-notification';
+import * as RootNavigation from '../navigation/root-navigator';
 
 const logger = LoggerFactory('push-notification-manager');
 
@@ -99,13 +102,17 @@ const notificationType = (remoteMessage: any) => {
 const navigateToScreen = (type: NotificationType, id: number) => {
   if (type === NotificationType.GoalCompleted) {
     logger.info('Navigating to goal screen.. ', id);
-    /*navigation.navigate('Goals', {
-      screen: 'GoalScreen',
-      params: { itemId: id },
-    })*/
+    PushNotification.configure({
+      onNotification: function (_: Omit<ReceivedNotification, 'userInfo'>) {
+        logger.info('Goal id in onNotification: ', { id });
+        RootNavigation.navigate('Goals', {
+          screen: 'GoalScreen',
+          params: { itemId: Number(id), test: 'Test' },
+        });
+      },
+    });
   } else {
-    logger.info('Navigating to chat screen..');
-    // navigate to chat
+    logger.info('Navigating to chat screen.. ', id);
   }
 };
 
@@ -121,7 +128,7 @@ export const NotificationListener = () => {
 
       PushNotification.localNotification({
         title: remoteMessage.notification?.title,
-        message: remoteMessage.notification?.body,
+        message: remoteMessage.notification?.body || '',
       });
 
       navigateToScreen(result.type, result.id);
