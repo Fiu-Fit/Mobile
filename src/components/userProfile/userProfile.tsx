@@ -63,6 +63,21 @@ const UserProfile = (props: UserProfileProps) => {
       <Text style={styles.name}>{selectedUser?.lastName}</Text>
       <Text style={styles.personalInfo}>{selectedUser?.bodyWeight} kg</Text>
       <Text style={styles.email}>{selectedUser?.email}</Text>
+      {!props.myProfile && (
+        <>
+          <Button
+            mode='contained'
+            style={styles.button}
+            onPress={() => {
+              logger.info('Navigation:', props.navigation);
+              props.navigation?.getParent()?.navigate('Users', {
+                screen: 'ChatScreen',
+                params: { user: currentUser },
+              });
+            }}>
+            Enviar mensaje
+          </Button>
+        </>)}
       {props.myProfile && (
         <>
           <Button
