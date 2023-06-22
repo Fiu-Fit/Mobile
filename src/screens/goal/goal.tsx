@@ -9,6 +9,9 @@ import { useCallback, useState } from 'react';
 import { goalStore } from '../../stores/goal.store';
 import { useFocusEffect } from '@react-navigation/native';
 import EditGoalModal from '../../components/editGoalModal';
+import LoggerFactory from '../../utils/logger-utility';
+
+const logger = LoggerFactory('goal-screen');
 
 type GoalScreenProps = {
   navigation: GoalScreenNavigationProp;
@@ -27,6 +30,7 @@ const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
   useFocusEffect(
     useCallback(() => {
       action(() => {
+        logger.debug('Goal ID: ', itemId);
         goalStore.fetchGoal(itemId);
       })();
       // eslint-disable-next-line react-hooks/exhaustive-deps

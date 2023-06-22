@@ -56,7 +56,7 @@ export class GoalStore {
     }
   }
 
-  *fetchGoal(goalId: string) {
+  *fetchGoal(goalId: number) {
     this.currentGoal = undefined;
     this.state = 'pending';
     try {
@@ -68,7 +68,7 @@ export class GoalStore {
         this.state = 'done';
       });
     } catch (e) {
-      logger.debug('Error when getting goal: ', e);
+      logger.error('Error when getting goal: ', { e });
       runInAction(() => {
         this.state = 'error';
       });

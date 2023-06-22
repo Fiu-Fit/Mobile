@@ -26,7 +26,7 @@ export class NotificationStore {
       if ('goalTitle' in notification) {
         const goalNotification = notification as GoalNotificationProps;
         return {
-          id: goalNotification._id,
+          id: goalNotification.goalId,
           title: GOAL_NOTIFICATION_TITLE,
           content: GOAL_NOTIFICATION_CONTENT(goalNotification.goalTitle),
           imageUrl:
@@ -36,7 +36,7 @@ export class NotificationStore {
       } else {
         const messageNotification = notification as MessageNotificationProps;
         return {
-          id: messageNotification._id,
+          id: messageNotification.messageId,
           title: MESSAGE_NOTIFICATION_TITLE,
           content: MESSAGE_NOTIFICATION_CONTENT(
             messageNotification.senderName ?? '',
