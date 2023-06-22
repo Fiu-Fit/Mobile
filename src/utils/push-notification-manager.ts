@@ -5,6 +5,7 @@ import LoggerFactory from './logger-utility';
 import { axiosClient } from './constants';
 import { NotificationType } from './notification-types';
 import { User } from './custom-types';
+import PushNotification from 'react-native-push-notification';
 
 const logger = LoggerFactory('push-notification-manager');
 
@@ -17,8 +18,11 @@ export const requestPermissions = async (user: User) => {
       logger.info('User granted permission');
 
       const token = await getFCMToken();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { followedUsers, ...rest } = user;
+
       const updatedUser = await axiosClient.put<User>(`/users/${user.id}`, {
-        ...user,
+        ...rest,
         deviceToken: token,
       });
 
@@ -29,7 +33,7 @@ export const requestPermissions = async (user: User) => {
       logger.info('User declined permission');
     }
   } catch (error) {
-    logger.error('Error while requesting permission: ', error);
+    logger.error('Error while requesting permission: ', { error });
   }
 };
 
@@ -114,6 +118,11 @@ export const NotificationListener = () => {
       if (!result) {
         throw Error('Invalid notification');
       }
+
+      PushNotification.localNotification({
+        title: remoteMessage.notification?.title,
+        message: remoteMessage.notification?.body,
+      });
 
       navigateToScreen(result.type, result.id);
     } catch (error) {
