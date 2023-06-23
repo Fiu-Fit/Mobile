@@ -27,6 +27,8 @@ import LoggerFactory from '../../utils/logger-utility';
 
 const logger = LoggerFactory('home-screen');
 
+const reference = storage().ref('black.jpg');
+
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
@@ -106,7 +108,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
             />
             <Button
               title='Test file'
-              onPress={() => {
+              onPress={async () => {
                 launchImageLibrary(
                   {
                     mediaType: 'mixed',
@@ -114,11 +116,13 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
                     maxHeight: 200,
                     maxWidth: 200,
                   },
-                  response => {
+                  async response => {
                     logger.debug('Img response: ', response);
                     if (response.assets) {
                       setResourcePath(response.assets![0].uri);
                       logger.debug('Selected media: ', resourcePath);
+                      await reference.putFile(resourcePath!);
+                      logger.debug('File uploaded');
                     }
                   },
                 );
