@@ -65,6 +65,18 @@ export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
     [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
   }[Keys];
 
+export type DateRangeState = {
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  displayedDate: Moment;
+};
+
+export type ProgressProps = {
+  traveledDistance: number;
+  timeSpent: number;
+  burntCalories: number;
+  activityTypes: { [category: number]: number };
+};
 export type DateState = {
   selectedDate: Date | undefined;
   displayedDate: Moment;

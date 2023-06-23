@@ -28,6 +28,7 @@ const config = {
     'create-goal',
     'password-recovery',
     'home-header',
+    'progress-store',
     'push-notification-manager',
     'goal-store',
     'edit-goal-modal',
@@ -38,6 +39,7 @@ const config = {
     'notification-store',
     'notifications-screen',
     'goal-screen',
+    'home-screen',
   ],
   transportOptions: {
     colors: {
