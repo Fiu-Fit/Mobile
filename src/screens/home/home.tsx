@@ -21,13 +21,11 @@ import {
   requestPermissions,
 } from '../../utils/push-notification-manager';
 import storage from '@react-native-firebase/storage';
-import { utils } from '@react-native-firebase/app';
 import { launchImageLibrary } from 'react-native-image-picker';
 import LoggerFactory from '../../utils/logger-utility';
+import VideoPlayer from 'react-native-video-player';
 
 const logger = LoggerFactory('home-screen');
-
-const reference = storage().ref('/download/test.jpg');
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
@@ -120,11 +118,13 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
                     maxWidth: 200,
                   },
                   async response => {
-                    logger.debug('Img response: ', response);
+                    logger.debug('Media response: ', response);
                     if (response.assets) {
                       setResourcePath(response.assets![0].uri);
-                      logger.debug('Selected media: ', resourcePath);
-                      await reference.putFile(resourcePath!);
+                      logger.debug('aa: ', resourcePath);
+                      await storage()
+                        .ref('/download/test.mp4')
+                        .putFile(resourcePath!);
                       logger.debug('File uploaded');
                     }
                   },
@@ -135,17 +135,20 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
               title='Descargar file'
               onPress={async () => {
                 const download = await storage()
-                  .ref('download/test.jpg')
+                  .ref('/download/test.mp4')
                   .getDownloadURL();
-                logger.debug('Get downloaded file');
+
                 setDowloadResourcePath(download);
+                logger.debug('Get downloaded file: ', downloadResourcePath);
               }}
             />
-            <Image
-              source={{
+            <VideoPlayer
+              video={{
                 uri: downloadResourcePath,
               }}
-              style={{ width: 200, height: 200 }}
+              videoWidth={1600}
+              videoHeight={1600}
+              thumbnail={{ uri: downloadResourcePath + '.jpg' }}
             />
           </View>
         )}
