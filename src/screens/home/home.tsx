@@ -27,7 +27,7 @@ import LoggerFactory from '../../utils/logger-utility';
 
 const logger = LoggerFactory('home-screen');
 
-const reference = storage().ref('black.jpg');
+const reference = storage().ref('/download/test.jpg');
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
@@ -36,6 +36,9 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const [showingExerciseMetricsModal, setShowingExerciseMetricsModal] =
     useState(false);
   const [resourcePath, setResourcePath] = useState<string | undefined>('');
+  const [downloadResourcePath, setDowloadResourcePath] = useState<
+    string | undefined
+  >('');
 
   useFocusEffect(
     useCallback(() => {
@@ -128,9 +131,19 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
                 );
               }}
             />
+            <Button
+              title='Descargar file'
+              onPress={async () => {
+                const download = await storage()
+                  .ref('download/test.jpg')
+                  .getDownloadURL();
+                logger.debug('Get downloaded file');
+                setDowloadResourcePath(download);
+              }}
+            />
             <Image
               source={{
-                uri: resourcePath,
+                uri: downloadResourcePath,
               }}
               style={{ width: 200, height: 200 }}
             />
