@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import ItemCardList from '../../components/itemCardList';
@@ -33,6 +33,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const [showingCalendarModal, setShowingCalendarModal] = useState(false);
   const [showingExerciseMetricsModal, setShowingExerciseMetricsModal] =
     useState(false);
+  const [resourcePath, setResourcePath] = useState<string | undefined>('');
 
   useFocusEffect(
     useCallback(() => {
@@ -114,10 +115,20 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
                     maxWidth: 200,
                   },
                   response => {
-                    logger.debug('Selected media: ', response.assets![0].uri);
+                    logger.debug('Img response: ', response);
+                    if (response.assets) {
+                      setResourcePath(response.assets![0].uri);
+                      logger.debug('Selected media: ', resourcePath);
+                    }
                   },
                 );
               }}
+            />
+            <Image
+              source={{
+                uri: resourcePath,
+              }}
+              style={{ width: 200, height: 200 }}
             />
           </View>
         )}
