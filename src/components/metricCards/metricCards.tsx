@@ -15,7 +15,7 @@ const MetricCards = ({ onPress }: MetricCardsProps) => {
       <View className='items-center justify-center'>
         <TouchableOpacity
           className='justify-center items-center'
-          onPress={() => onPress()}>
+          onPress={onPress}>
           <Text className='text-3xl'>
             {Object.values(progressStore.progress.activityTypes)
               .reduce(

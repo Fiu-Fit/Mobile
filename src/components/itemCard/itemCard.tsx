@@ -82,7 +82,11 @@ const ItemCard = <T extends CardInfo>({
               />
             )}
             {onRemovePress && (
-              <IconButton key={`card-remove-button-${item.id}`} icon={'minus-circle'} onPress={onRemovePress} />
+              <IconButton
+                key={`card-remove-button-${item.id}`}
+                icon={'minus-circle'}
+                onPress={onRemovePress}
+              />
             )}
           </View>
         </Card.Content>

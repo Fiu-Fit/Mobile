@@ -39,6 +39,7 @@ const config = {
     'notification-store',
     'notifications-screen',
     'goal-screen',
+    'home-screen',
   ],
   transportOptions: {
     colors: {
