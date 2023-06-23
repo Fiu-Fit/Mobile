@@ -2282,6 +2282,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-18.0.0.tgz#3f9e5c280fe99279773c0d59575f2873839b5d39"
   integrity sha512-BiYeHTNkEi67MBzMUXTjaTwEjbWTkCHcY/1PYejq9IQDxRoeYnlIPjd9J7GmJrY2nGKT14y0U5Q0aK7YU2ZKxA==
 
+"@react-native-firebase/storage@^18.1.0":
+  version "18.1.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/storage/-/storage-18.1.0.tgz#42a839d2144e37cb0a65e6beeb11dd43b6a0e5ba"
+  integrity sha512-3LqITfn3b6xOFT5XFHomPNZBOm2cJIFK3tmpJPbadV21c9bbordTB3JA1RL4DT6Xx9UvD2R51sPG4DPFmySplw==
+
 "@react-native-google-signin/google-signin@^9.0.2":
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-9.1.0.tgz#7757dabfe6f397ab25f09393f99e816ad7c9b7ff"
@@ -7585,6 +7590,11 @@ react-native-gradle-plugin@^0.71.17:
   version "0.71.19"
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.19.tgz#3379e28341fcd189bc1f4691cefc84c1a4d7d232"
   integrity sha512-1dVk9NwhoyKHCSxcrM6vY6cxmojeATsBobDicX0ZKr7DgUF2cBQRTKsimQFvzH8XhOVXyH8p4HyDSZNIFI8OlQ==
+
+react-native-image-picker@^5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-5.6.0.tgz#e7b6637dc5296cddb486106b711eb4eedabd083d"
+  integrity sha512-QHHb0qw3VXDedllrfS6SjxNG1SubnjUjIR2OH1HVbjv/IRVa3v4fI1MHbQaSNXlGopT9kL9jcnh7tbcX1z74Vg==
 
 react-native-logs@^5.0.1:
   version "5.0.1"

@@ -20,6 +20,12 @@ import {
   NotificationListener,
   requestPermissions,
 } from '../../utils/push-notification-manager';
+import storage from '@react-native-firebase/storage';
+import { utils } from '@react-native-firebase/app';
+import { launchImageLibrary } from 'react-native-image-picker';
+import LoggerFactory from '../../utils/logger-utility';
+
+const logger = LoggerFactory('home-screen');
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
@@ -96,6 +102,22 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
             <Button
               title='Empezar a buscar'
               onPress={() => navigation.navigate('Workouts')}
+            />
+            <Button
+              title='Test file'
+              onPress={() => {
+                launchImageLibrary(
+                  {
+                    mediaType: 'mixed',
+                    includeBase64: false,
+                    maxHeight: 200,
+                    maxWidth: 200,
+                  },
+                  response => {
+                    logger.debug('Selected media: ', response.assets![0].uri);
+                  },
+                );
+              }}
             />
           </View>
         )}
