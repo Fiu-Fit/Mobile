@@ -18,6 +18,7 @@ const iconMap = new Map([
   ['Workouts', 'dumbbell'],
   ['Notifications', 'bell'],
   ['Search', 'account-search'],
+  ['Users', 'account']
 ]);
 
 const tabBarIcon = ({
@@ -50,8 +51,7 @@ const TabNavigator = () => {
       <Tab.Screen name='Goals' component={GoalStack} />
       <Tab.Screen name='Workouts' component={WorkoutStack} />
       <Tab.Screen name='Notifications' component={NotificationStack} />
-      <Tab.Screen name='Search' component={ProfileSearchScreen} />
-      <Tab.Screen name='Users' component={UserStack} />
+      <Tab.Screen name='Search' component={UserStack} />
     </Tab.Navigator>
   );
 };

@@ -10,13 +10,13 @@ import { useAppTheme, useUserContext } from '../../App';
 import { observer } from 'mobx-react';
 import { searchStore } from '../../stores/userSearch.store';
 import ItemCardList from '../../components/itemCardList';
-import { UserSearchNavigationProp } from '../../navigation/navigation-props';
 import { useState } from 'react';
+import { UserSearchScreenNavigationProp } from '../../navigation/navigation-props';
 
 const ProfileSearchScreen = ({
   navigation,
 }: {
-  navigation: UserSearchNavigationProp;
+  navigation: UserSearchScreenNavigationProp;
 }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
@@ -72,7 +72,7 @@ const ProfileSearchScreen = ({
         <ItemCardList
           items={searchStore.cardsInfo ?? []}
           onPress={item => {
-            navigation.getParent()?.navigate('SearchedProfile', {
+            navigation.push('UserProfileScreen', {
               givenUserId: Number(item.id),
               canEdit: false,
             });

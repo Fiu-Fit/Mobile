@@ -159,15 +159,12 @@ const UserProfile = (props: UserProfileProps) => {
             mode='contained'
             style={styles.button}
             onPress={() => {
-              logger.info('Navigation:', props.navigation);
-              props.navigation?.getParent()?.navigate('Users', {
-                screen: 'ChatScreen',
-                params: { user: currentUser },
-              });
+              props.navigation?.push('ChatScreen', { user: currentUser });
             }}>
             Enviar mensaje
           </Button>
-        </>)}
+        </>
+      )}
       {props.myProfile && (
         <>
           <Button

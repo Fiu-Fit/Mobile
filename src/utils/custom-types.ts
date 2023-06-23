@@ -1,5 +1,5 @@
 import { Role } from '../constants/roles';
-import { ProfileNavigationProp } from '../navigation/navigation-props';
+import { UserProfileScreenNavigationProp } from '../navigation/navigation-props';
 import { Moment } from 'moment';
 
 export type InputProps = {
@@ -17,7 +17,7 @@ export interface UserProfileProps {
     name: string;
     params: { givenUserId: number };
   };
-  navigation?: ProfileNavigationProp;
+  navigation?: UserProfileScreenNavigationProp;
   myProfile?: boolean;
 }
 
