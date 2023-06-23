@@ -148,7 +148,13 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
               }}
               videoWidth={1600}
               videoHeight={1600}
-              thumbnail={{ uri: downloadResourcePath + '.jpg' }}
+              thumbnail={{ uri: resourcePath + '.jpg' }}
+            />
+            <Image
+              source={{
+                uri: downloadResourcePath,
+              }}
+              style={{ width: 200, height: 200 }}
             />
           </View>
         )}
