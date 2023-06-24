@@ -6,10 +6,15 @@ import { IWorkoutHeader } from '../../utils/workout-types';
 
 type WorkoutInfoProps = {
   workoutHeader: IWorkoutHeader;
-  onPressModal: () => void;
+  onPressRatingModal: () => void;
+  onPressMultimediaModal: () => void;
 };
 
-const WorkoutInfo = ({ workoutHeader, onPressModal }: WorkoutInfoProps) => {
+const WorkoutInfo = ({
+  workoutHeader,
+  onPressRatingModal,
+  onPressMultimediaModal,
+}: WorkoutInfoProps) => {
   const appTheme = useAppTheme();
   return (
     <View
@@ -23,7 +28,7 @@ const WorkoutInfo = ({ workoutHeader, onPressModal }: WorkoutInfoProps) => {
       <View className='flex-row justify-center'>
         <TouchableOpacity
           className='flex-row justify-center'
-          onPress={onPressModal}>
+          onPress={onPressRatingModal}>
           <Text className='text-xl'>{workoutHeader.averageRating}</Text>
           <Icon
             style={{
@@ -33,6 +38,19 @@ const WorkoutInfo = ({ workoutHeader, onPressModal }: WorkoutInfoProps) => {
               marginLeft: 5,
             }}
             name={'comment-outline'}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          className='flex-row justify-center'
+          onPress={onPressMultimediaModal}>
+          <Icon
+            style={{
+              fontSize: 30,
+              color: appTheme.colors.onSurface,
+              marginRight: 30,
+              marginLeft: 5,
+            }}
+            name={'attachment'}
           />
         </TouchableOpacity>
       </View>
