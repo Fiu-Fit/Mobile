@@ -36,9 +36,9 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
   >(undefined);
   const [selectedUnit, setSelectedUnit] = useState<Unit | undefined>(undefined);
   const workoutExercise = workoutDetailStore.workout.exercises.get(
-    exerciseItem.id,
+    `${exerciseItem.id}`,
   ) ??
-    workoutDetailStore.newExercises.get(exerciseItem.id) ?? {
+    workoutDetailStore.newExercises.get(`${exerciseItem.id}`) ?? {
       _id: workoutDetailStore.newExercises.size.toString(),
       exerciseId: '',
       exercise: {
@@ -83,14 +83,17 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
   return (
     <Portal>
       <Modal
+        key={'edit-exercise-modal'}
         visible={true}
         onDismiss={onDismiss}
         contentContainerStyle={containerStyle}>
         <View className='items-center' style={{ flex: 1 }}>
           <View
+            key={'edit-exercise-modal-image-view'}
             className='items-center mx-10 justify-between'
             style={{ flex: 0.5 }}>
             <Image
+              key={'edit-exercise-modal-image'}
               style={{ width: 300, height: '100%' }}
               source={{
                 uri: 'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
@@ -98,6 +101,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
             />
           </View>
           <ScrollView
+            key={'edit-exercise-modal-scrollview'}
             className='flex-1'
             style={{
               backgroundColor: appTheme.colors.background,
@@ -120,6 +124,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                 unit: (workoutExercise?.unit as Unit) ?? Unit.UNRECOGNIZED,
                 weight: workoutExercise?.weight ?? 0,
               }}
+              key={'edit-exercise-modal-form'}
               onSubmit={function (): void | Promise<any> {
                 onDismiss();
               }}>
@@ -127,21 +132,23 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                 <>
                   <List.Section
                     title='Exercises'
-                    id='exercises-section'
-                    key={'exercises-section'}>
+                    key={'edit-exercise-modal-exercises-section'}>
                     <List.Accordion
-                      id={'exercises-list'}
-                      key={'exercises-list'}
+                      key={'edit-exercise-modal-exercises-list'}
                       title={selectedExercise?.name ?? 'Pick an Exercise'}
-                      left={FolderIcon}
+                      left={props =>
+                        FolderIcon({
+                          key: 'edit-exercise-modal-exercises-icon',
+                          ...props,
+                        })
+                      }
                       onPress={() => {
                         setSelectedExercise(undefined);
                       }}
                       expanded={!selectedExercise}>
                       {exerciseList.map(exercise => (
                         <List.Item
-                          id={`exercises-list-${exercise._id}`}
-                          key={`exercises-list-${exercise._id}-key`}
+                          key={`edit-exercise-modal-exercises-dropdown-${exercise._id}`}
                           title={exercise.name}
                           description={exercise.description}
                           onPress={() => {
@@ -155,24 +162,26 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
 
                   <List.Section
                     title='Unit'
-                    id='unit-section'
-                    key={'unit-section'}>
+                    key={'edit-exercise-modal-units-section'}>
                     <List.Accordion
-                      id='unit-list'
-                      key={'unit-list'}
+                      key={'edit-exercise-modal-units-dropdown'}
                       title={
                         unitMap.get(selectedUnit ?? Unit.UNRECOGNIZED) ??
                         'Pick a Unit'
                       }
-                      left={FolderIcon}
+                      left={props =>
+                        FolderIcon({
+                          key: 'edit-exercise-modal-units-icon',
+                          ...props,
+                        })
+                      }
                       onPress={() => {
                         setSelectedUnit(undefined);
                       }}
                       expanded={selectedUnit === undefined}>
                       {Array.from(unitMap.entries()).map(([key, value]) => (
                         <List.Item
-                          id={`unit-list-${key}`}
-                          key={`unit-list-${key}-key`}
+                          key={`edit-exercise-modal-unit-${key}`}
                           title={value}
                           onPress={() => {
                             values.unit = key;
@@ -183,6 +192,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                     </List.Accordion>
                   </List.Section>
                   <Input
+                    key={'edit-exercise-modal-sets-input'}
                     value={values.sets}
                     placeholder='3'
                     placeholderTextColor={appTheme.colors.background}
@@ -204,6 +214,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                     }}
                   />
                   <Input
+                    key={'edit-exercise-modal-reps-input'}
                     value={values.reps}
                     placeholder='12'
                     placeholderTextColor={appTheme.colors.background}
@@ -222,6 +233,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                     }}
                   />
                   <Input
+                    key={'edit-exercise-modal-weight-input'}
                     value={values.weight ?? 0}
                     placeholder='10.0'
                     placeholderTextColor={appTheme.colors.background}
@@ -241,6 +253,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                     }}
                   />
                   <CustomButton
+                    key={'edit-exercise-modal-save-button'}
                     title='Guardar'
                     onPress={() => {
                       runInAction(() => {

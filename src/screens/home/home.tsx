@@ -1,8 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import { View } from 'react-native';
 import { Text, Divider } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import ItemCardList from '../../components/itemCardList';
-import MetricCard from '../../components/metricCard';
 import HomeHeader from '../../components/homeHeader.tsx';
 import Button from '../../components/button';
 import { workoutStore } from '../../stores/workout.store';
@@ -10,34 +10,66 @@ import { HomeNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 import { useFocusEffect } from '@react-navigation/native';
 import { action } from 'mobx';
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
+import RangeCalendarModal from '../../components/rangeCalendarModal';
+import { progressStore } from '../../stores/progress.store';
+import ExerciseMetricsModal from '../../components/exerciseMetricsModal';
+import MetricPeriodSelector from '../../components/metricPeriodSelector';
+import MetricCards from '../../components/metricCards';
+import {
+  NotificationListener,
+  requestPermissions,
+} from '../../utils/push-notification-manager';
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
+  const [showingCalendarModal, setShowingCalendarModal] = useState(false);
+  const [showingExerciseMetricsModal, setShowingExerciseMetricsModal] =
+    useState(false);
 
   useFocusEffect(
     useCallback(() => {
       action(() => {
-        workoutStore.fetchFavoriteWorkouts(`${currentUser.id}`);
+        workoutStore.fetchFavoriteWorkouts(currentUser.id);
+        progressStore.fetchProgress(currentUser.id);
       })();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
 
+  useEffect(() => {
+    requestPermissions(currentUser);
+    NotificationListener();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <View className='flex-1' style={{ backgroundColor: appTheme.colors.scrim }}>
+      {showingCalendarModal && (
+        <RangeCalendarModal
+          onDismiss={() => {
+            if (progressStore.endDate) {
+              progressStore.fetchProgress(currentUser.id);
+              setShowingCalendarModal(false);
+            }
+          }}
+        />
+      )}
+      {showingExerciseMetricsModal && (
+        <ExerciseMetricsModal
+          onDismiss={() => setShowingExerciseMetricsModal(false)}
+        />
+      )}
       <View style={{ flex: 0.1 }}>
         <HomeHeader navigation={navigation} />
         <Divider className='mt-5' />
       </View>
       <View className='flex-row justify-around' style={{ flex: 0.2 }}>
-        <MetricCard title={'Ejercicios'} value={'120'} />
-        <MetricCard title={'Calorias'} value='12000' />
-        <MetricCard title={'Minutos'} value='400' />
+        <MetricCards onPress={() => setShowingExerciseMetricsModal(true)} />
       </View>
       <View className='justify-center items-center' style={{ flex: 0.1 }}>
-        <Text>Calendario</Text>
+        <MetricPeriodSelector onPress={() => setShowingCalendarModal(true)} />
       </View>
       <View style={{ flex: 0.6, backgroundColor: appTheme.colors.background }}>
         <Divider />

@@ -27,6 +27,7 @@ import { useUserContext } from '../../App';
 // import FingerprintScanner from 'react-native-fingerprint-scanner';
 // import Biometrics from 'react-native-biometrics';
 import TouchID from 'react-native-touch-id';
+import { fetchUserData } from '../../utils/fetch-helpers';
 
 const logger = LoggerFactory('login');
 
@@ -55,11 +56,16 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      const { data } = await axiosClient.post('/users/me');
-      setCurrentUser(data as User);
-      navigation.push('Home');
+      const { response: user, error } = await fetchUserData();
+      if (error) {
+        logger.error('Error while logging in: ', error);
+      } else {
+        logger.debug('user: ', user);
+        setCurrentUser(user as User);
+        navigation.push('Home');
+      }
     } catch (error: any) {
-      logger.error('Error while logging in: ', error.response.data);
+      logger.error('Error while logging in: ', error);
     }
     setLoading(false);
   };
@@ -130,7 +136,6 @@ const LoginScreen = ({
   };
 
   const fingerprintLogin = async () => {
-
     TouchID.authenticate(
       'to demo this react-native component',
       optionalConfigObject,

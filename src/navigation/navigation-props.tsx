@@ -13,15 +13,19 @@ export type AuthStackParamList = {
 };
 
 export type WorkoutStackParamList = {
-  WorkoutScreen: { itemId: string };
+  WorkoutScreen: { itemId: string | number };
   WorkoutsScreen: undefined;
-  UpsertWorkoutScreen: { itemId?: string };
+  UpsertWorkoutScreen: { itemId?: string | number };
 };
 
 export type GoalStackParamList = {
   CreateGoalScreen: undefined;
-  GoalScreen: { itemId: string };
+  GoalScreen: { itemId: number };
   GoalsScreen: undefined;
+};
+
+export type NotificationStackParamList = {
+  NotificationScreen: undefined;
 };
 
 export type TabParamList = {
@@ -32,6 +36,7 @@ export type TabParamList = {
   HomeTab: undefined;
   UserSearch: undefined;
   LoginScreen: undefined;
+  Notification: undefined;
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<
@@ -76,6 +81,16 @@ export type GoalScreenNavigationProp = StackNavigationProp<
   'GoalScreen'
 >;
 
+export type GoalsScreenNavigationProp = StackNavigationProp<
+  GoalStackParamList,
+  'GoalsScreen'
+>;
+
+export type NotificationsScreenNavigationProp = StackNavigationProp<
+  NotificationStackParamList,
+  'NotificationScreen'
+>;
+
 export type WorkoutsNavigationProp = BottomTabNavigationProp<
   TabParamList,
   'Workouts'
@@ -96,6 +111,10 @@ export type HomeNavigationProp = BottomTabNavigationProp<
   'HomeTab'
 >;
 
+export type NotificationsNavigationProp = BottomTabNavigationProp<
+  TabParamList,
+  'Notification'
+>;
 export type UserSearchNavigationProp = BottomTabNavigationProp<
   TabParamList,
   'UserSearch'

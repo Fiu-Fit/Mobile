@@ -8,6 +8,7 @@ const logger = LoggerFactory('workout-store');
 
 export class WorkoutStore {
   workouts: WorkoutProps[] = [];
+  favoriteWorkouts: WorkoutProps[] = [];
   state = 'pending';
   selectedTypeFilter: number | undefined = undefined;
   selectedDifficultyFilter: number | undefined = undefined;
@@ -31,6 +32,7 @@ export class WorkoutStore {
   constructor() {
     makeObservable(this, {
       workouts: observable,
+      favoriteWorkouts: observable,
       selectedTypeFilter: observable,
       selectedDifficultyFilter: observable,
       workoutsCount: computed,
@@ -63,6 +65,7 @@ export class WorkoutStore {
         this.state = 'done';
       });
     } catch (e) {
+      logger.error('Error while fetching all workouts:', e);
       runInAction(() => {
         this.state = 'error';
       });
@@ -91,13 +94,14 @@ export class WorkoutStore {
         this.state = 'done';
       });
     } catch (e) {
+      logger.error('Error while fetching recommended workouts:', e);
       runInAction(() => {
         this.state = 'error';
       });
     }
   }
 
-  *fetchFavoriteWorkouts(userId: string) {
+  *fetchFavoriteWorkouts(userId: number) {
     this.workouts = [];
     this.state = 'pending';
     try {
@@ -108,9 +112,11 @@ export class WorkoutStore {
       logger.debug(`Got data for user: ${userId}`, data);
       runInAction(() => {
         this.workouts = data;
+        this.favoriteWorkouts = data;
         this.state = 'done';
       });
     } catch (e) {
+      logger.error('Error while fetching favorite workouts:', e);
       runInAction(() => {
         this.state = 'error';
       });

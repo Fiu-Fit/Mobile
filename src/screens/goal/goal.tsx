@@ -1,30 +1,40 @@
-import { Image, View } from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { GoalScreenNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
-import { Divider, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { action } from 'mobx';
+import { useCallback, useState } from 'react';
+import { goalStore } from '../../stores/goal.store';
+import { useFocusEffect } from '@react-navigation/native';
+import EditGoalModal from '../../components/editGoalModal';
+import LoggerFactory from '../../utils/logger-utility';
 
-// const goalDetailStore = new GoalDetailStore();
+const logger = LoggerFactory('goal-screen');
 
 type GoalScreenProps = {
   navigation: GoalScreenNavigationProp;
   route: {
     params: {
-      itemId: string;
+      itemId: number;
     };
   };
 };
 
-const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
+const GoalScreen = (props: GoalScreenProps) => {
   const appTheme = useAppTheme();
-  const { itemId } = route.params;
+  const [showingEditGoalModal, setShowingEditGoalModal] = useState(false);
 
-  /*
-  useEffect(() => {
-    flowResult(goalDetailStore.fetchGoal(itemId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);*/
+  useFocusEffect(
+    useCallback(() => {
+      action(() => {
+        logger.debug('Props: ', props);
+        goalStore.fetchGoal(props.route.params.itemId);
+      })();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
 
   return (
     <View
@@ -34,18 +44,20 @@ const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
         <Text
           style={{ color: appTheme.colors.onBackground }}
           className='text-3xl self-center'>
-          Hacer abdominales
+          {goalStore.currentGoal?.title}
         </Text>
         <Text
           className='text-lg'
           style={{ color: appTheme.colors.onSurfaceVariant }}>
-          Descripción
+          {goalStore.currentGoal?.description}
         </Text>
       </View>
       <View
         className='items-center justify-around'
         style={{ backgroundColor: appTheme.colors.backdrop, flex: 0.6 }}>
-        <Text className='text-xl text-red-400'>Pendiente</Text>
+        <Text className='text-xl text-red-400'>
+          {goalStore.currentGoal?.status}
+        </Text>
         <Image
           className='h-20 w-80'
           source={{
@@ -53,14 +65,25 @@ const GoalScreen = ({ navigation, route }: GoalScreenProps) => {
           }}
           resizeMode='cover'
         />
-        <Text className='text-xl'>x 10</Text>
+        <Text className='text-xl'>x {goalStore.currentGoal?.targetValue}</Text>
       </View>
       <View
         className='flex-row items-center justify-around'
         style={{ flex: 0.2 }}>
-        <Icon size={50} name={'delete'} />
-        <Icon size={50} name={'pencil'} />
+        <TouchableOpacity
+          onPress={() => {
+            goalStore.deleteGoal();
+            props.navigation.push('GoalsScreen');
+          }}>
+          <Icon size={50} name={'delete'} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowingEditGoalModal(true)}>
+          <Icon size={50} name={'pencil'} />
+        </TouchableOpacity>
       </View>
+      {showingEditGoalModal && (
+        <EditGoalModal onDismiss={() => setShowingEditGoalModal(false)} />
+      )}
     </View>
   );
 };

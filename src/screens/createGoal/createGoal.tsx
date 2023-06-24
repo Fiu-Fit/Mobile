@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { Text, SafeAreaView, ScrollView, View } from 'react-native';
 import Input from '../../components/input';
 import Button from '../../components/button';
@@ -6,14 +6,18 @@ import Loader from '../../components/loader';
 import LoggerFactory from '../../utils/logger-utility';
 import { CreateGoalScreenNavigationProp } from '../../navigation/navigation-props';
 import { Formik, FormikErrors } from 'formik';
-import { ExerciseStore } from '../../stores/exercise.store';
 import { GoalInputProps } from '../../utils/goal-types';
-import { useAppTheme } from '../../App';
+import { useAppTheme, useUserContext } from '../../App';
 import ItemCardList from '../../components/itemCardList/itemCardList';
 import { Divider } from 'react-native-paper';
-import { CardInfo } from '../../utils/custom-types';
+import { CardInfo, DateState } from '../../utils/custom-types';
+import { exerciseStore } from '../../stores/exercise.store';
+import { flowResult } from 'mobx';
+import { goalStore } from '../../stores/goal.store';
+import { observer } from 'mobx-react';
+import moment from 'moment';
+import CalendarModal from '../../components/calendarModal';
 
-const execisesStore = new ExerciseStore();
 const logger = LoggerFactory('create-goal');
 
 const CreateGoalScreen = ({
@@ -21,19 +25,26 @@ const CreateGoalScreen = ({
 }: {
   navigation: CreateGoalScreenNavigationProp;
 }) => {
-  const [loading, setLoading] = React.useState(false);
-  const [showExerciseList, setShowExerciseList] = React.useState(true);
-  const [selectedExercise, setSelectedExercise] = React.useState<
+  const appTheme = useAppTheme();
+  const { currentUser } = useUserContext();
+  const [loading, setLoading] = useState(false);
+  const [showExerciseList, setShowExerciseList] = useState(true);
+  const [selectedExercise, setSelectedExercise] = useState<
     CardInfo | undefined
   >();
+  const [showingCalendarModal, setShowingCalendarModal] = useState(false);
+  const [date, setDate] = useState<DateState>({
+    selectedDate: undefined,
+    displayedDate: moment(),
+  });
 
-  const appTheme = useAppTheme();
   const handleNewGoal = async (inputs: GoalInputProps) => {
     setLoading(true);
     try {
-      logger.info('Inputs: ', inputs);
-      logger.info('Exercise ID: ', selectedExercise?.id);
-      //const response = await axiosClient.post('/goals', inputs);
+      inputs.exerciseId = selectedExercise?.id;
+      inputs.deadline = date.selectedDate;
+      console.log(inputs.deadline);
+      flowResult(goalStore.createGoal(inputs, currentUser.id));
       navigation.push('GoalsScreen');
     } catch (error) {
       logger.error(error as string);
@@ -41,9 +52,20 @@ const CreateGoalScreen = ({
     setLoading(false);
   };
 
+  useEffect(() => {
+    flowResult(exerciseStore.fetchExercises());
+  }, []);
+
   return (
     <SafeAreaView className='flex-1 bg-black'>
       {loading && <Loader />}
+      {showingCalendarModal && (
+        <CalendarModal
+          onDismiss={() => setShowingCalendarModal(false)}
+          setDate={newDate => setDate(newDate)}
+          date={date}
+        />
+      )}
       <View className='flex-none pt-20 items-center justify-center'>
         <Text className='text-5xl font-white text-white'>Crear Meta</Text>
       </View>
@@ -58,7 +80,7 @@ const CreateGoalScreen = ({
       {showExerciseList ? (
         <View className='mt-5'>
           <ItemCardList
-            items={execisesStore.cardsInfo}
+            items={exerciseStore.cardsInfo}
             onPress={item => {
               setSelectedExercise(item);
               setShowExerciseList(false);
@@ -75,7 +97,6 @@ const CreateGoalScreen = ({
                   description: '',
                   exerciseId: '',
                   targetValue: '',
-                  deadline: '',
                 }}
                 validate={values => {
                   let errors: FormikErrors<GoalInputProps> = {};
@@ -133,17 +154,21 @@ const CreateGoalScreen = ({
                       onFocus={() => {
                         errors.targetValue = '';
                       }}
+                      keyboardType='numeric'
                     />
-                    <Input
-                      value={values.deadline}
-                      placeholder='Ingresa un deadline (opcional)'
-                      placeholderTextColor={appTheme.colors.onPrimary}
-                      onChangeText={handleChange('deadline')}
-                      labelText='Deadline (opcional)'
-                      iconName='flag-checkered'
-                      error={errors.deadline}
-                      password={false}
-                    />
+                    <View className='my-5'>
+                      <Button
+                        title={
+                          date.selectedDate
+                            ? date.selectedDate.toLocaleDateString()
+                            : 'Seleccionar un deadline (opcional)'
+                        }
+                        onPress={() => setShowingCalendarModal(true)}
+                        buttonColor={appTheme.colors.backdrop}
+                        textColor={appTheme.colors.onBackground}
+                      />
+                    </View>
+
                     <Button title='Crear' onPress={handleSubmit} />
                   </>
                 )}
@@ -156,4 +181,4 @@ const CreateGoalScreen = ({
   );
 };
 
-export default CreateGoalScreen;
+export default observer(CreateGoalScreen);
