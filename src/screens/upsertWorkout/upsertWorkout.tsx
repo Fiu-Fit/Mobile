@@ -1,4 +1,4 @@
-import { ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useAppTheme, useUserContext } from '../../App';
 import { UpsertWorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import React, { useEffect } from 'react';
@@ -19,6 +19,10 @@ import { FieldArray, Formik } from 'formik';
 import ItemCard from '../../components/itemCard';
 import EditExerciseModal from '../../components/editExerciseModal';
 import { workoutStore } from '../../stores/workout.store';
+import storage from '@react-native-firebase/storage';
+import { launchImageLibrary } from 'react-native-image-picker';
+import Button from '../../components/button';
+import { Text } from 'react-native-paper';
 
 type UpsertWorkoutScreenProps = {
   navigation: UpsertWorkoutScreenNavigationProp;
@@ -43,18 +47,18 @@ const UpsertWorkoutScreen = ({
     ExerciseCardInfo | undefined
   >(undefined);
   const { itemId } = route.params;
+  const [selectedMultimedia, setSelectedMultimedia] = React.useState<string[]>(
+    [],
+  );
 
   useEffect(() => {
     flowResult(workoutDetailStore.fetchWorkout(itemId ?? ''));
+    setSelectedMultimedia(workoutDetailStore.workout.multimedia);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleCompletedWorkout = () => {
-    // Handle metric endpoint
-    navigation.goBack();
-  };
-
   const handleSubmitWorkout = async () => {
+    workoutDetailStore.workout.multimedia = selectedMultimedia;
     workoutDetailStore.upsertStoredWorkout();
     workoutStore.fetchWorkouts();
     navigation.goBack();
@@ -210,6 +214,43 @@ const UpsertWorkoutScreen = ({
                 </>
               )}
             />
+            <View className='my-5 items-center justify-center'>
+              <Button
+                title='Adjuntar multimedia'
+                onPress={async () => {
+                  launchImageLibrary(
+                    {
+                      mediaType: 'mixed',
+                      includeBase64: false,
+                      maxHeight: 200,
+                      maxWidth: 200,
+                    },
+                    async response => {
+                      if (response.assets) {
+                        logger.debug(
+                          'Selected multimedia: ',
+                          response.assets![0].uri,
+                        );
+                        setSelectedMultimedia([
+                          ...Array.from(selectedMultimedia),
+                          response.assets![0].uri!,
+                        ]);
+                      }
+                    },
+                  );
+                }}
+              />
+              <View>
+                {selectedMultimedia.map(filename => (
+                  <Text
+                    className='text-l'
+                    style={{ color: appTheme.colors.outline }}>
+                    {filename.slice(59)}
+                  </Text>
+                ))}
+              </View>
+            </View>
+
             <CustomButton
               key={'upsertWorkout-send-workout-button'}
               title='Enviar'

@@ -18,6 +18,7 @@ import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
 import { workoutStore } from './workout.store';
 import { goalStore } from './goal.store';
+import storage from '@react-native-firebase/storage';
 
 const logger = LoggerFactory('workout-detail-store');
 
@@ -33,6 +34,7 @@ const defaultWorkout = {
   exercises: new Map<string, WorkoutExercise>(),
   athleteIds: [],
   authorId: 0,
+  multimedia: [],
 };
 
 export class WorkoutDetailStore {
@@ -206,6 +208,18 @@ export class WorkoutDetailStore {
     this.workout.exercises.delete(exerciseId) ||
       this.newExercises.delete(exerciseId);
   }
+
+  async uploadResources() {
+    logger.debug('Uploading files: ', this.workout.multimedia);
+    this.workout.multimedia.map(async uri => {
+      const lastSlashIndex = uri.lastIndexOf('/');
+      const fileName = uri.substring(lastSlashIndex + 1);
+      await storage()
+        .ref(`/workouts/${this.workout._id}/${fileName}`)
+        .putFile(uri);
+    });
+    logger.debug('Files uploaded!');
+  }
   *upsertStoredWorkout() {
     const newExercisesList = Array.from(this.newExercises.values()).map(
       newExercise => {
@@ -233,6 +247,7 @@ export class WorkoutDetailStore {
           });
       this.workout._id = data._id;
       logger.info('Upsert workout Data: ', data);
+      this.uploadResources();
     } catch (err) {
       logger.error(
         'Error while trying to upsert workout:',
