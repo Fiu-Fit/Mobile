@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import {
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -23,8 +24,9 @@ import { Role } from '../../constants/roles';
 import { DateTime } from 'luxon';
 import FiuFitLogo from '../../components/dumb/fiuFitLogo';
 import { useUserContext } from '../../App';
-import FingerprintScanner from 'react-native-fingerprint-scanner';
-import Biometrics from 'react-native-biometrics';
+// import FingerprintScanner from 'react-native-fingerprint-scanner';
+// import Biometrics from 'react-native-biometrics';
+import TouchID from 'react-native-touch-id';
 
 const logger = LoggerFactory('login');
 
@@ -115,21 +117,31 @@ const LoginScreen = ({
     }
   };
 
-  const fingerprintLogin = async () => {
-    try {
-      await FingerprintScanner.authenticate({ description: 'Scan your fingerprint to login.' });
-  
-      const response = await axiosClient.post('/auth/biometric-login');
-  
-      // Once authenticated, navigate to the home screen
-      navigation.push('Home');
-    } catch (error) {
-      // Fingerprint authentication failed or was canceled
-      // Handle it accordingly, such as showing an error message or falling back to password login
-      console.log('Fingerprint authentication failed or was canceled:', error);
-    }
+  const optionalConfigObject = {
+    title: 'Authentication Required', // Android
+    imageColor: '#e00606', // Android
+    imageErrorColor: '#ff0000', // Android
+    sensorDescription: 'Touch sensor', // Android
+    sensorErrorDescription: 'Failed', // Android
+    cancelText: 'Cancel', // Android
+    fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+    unifiedErrors: false, // use unified error messages (default false)
+    passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
   };
-  
+
+  const fingerprintLogin = async () => {
+
+    TouchID.authenticate(
+      'to demo this react-native component',
+      optionalConfigObject,
+    )
+      .then(success => {
+        Alert.alert('ando: ', success);
+      })
+      .catch(error => {
+        Alert.alert('no ando: ', error);
+      });
+  };
 
   return (
     <ScrollView contentInsetAdjustmentBehavior='automatic'>
@@ -222,10 +234,7 @@ const LoginScreen = ({
             title='Olvidaste tu contraseña?'
           />
 
-          <Button
-            title='Biometric Login'
-            onPress={fingerprintLogin}
-          />
+          <Button title='Biometric Login' onPress={fingerprintLogin} />
         </View>
       </SafeAreaView>
     </ScrollView>
