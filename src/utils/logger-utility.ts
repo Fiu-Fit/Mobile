@@ -40,6 +40,7 @@ const config = {
     'notifications-screen',
     'goal-screen',
     'home-screen',
+    'boimetrics-helper',
   ],
   transportOptions: {
     colors: {
