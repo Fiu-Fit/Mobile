@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import {
-  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -24,10 +23,13 @@ import { Role } from '../../constants/roles';
 import { DateTime } from 'luxon';
 import FiuFitLogo from '../../components/dumb/fiuFitLogo';
 import { useUserContext } from '../../App';
-// import FingerprintScanner from 'react-native-fingerprint-scanner';
-// import Biometrics from 'react-native-biometrics';
-import TouchID from 'react-native-touch-id';
 import { fetchUserData } from '../../utils/fetch-helpers';
+import {
+  authUserFingerprint,
+  deviceSupportsTouchId,
+  getBiometricLoginCredentials,
+  setBiometricLoginCredentials,
+} from '../../utils/biometrics-helpers';
 
 const logger = LoggerFactory('login');
 
@@ -46,6 +48,34 @@ const LoginScreen = ({
     }
   };
 
+  deviceSupportsTouchId().then(async isSuported => {
+    try {
+      if (!isSuported) {
+        return;
+      }
+      const biometricCredentials = await getBiometricLoginCredentials();
+      if (biometricCredentials === null) {
+        return;
+      }
+      const { response: user, error } = await authUserFingerprint(
+        'Biometric Login',
+        saveToken,
+      );
+      if (error) {
+        logger.error('Error while logging in: ', error);
+      } else {
+        logger.debug('user: ', user);
+        setCurrentUser(user as User);
+        navigation.push('Home');
+      }
+    } catch (error) {
+      logger.error(
+        'error while logging in with biometric credentials: ',
+        error,
+      );
+    }
+  });
+
   const handleSignIn = async (inputs: InputProps) => {
     setLoading(true);
     const { email, password } = inputs;
@@ -56,6 +86,14 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
+      const biometricCredentials = await getBiometricLoginCredentials();
+      if (
+        biometricCredentials === null ||
+        biometricCredentials.email !== email ||
+        biometricCredentials.password !== password
+      ) {
+        setBiometricLoginCredentials(email, password);
+      }
       const { response: user, error } = await fetchUserData();
       if (error) {
         logger.error('Error while logging in: ', error);
@@ -121,31 +159,6 @@ const LoginScreen = ({
     } catch (error: any) {
       logger.error('Error while logging in with google: ', error.response.data);
     }
-  };
-
-  const optionalConfigObject = {
-    title: 'Authentication Required', // Android
-    imageColor: '#e00606', // Android
-    imageErrorColor: '#ff0000', // Android
-    sensorDescription: 'Touch sensor', // Android
-    sensorErrorDescription: 'Failed', // Android
-    cancelText: 'Cancel', // Android
-    fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
-    unifiedErrors: false, // use unified error messages (default false)
-    passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
-  };
-
-  const fingerprintLogin = async () => {
-    TouchID.authenticate(
-      'to demo this react-native component',
-      optionalConfigObject,
-    )
-      .then(success => {
-        Alert.alert('ando: ', success);
-      })
-      .catch(error => {
-        Alert.alert('no ando: ', error);
-      });
   };
 
   return (
@@ -238,8 +251,6 @@ const LoginScreen = ({
             onPress={() => navigation.push('PasswordRecoveryScreen')}
             title='Olvidaste tu contraseña?'
           />
-
-          <Button title='Biometric Login' onPress={fingerprintLogin} />
         </View>
       </SafeAreaView>
     </ScrollView>
