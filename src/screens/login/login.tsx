@@ -53,14 +53,14 @@ const LoginScreen = ({
       if (!isSuported) {
         return;
       }
-      const biometricCredentials = await getBiometricLoginCredentials();
-      if (biometricCredentials === null) {
-        return;
-      }
-      const { response: user, error } = await authUserFingerprint(
+      const biometricCredentials = await authUserFingerprint(
         'Biometric Login',
         saveToken,
       );
+      if (!biometricCredentials) {
+        return;
+      }
+      const { response: user, error } = biometricCredentials;
       if (error) {
         logger.error('Error while logging in: ', error);
       } else {
