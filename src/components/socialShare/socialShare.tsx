@@ -14,11 +14,13 @@ const SocialShare = ({ content }: { content: ShareTypedContent }) => {
   const onShare = async () => {
     try {
       const { title, message } = content;
-      const customMessage = `Terminé mi meta en FiuFit! ${title}: ${message}`;
+      const customTitle = `Meta ${title} cumplida en FiuFit!`;
+      const customMessage = `Terminé mi meta ${title} en FiuFit, ${message}!`;
       logger.info('Sharing content:', customMessage);
       Share.open({
         message: customMessage,
-        title,
+        title: customTitle,
+        subject: customTitle,
         failOnCancel: false,
         showAppsToView: true,
         isNewTask: true,
