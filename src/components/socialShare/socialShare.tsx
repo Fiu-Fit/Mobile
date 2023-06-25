@@ -12,8 +12,8 @@ export type ShareTypedContent = {
 const SocialShare = ({ content }: { content: ShareTypedContent }) => {
   const onShare = async () => {
     try {
-      const { title, message, type } = content;
-      const customMessage = `Check out this ${type} from FiuFit! ${title}: ${message}`;
+      const { title, message } = content;
+      const customMessage = `Terminé mi meta en FiuFit! ${title}: ${message}`;
       logger.info('Sharing content:', customMessage);
       const result = await Share.share({
         title,
