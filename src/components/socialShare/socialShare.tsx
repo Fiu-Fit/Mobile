@@ -36,7 +36,7 @@ const SocialShare = ({ content }: { content: ShareTypedContent }) => {
     }
   };
   return (
-    <View style={{ marginTop: 50 }}>
+    <View>
       <Button onPress={onShare} title='Share' />
     </View>
   );
