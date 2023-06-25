@@ -36,11 +36,9 @@ export class NotificationStore {
       } else {
         const messageNotification = notification as MessageNotificationProps;
         return {
-          id: messageNotification.messageId,
+          id: messageNotification.senderId,
           title: MESSAGE_NOTIFICATION_TITLE,
-          content: MESSAGE_NOTIFICATION_CONTENT(
-            messageNotification.senderName ?? '',
-          ),
+          content: MESSAGE_NOTIFICATION_CONTENT(messageNotification.senderName),
           imageUrl:
             'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
           onPressScreen: 'ChatScreen',
