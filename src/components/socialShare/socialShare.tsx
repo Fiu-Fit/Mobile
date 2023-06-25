@@ -17,7 +17,7 @@ const SocialShare = ({ content }: { content: ShareTypedContent }) => {
       const customTitle = `Meta ${title} cumplida en FiuFit!`;
       const customMessage = `Terminé mi meta ${title} en FiuFit, ${message}!`;
       logger.info('Sharing content:', customMessage);
-      Share.open({
+      await Share.open({
         message: customMessage,
         title: customTitle,
         subject: customTitle,
