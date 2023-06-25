@@ -41,6 +41,7 @@ const config = {
     'notifications-screen',
     'goal-screen',
     'home-screen',
+    'chat-screen',
   ],
   transportOptions: {
     colors: {

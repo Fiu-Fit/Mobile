@@ -8,6 +8,9 @@ import { notificationStore } from '../../stores/notification.store';
 import { observer } from 'mobx-react';
 import LoggerFactory from '../../utils/logger-utility';
 import * as RootNavigation from '../../navigation/root-navigator';
+import { NotificationType } from '../../utils/notification-types';
+import { User } from '../../utils/custom-types';
+import { axiosClient } from '../../utils/constants';
 
 const logger = LoggerFactory('notifications-screen');
 
@@ -24,12 +27,23 @@ const NotificactionsScreen = ({
       <View style={{ flex: 0.9 }}>
         <ItemCardList
           items={notificationStore.notificationCardsInfo}
-          onPress={item => {
+          onPress={async item => {
             logger.debug('Goal id in notification screen: ', item.id);
-            RootNavigation.navigate('Goals', {
-              screen: 'GoalScreen',
-              params: { itemId: item.id },
-            });
+            if (item.type === NotificationType.GoalCompleted.toString()) {
+              logger.debug('Goal notification');
+              RootNavigation.navigate('Goals', {
+                screen: 'GoalScreen',
+                params: { itemId: Number(item.id) },
+              });
+            } else {
+              logger.debug('Message notification');
+              const user = await axiosClient.get<User>(`/users/${item.id}`);
+              logger.debug('Got user: ', user.data);
+              RootNavigation.navigate('Search', {
+                screen: 'ChatScreen',
+                params: { user: user.data },
+              });
+            }
           }}
         />
       </View>

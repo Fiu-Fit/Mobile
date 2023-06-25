@@ -9,6 +9,7 @@ import {
   MESSAGE_NOTIFICATION_TITLE,
   GoalNotificationProps,
   MessageNotificationProps,
+  NotificationType,
 } from '../utils/notification-types';
 
 const logger = LoggerFactory('notification-store');
@@ -29,6 +30,7 @@ export class NotificationStore {
           id: goalNotification.goalId,
           title: GOAL_NOTIFICATION_TITLE,
           content: GOAL_NOTIFICATION_CONTENT(goalNotification.goalTitle),
+          type: NotificationType.GoalCompleted.toString(),
           imageUrl:
             'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
           onPressScreen: 'GoalScreen',
@@ -39,6 +41,7 @@ export class NotificationStore {
           id: messageNotification.senderId,
           title: MESSAGE_NOTIFICATION_TITLE,
           content: MESSAGE_NOTIFICATION_CONTENT(messageNotification.senderName),
+          type: NotificationType.NewMessage.toString(),
           imageUrl:
             'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
           onPressScreen: 'ChatScreen',
@@ -81,20 +84,9 @@ export class NotificationStore {
     this.notifications = [];
     this.state = 'pending';
     try {
-      const filters = {
-        userId: userId,
-      };
-
-      const params = {
-        filters: JSON.stringify(filters),
-      };
       logger.debug('Getting message notifications...');
       const { data } = yield axiosClient.get<MessageNotificationProps[]>(
-        '/notifications/message',
-        {
-          params,
-        },
-      );
+        `/notifications/messages?userId=${userId}`);
       logger.debug('Got data: ', data);
       runInAction(() => {
         this.notifications = data;

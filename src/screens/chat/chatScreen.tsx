@@ -16,14 +16,17 @@ type ChatScreenProps = {
   };
 };
 
-const ChatScreen = async ({
+const ChatScreen = ({
   route: {
     params: { user },
   },
 }: ChatScreenProps) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
 
+  logger.debug('User is: ', user);
+
   const { currentUser } = useUserContext();
+  logger.info('entering chat screen');
 
   const getAllMessages = () => {
     const uid = user.uid;
@@ -57,6 +60,7 @@ const ChatScreen = async ({
   }, []);
 
   const onSend = async (newMessages: IMessage[]) => {
+    logger.info('ending message...');
     const [msg] = newMessages;
 
     const uid = user.uid;
@@ -77,16 +81,21 @@ const ChatScreen = async ({
       .doc(chatId)
       .collection('messages')
       .add({ ...userMsg, createdAt: firestore.FieldValue.serverTimestamp() });
+
+    logger.info('message sent: ', msg);
+    await createMessageNotification();
   };
 
-  // create message notification
-  const notification = await axiosClient.post('/notifications/messages', {
-    userId: user.id,
-    senderId: currentUser.uid,
-    senderName: currentUser.firstName + ' ' + currentUser.lastName,
-  });
+  const createMessageNotification = async () => {
+    logger.debug('Creating message notification..');
+    const notification = await axiosClient.post('/notifications/messages', {
+      userId: user.id,
+      senderId: currentUser.id,
+      senderName: currentUser.firstName + ' ' + currentUser.lastName,
+    });
 
-  logger.info('message notification: ', notification.data);
+    logger.info('message notification: ', notification.data);
+  };
 
   return (
     <GiftedChat
