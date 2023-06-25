@@ -28,6 +28,7 @@ const config = {
     'create-goal',
     'password-recovery',
     'home-header',
+    'social-share',
     'progress-store',
     'push-notification-manager',
     'goal-store',
