@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { useUserContext } from '../../App';
 import { User } from '../../utils/custom-types';
+import { axiosClient } from '../../utils/constants';
+import LoggerFactory from '../../utils/logger-utility';
+
+const logger = LoggerFactory('chat-screen');
 
 type ChatScreenProps = {
   route: {
@@ -12,7 +16,7 @@ type ChatScreenProps = {
   };
 };
 
-const ChatScreen = ({
+const ChatScreen = async ({
   route: {
     params: { user },
   },
@@ -74,6 +78,15 @@ const ChatScreen = ({
       .collection('messages')
       .add({ ...userMsg, createdAt: firestore.FieldValue.serverTimestamp() });
   };
+
+  // create message notification
+  const notification = await axiosClient.post('/notifications/messages', {
+    userId: user.id,
+    senderId: currentUser.uid,
+    senderName: currentUser.firstName + ' ' + currentUser.lastName,
+  });
+
+  logger.info('message notification: ', notification.data);
 
   return (
     <GiftedChat
