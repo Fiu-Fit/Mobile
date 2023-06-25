@@ -75,13 +75,6 @@ const ItemCard = <T extends CardInfo>({
               style={{ color: appTheme.colors.onSurfaceVariant }}>
               {item.content}
             </Paragraph>
-            <SocialShare
-              content={{
-                title: item.title,
-                message: item.content,
-                type: item.type,
-              }}
-            />
             {onEditPress && (
               <IconButton
                 key={`card-edit-buton-${item.id}`}
