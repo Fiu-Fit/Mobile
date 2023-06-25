@@ -1,4 +1,5 @@
-import { Share, View, Button, Alert } from 'react-native';
+import { View, Button } from 'react-native';
+import Share from 'react-native-share';
 import LoggerFactory from '../../utils/logger-utility';
 
 const logger = LoggerFactory('social-share');
@@ -15,24 +16,15 @@ const SocialShare = ({ content }: { content: ShareTypedContent }) => {
       const { title, message } = content;
       const customMessage = `Terminé mi meta en FiuFit! ${title}: ${message}`;
       logger.info('Sharing content:', customMessage);
-      const result = await Share.share({
-        title,
+      Share.open({
         message: customMessage,
+        title,
+        failOnCancel: false,
+        showAppsToView: true,
+        isNewTask: true,
       });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-          logger.info(`Shared with ${result.activityType}: `, result);
-        } else {
-          // shared
-          logger.info('Shared with result: ', result);
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-        logger.info('Shared dismissed: ', result);
-      }
-    } catch (error: any) {
-      Alert.alert(error.message);
+    } catch (err: any) {
+      logger.error('Error while sharing:', { err });
     }
   };
   return (
