@@ -16,7 +16,11 @@ const ItemCardList = <T extends CardInfo>({
       <FlatList
         data={items}
         renderItem={({ item }) => (
-          <ItemCard item={item} onPress={() => onPress(item)} />
+          <ItemCard
+            key={`itemCard-${item.id}`}
+            item={item}
+            onPress={() => onPress(item)}
+          />
         )}
       />
     </>

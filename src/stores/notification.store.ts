@@ -1,16 +1,20 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
-import {
-  MessageNotificationProps,
-  GoalNotificationProps,
-} from '../utils/notification-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
 import { CardInfo } from '../utils/custom-types';
+import {
+  GOAL_NOTIFICATION_CONTENT,
+  GOAL_NOTIFICATION_TITLE,
+  MESSAGE_NOTIFICATION_CONTENT,
+  MESSAGE_NOTIFICATION_TITLE,
+  GoalNotificationProps,
+  MessageNotificationProps,
+} from '../utils/notification-types';
 
 const logger = LoggerFactory('notification-store');
 
 export class NotificationStore {
-  notifications: MessageNotificationProps[] | GoalNotificationProps[] = [];
+  notifications: (GoalNotificationProps | MessageNotificationProps)[] = [];
   state = 'pending';
 
   get notificationCount() {
@@ -18,15 +22,31 @@ export class NotificationStore {
   }
 
   get notificationCardsInfo(): CardInfo[] {
-    return this.notifications.map(
-      (notification): CardInfo => ({
-        id: notification._id,
-        title: notification.name,
-        content: notification.description,
-        imageUrl:
-          'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
-      }),
-    );
+    return this.notifications.map((notification): CardInfo => {
+      if ('goalTitle' in notification) {
+        const goalNotification = notification as GoalNotificationProps;
+        return {
+          id: goalNotification.goalId,
+          title: GOAL_NOTIFICATION_TITLE,
+          content: GOAL_NOTIFICATION_CONTENT(goalNotification.goalTitle),
+          imageUrl:
+            'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
+          onPressScreen: 'GoalScreen',
+        };
+      } else {
+        const messageNotification = notification as MessageNotificationProps;
+        return {
+          id: messageNotification.messageId,
+          title: MESSAGE_NOTIFICATION_TITLE,
+          content: MESSAGE_NOTIFICATION_CONTENT(
+            messageNotification.senderName ?? '',
+          ),
+          imageUrl:
+            'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
+          onPressScreen: 'ChatScreen',
+        };
+      }
+    });
   }
 
   constructor() {
@@ -43,19 +63,9 @@ export class NotificationStore {
     this.notifications = [];
     this.state = 'pending';
     try {
-      const filters = {
-        userId: userId,
-      };
-
-      const params = {
-        filters: JSON.stringify(filters),
-      };
       logger.debug('Getting goal notifications...');
       const { data } = yield axiosClient.get<GoalNotificationProps[]>(
-        '/notifications/goals',
-        {
-          params,
-        },
+        `/notifications/goals?userId=${userId}`,
       );
       logger.debug('Got data: ', data);
       runInAction(() => {

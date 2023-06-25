@@ -48,3 +48,5 @@ export class ExerciseStore {
     }
   }
 }
+
+export const exerciseStore = new ExerciseStore();

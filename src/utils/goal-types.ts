@@ -1,24 +1,24 @@
 export enum GoalStatus {
-  INPROGRESS = 'En progreso',
-  COMPLETED = 'Completado',
-  COMPLETEDLATE = 'Completado tarde',
+  INPROGRESS = 'InProgress',
+  COMPLETED = 'Completed',
+  COMPLETEDLATE = 'CompletedLate',
 }
 
 export type GoalsProps = {
-  id: string;
+  id: number;
   title: string;
   description: string;
   userId: number;
   targetValue: number;
-  deadline: Date;
+  deadline?: Date;
   exerciseId: string;
-  status: string;
+  status: GoalStatus;
 };
 
 export type GoalInputProps = {
   title: string;
   description: string;
-  exerciseId: string;
+  exerciseId: string | number | undefined;
   targetValue: string;
-  deadline?: string;
+  deadline?: Date;
 };

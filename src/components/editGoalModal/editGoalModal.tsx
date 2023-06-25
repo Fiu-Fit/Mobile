@@ -3,35 +3,29 @@ import { useAppTheme } from '../../App';
 import { Modal, Portal } from 'react-native-paper';
 import Button from '../../components/button';
 import React from 'react';
-import LoggerFactory from '../../utils/logger-utility';
 import { Formik, FormikErrors } from 'formik';
-import {
-  ErrorCommentInputProps,
-  CommentInputProps,
-} from '../../utils/custom-types';
+import { ErrorEditGoalProps } from '../../utils/custom-types';
 import Input from '../input';
 import Loader from '../loader';
+import { goalStore } from '../../stores/goal.store';
+import LoggerFactory from '../../utils/logger-utility';
+import { observer } from 'mobx-react';
 
-const logger = LoggerFactory('register');
-const MAX_COMMENT_LENGTH = 10;
+const MAX_DESCRIPTION_LENGTH = 100;
+const logger = LoggerFactory('edit-goal-modal');
 
-type WorkoutCommentModalProps = {
-  visible: boolean;
+type EditGoalModalProps = {
   onDismiss: () => void;
 };
 
-const WorkoutCommentModal = ({
-  visible,
-  onDismiss,
-}: WorkoutCommentModalProps) => {
+const EditGoalModal = ({ onDismiss }: EditGoalModalProps) => {
   const appTheme = useAppTheme();
   const [loading, setLoading] = React.useState(false);
 
-  const handleSubmitComment = async (inputs: CommentInputProps) => {
+  const handleEditGoal = async (newDescription: string) => {
     setLoading(true);
     try {
-      logger.info('Inputs: ', inputs);
-      //const response = await axiosClient.post('/workouts/comments', inputs);
+      goalStore.editGoal(newDescription);
       onDismiss();
     } catch (error) {
       logger.error(error as string);
@@ -50,7 +44,7 @@ const WorkoutCommentModal = ({
   return (
     <Portal>
       <Modal
-        visible={visible}
+        visible={true}
         onDismiss={onDismiss}
         contentContainerStyle={containerStyle}>
         <SafeAreaView className='flex-1 bg-black' style={{ borderRadius: 20 }}>
@@ -58,34 +52,34 @@ const WorkoutCommentModal = ({
             {loading && <Loader />}
             <Formik
               initialValues={{
-                comment: '',
+                description: '',
               }}
               validate={values => {
-                let errors: FormikErrors<ErrorCommentInputProps> = {};
-                if (!values.comment) {
-                  errors.comment = 'Por favor realiza un comentario';
-                } else if (values.comment.length > MAX_COMMENT_LENGTH) {
-                  errors.comment = 'Ingresa un comentario más corto';
+                let errors: FormikErrors<ErrorEditGoalProps> = {};
+                if (!values.description) {
+                  errors.description = 'Por favor realiza una descripción';
+                } else if (values.description.length > MAX_DESCRIPTION_LENGTH) {
+                  errors.description = 'Ingresa una descripción más corta';
                 }
                 return errors;
               }}
               onSubmit={values => {
-                handleSubmitComment(values);
+                handleEditGoal(values.description);
               }}>
               {({ values, errors, handleChange, handleSubmit }) => (
                 <>
                   <Input
-                    value={values.comment}
-                    placeholder='Ingresa un comentario'
+                    value={values.description}
+                    placeholder='Ingresa una descripción'
                     placeholderTextColor={appTheme.colors.background}
-                    onChangeText={handleChange('comment')}
+                    onChangeText={handleChange('description')}
                     multiline={true}
-                    labelText='Comentario'
+                    labelText='Descripción'
                     iconName='comment-outline'
-                    error={errors.comment}
+                    error={errors.description}
                     password={false}
                     onFocus={() => {
-                      errors.comment = '';
+                      errors.description = '';
                     }}
                   />
                   <Button title='Enviar' onPress={handleSubmit} />
@@ -99,4 +93,4 @@ const WorkoutCommentModal = ({
   );
 };
 
-export default WorkoutCommentModal;
+export default observer(EditGoalModal);

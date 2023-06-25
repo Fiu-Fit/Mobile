@@ -5,7 +5,6 @@ import {
   computed,
   runInAction,
 } from 'mobx';
-// import { observer } from 'mobx-react-lite';
 import debounce from 'lodash.debounce';
 import { axiosClient } from '../utils/constants';
 import axios, { CancelTokenSource } from 'axios';

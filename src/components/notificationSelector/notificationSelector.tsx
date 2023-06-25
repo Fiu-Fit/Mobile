@@ -1,35 +1,36 @@
 import { TouchableOpacity, View } from 'react-native';
 import { useAppTheme, useUserContext } from '../../App';
 import { Text } from 'react-native-paper';
-import { workoutStore } from '../../stores/workout.store';
+import { notificationStore } from '../../stores/notification.store';
 import { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { action } from 'mobx';
-import LoggerFactory from '../../utils/logger-utility';
+import { observer } from 'mobx-react';
 
-const logger = LoggerFactory('workout-selector');
-
-const WorkoutsSelector = () => {
+const NotificationSelector = () => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
-  const [showingAllWorkouts, setShowingAllWorkouts] = useState(false);
+  const [isShowingGoalNotifications, setShowingGoalNotifications] =
+    useState(false);
 
   useFocusEffect(
     useCallback(() => {
       action(() => {
-        onChangeShowingAllWorkouts(showingAllWorkouts);
+        onChangeShowingGoalNotifications(isShowingGoalNotifications);
       })();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
 
-  const onChangeShowingAllWorkouts = (isShowingAllWorkouts: boolean) => {
-    if (isShowingAllWorkouts) {
-      workoutStore.fetchWorkouts();
+  const onChangeShowingGoalNotifications = (
+    isShowingGoalNotifications: boolean,
+  ) => {
+    if (isShowingGoalNotifications) {
+      notificationStore.fetchGoalNotifications(currentUser.id);
     } else {
-      workoutStore.fetchRecommendedWorkouts(currentUser.interests);
+      notificationStore.fetchMessageNotifications(currentUser.id);
     }
-    setShowingAllWorkouts(isShowingAllWorkouts);
+    setShowingGoalNotifications(isShowingGoalNotifications);
   };
 
   return (
@@ -41,27 +42,27 @@ const WorkoutsSelector = () => {
         style={{
           flex: 0.5,
           borderBottomWidth: 2,
-          borderBottomColor: showingAllWorkouts
+          borderBottomColor: isShowingGoalNotifications
             ? 'transparent'
             : appTheme.colors.primary,
         }}
-        onPress={() => onChangeShowingAllWorkouts(false)}>
-        <Text>Recomendados</Text>
+        onPress={() => onChangeShowingGoalNotifications(false)}>
+        <Text>Mensajes</Text>
       </TouchableOpacity>
       <TouchableOpacity
         className='justify-center items-center h-full'
         style={{
           flex: 0.5,
           borderBottomWidth: 2,
-          borderBottomColor: showingAllWorkouts
+          borderBottomColor: isShowingGoalNotifications
             ? appTheme.colors.primary
             : 'transparent',
         }}
-        onPress={() => onChangeShowingAllWorkouts(true)}>
-        <Text>Todos</Text>
+        onPress={() => onChangeShowingGoalNotifications(true)}>
+        <Text>Metas</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default WorkoutsSelector;
+export default observer(NotificationSelector);
