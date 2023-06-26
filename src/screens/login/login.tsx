@@ -39,7 +39,7 @@ const LoginScreen = ({
   navigation: LoginScreenNavigationProp;
 }) => {
   const [loading, setLoading] = React.useState(false);
-  const { setCurrentUser } = useUserContext();
+  const { biometricLoginState, setCurrentUser } = useUserContext();
   const saveToken = async (token: string) => {
     try {
       await AsyncStorage.setItem('UserToken', token);
@@ -47,34 +47,6 @@ const LoginScreen = ({
       logger.error('Error while saving user token: ', error);
     }
   };
-
-  deviceSupportsTouchId().then(async isSuported => {
-    try {
-      if (!isSuported) {
-        return;
-      }
-      const biometricCredentials = await authUserFingerprint(
-        'Biometric Login',
-        saveToken,
-      );
-      if (!biometricCredentials) {
-        return;
-      }
-      const { response: user, error } = biometricCredentials;
-      if (error) {
-        logger.error('Error while logging in: ', error);
-      } else {
-        logger.debug('user: ', user);
-        setCurrentUser(user as User);
-        navigation.push('Home');
-      }
-    } catch (error) {
-      logger.error(
-        'error while logging in with biometric credentials: ',
-        error,
-      );
-    }
-  });
 
   const handleSignIn = async (inputs: InputProps) => {
     setLoading(true);
@@ -109,12 +81,41 @@ const LoginScreen = ({
   };
 
   useEffect(() => {
+    const loginWithBiometricCredentials = async () => {
+      try {
+        if (!((await deviceSupportsTouchId()) && biometricLoginState)) {
+          return;
+        }
+        const biometricCredentials = await authUserFingerprint(
+          'Biometric Login',
+          saveToken,
+        );
+        if (!biometricCredentials) {
+          return;
+        }
+        const { response: user, error } = biometricCredentials;
+        if (error) {
+          logger.error('Error while logging in: ', error);
+        } else {
+          logger.debug('user: ', user);
+          setCurrentUser(user as User);
+          navigation.push('Home');
+        }
+      } catch (error) {
+        logger.error(
+          'error while logging in with biometric credentials: ',
+          error,
+        );
+      }
+    };
     GoogleSignin.configure({
       scopes: ['email'],
       webClientId:
         '649565336432-aftssi22monbq7e2egkrufg8uou85kac.apps.googleusercontent.com',
       offlineAccess: true,
     });
+    loginWithBiometricCredentials();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getDateDiff = (date1: DateTime, date2: DateTime): number => {
