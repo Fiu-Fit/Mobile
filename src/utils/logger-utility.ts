@@ -40,6 +40,8 @@ const config = {
     'notifications-screen',
     'goal-screen',
     'home-screen',
+    'workout-media-medial',
+    'workout-info',
   ],
   transportOptions: {
     colors: {

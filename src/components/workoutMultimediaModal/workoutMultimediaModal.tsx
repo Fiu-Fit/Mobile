@@ -1,7 +1,11 @@
-import { Text, View } from 'react-native';
+import { Text, View, Image, FlatList, Animated } from 'react-native';
 import { useAppTheme } from '../../App';
 import { Modal, Portal } from 'react-native-paper';
 import { observer } from 'mobx-react';
+import { workoutDetailStore } from '../../stores/workoutDetail.store';
+import VideoPlayer from 'react-native-video-player';
+import Pagination from '../pagination';
+import { useRef } from 'react';
 
 type ModalProps = {
   onDismiss: () => void;
@@ -14,8 +18,26 @@ const WorkoutMultimediaModal = ({ onDismiss }: ModalProps) => {
     backgroundColor: appTheme.colors.surface,
     marginHorizontal: '5%',
     width: '90%',
-    height: '40%',
+    height: '60%',
     borderRadius: 20,
+  };
+
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const handleOnScroll = event => {
+    Animated.event(
+      [
+        {
+          nativeEvent: {
+            contentOffset: {
+              x: scrollX,
+            },
+          },
+        },
+      ],
+      {
+        useNativeDriver: false,
+      },
+    )(event);
   };
 
   return (
@@ -24,34 +46,55 @@ const WorkoutMultimediaModal = ({ onDismiss }: ModalProps) => {
         visible={true}
         onDismiss={onDismiss}
         contentContainerStyle={containerStyle}>
-        <View className='items-center justify-around' style={{ flex: 1 }}>
-          <Text className='text-xl'>Contenido Multimedia</Text>
-          {/*
-            <Button
-              title='Descargar file'
-              onPress={async () => {
-                const download = await storage()
-                  .ref('/download/test.mp4')
-                  .getDownloadURL();
-
-                setDowloadResourcePath(download);
-                logger.debug('Get downloaded file: ', downloadResourcePath);
+        <View className='items-center justify-center' style={{ flex: 1 }}>
+          <Text className='text-xl mt-4' style={{ flex: 0.3 }}>
+            Contenido Multimedia
+          </Text>
+          <View
+            style={{ flex: 0.7 }}
+            className='mb-10 mx-5 items-center justify-center'>
+            <FlatList
+              data={workoutDetailStore.downloads}
+              renderItem={({ item, index }) => (
+                <View className='items-center justify-center'>
+                  {item.slice(item.lastIndexOf('.')) === '.jpg' ? (
+                    <Image
+                      key={index}
+                      source={{
+                        uri: item,
+                      }}
+                      style={{ width: 300, height: 300 }}
+                    />
+                  ) : (
+                    <VideoPlayer
+                      key={index}
+                      video={{
+                        uri: item,
+                      }}
+                      videoWidth={400}
+                      videoHeight={450}
+                    />
+                  )}
+                </View>
+              )}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              pagingEnabled
+              snapToAlignment='center'
+              onScroll={handleOnScroll}
+              ItemSeparatorComponent={() => {
+                return (
+                  <View
+                    style={{
+                      height: '100%',
+                      width: 100,
+                    }}
+                  />
+                );
               }}
             />
-            <VideoPlayer
-              video={{
-                uri: downloadResourcePath,
-              }}
-              videoWidth={1600}
-              videoHeight={1600}
-              thumbnail={{ uri: resourcePath + '.jpg' }}
-            />
-            <Image
-              source={{
-                uri: downloadResourcePath,
-              }}
-              style={{ width: 200, height: 200 }}
-            /> */}
+            <Pagination data={workoutDetailStore.downloads} scrollX={scrollX} />
+          </View>
         </View>
       </Modal>
     </Portal>

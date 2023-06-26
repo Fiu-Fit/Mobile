@@ -18,8 +18,6 @@ import Input from '../../components/input';
 import { FieldArray, Formik } from 'formik';
 import ItemCard from '../../components/itemCard';
 import EditExerciseModal from '../../components/editExerciseModal';
-import { workoutStore } from '../../stores/workout.store';
-import storage from '@react-native-firebase/storage';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Button from '../../components/button';
 import { Text } from 'react-native-paper';
@@ -33,7 +31,10 @@ type UpsertWorkoutScreenProps = {
   };
 };
 
-type UpsertWorkoutFormValue = Omit<WorkoutProps, 'rating' | 'athleteIds'>;
+type UpsertWorkoutFormValue = Omit<
+  WorkoutProps,
+  'rating' | 'athleteIds' | 'multimedia'
+>;
 
 const logger = LoggerFactory('upsert-workout-screen');
 
@@ -58,10 +59,14 @@ const UpsertWorkoutScreen = ({
   }, []);
 
   const handleSubmitWorkout = async () => {
-    workoutDetailStore.workout.multimedia = selectedMultimedia;
-    workoutDetailStore.upsertStoredWorkout();
-    workoutStore.fetchWorkouts();
-    navigation.goBack();
+    runInAction(() => {
+      workoutDetailStore.workout.multimedia = selectedMultimedia;
+    });
+    await workoutDetailStore.upsertStoredWorkout();
+    navigation.navigate('Workouts', {
+      screen: 'WorkoutScreen',
+      params: { itemId: workoutDetailStore.workout._id },
+    })
   };
 
   return workoutDetailStore.state === 'pending' ? (
@@ -241,9 +246,10 @@ const UpsertWorkoutScreen = ({
                 }}
               />
               <View>
-                {selectedMultimedia.map(filename => (
+                {selectedMultimedia.map((filename, index) => (
                   <Text
                     className='text-l'
+                    key={index}
                     style={{ color: appTheme.colors.outline }}>
                     {filename.slice(59)}
                   </Text>
