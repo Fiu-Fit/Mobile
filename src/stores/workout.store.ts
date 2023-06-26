@@ -51,7 +51,6 @@ export class WorkoutStore {
       const filters = {
         category: this.selectedTypeFilter,
         difficulty: this.selectedDifficultyFilter,
-        isBlocked: false,
       };
 
       const params = {
