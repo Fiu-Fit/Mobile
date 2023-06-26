@@ -10,6 +10,8 @@ import { goalStore } from '../../stores/goal.store';
 import { useFocusEffect } from '@react-navigation/native';
 import EditGoalModal from '../../components/editGoalModal';
 import LoggerFactory from '../../utils/logger-utility';
+import SocialShare from '../../components/socialShare';
+import { GoalStatus } from '../../utils/goal-types';
 
 const logger = LoggerFactory('goal-screen');
 
@@ -51,6 +53,16 @@ const GoalScreen = (props: GoalScreenProps) => {
           style={{ color: appTheme.colors.onSurfaceVariant }}>
           {goalStore.currentGoal?.description}
         </Text>
+        {(goalStore.currentGoal?.status === GoalStatus.COMPLETED ||
+          goalStore.currentGoal?.status === GoalStatus.COMPLETEDLATE) && (
+          <SocialShare
+            content={{
+              title: goalStore.currentGoal?.title,
+              message: goalStore.currentGoal?.description,
+              type: 'goal',
+            }}
+          />
+        )}
       </View>
       <View
         className='items-center justify-around'

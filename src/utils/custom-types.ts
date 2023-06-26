@@ -39,6 +39,7 @@ export interface CardInfo {
   id: string | number;
   title: string;
   content: string;
+  type: string;
   imageUrl: string;
   onPressScreen?: string;
 }
@@ -76,8 +77,9 @@ export type ProgressProps = {
   traveledDistance: number;
   timeSpent: number;
   burntCalories: number;
-  activityTypes: { [category: number]: number };
+  numberOfExercises: number;
 };
+
 export type DateState = {
   selectedDate: Date | undefined;
   displayedDate: Moment;
