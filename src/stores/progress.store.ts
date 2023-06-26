@@ -11,35 +11,24 @@ const defaultProgress = {
   traveledDistance: 0,
   timeSpent: 0,
   burntCalories: 0,
-  activityTypes: {},
+  numberOfExercises: 0,
 };
 
 export class ProgressStore {
   progress: ProgressProps = defaultProgress;
   startDate: Date | undefined = undefined;
-  endDate: Date | undefined = undefined;
+  endDate: Date | undefined = new Date();
   displayedDate: Moment = moment();
+  selectedTypeFilter: number | undefined = undefined;
   state = 'pending';
-
-  get exerciseMetricsCardsInfo(): CardInfo[] {
-    return Object.entries(this.progress.activityTypes).map(
-      ([key, value]): CardInfo => ({
-        id: key,
-        title: categoryMap.get(Number(key)) || 'Desconocido',
-        content: value.toString(),
-        imageUrl:
-          'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
-      }),
-    );
-  }
 
   constructor() {
     makeObservable(this, {
       progress: observable,
       startDate: observable,
       endDate: observable,
+      selectedTypeFilter: observable,
       displayedDate: observable,
-      exerciseMetricsCardsInfo: computed,
       fetchProgress: flow,
     });
   }
@@ -49,21 +38,21 @@ export class ProgressStore {
     try {
       const startDateStr = this.startDate?.toISOString();
       const endDateStr = this.endDate?.toISOString();
+
       logger.debug(`Getting progress from ${startDateStr} to ${endDateStr}...`);
 
+      const filters: string = this.selectedTypeFilter !== undefined
+        ? `category=${this.selectedTypeFilter}&start=${startDateStr}&end=${endDateStr}`
+        : `start=${startDateStr}&end=${endDateStr}`;
+
       const { data } = yield axiosClient.get<ProgressProps[]>(
-        `/progress/user-progress/${userId}`,
-        {
-          params: {
-            start: startDateStr,
-            end: endDateStr,
-          },
-        },
+        `/progress/user-progress/${userId}?${filters}`,
       );
 
       logger.debug(
-        `Got data for progress from :  ${startDateStr} to ${endDateStr}... ${data}`,
+        `Got data for progress from :  ${startDateStr} to ${endDateStr}...`,
       );
+      logger.debug(data);
       runInAction(() => {
         this.progress = data;
         this.state = 'done';
