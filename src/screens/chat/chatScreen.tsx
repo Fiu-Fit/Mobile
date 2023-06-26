@@ -60,7 +60,6 @@ const ChatScreen = ({
   }, []);
 
   const onSend = async (newMessages: IMessage[]) => {
-    logger.info('ending message...');
     const [msg] = newMessages;
 
     const uid = user.uid;

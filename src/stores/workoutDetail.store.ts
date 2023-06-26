@@ -18,6 +18,7 @@ import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
 import { workoutStore } from './workout.store';
 import { goalStore } from './goal.store';
+import storage from '@react-native-firebase/storage';
 
 const logger = LoggerFactory('workout-detail-store');
 
@@ -33,12 +34,14 @@ const defaultWorkout = {
   exercises: new Map<string, WorkoutExercise>(),
   athleteIds: [],
   authorId: 0,
+  multimedia: [],
 };
 
 export class WorkoutDetailStore {
   workout: WorkoutProps = defaultWorkout;
   newExercises = new Map<string, WorkoutExercise>();
   ratings: WorkoutRatingProps[] = [];
+  downloads: string[] = [];
   state = 'pending';
 
   get workoutHeader(): IWorkoutHeader {
@@ -89,6 +92,7 @@ export class WorkoutDetailStore {
       state: observable,
       newExercises: observable,
       ratings: observable,
+      downloads: observable,
       exerciseCards: computed,
       workoutHeader: computed,
       workoutComments: computed,
@@ -105,6 +109,31 @@ export class WorkoutDetailStore {
     });
   }
 
+  async downloadResources() {
+    logger.debug('Downloading files: ', this.workout.multimedia);
+    this.downloads = [];
+    this.workout.multimedia.map(async uri => {
+      const lastSlashIndex = uri.lastIndexOf('/');
+      const fileName = uri.substring(lastSlashIndex + 1);
+      const download = await storage()
+        .ref(`/workouts/${this.workout._id}/${fileName}`)
+        .getDownloadURL();
+      this.downloads.push(download + uri.slice(uri.lastIndexOf('.')));
+    });
+  }
+
+  async uploadResources() {
+    logger.debug('Uploading files: ', this.workout.multimedia);
+    this.workout.multimedia.map(async uri => {
+      const lastSlashIndex = uri.lastIndexOf('/');
+      const fileName = uri.substring(lastSlashIndex + 1);
+      await storage()
+        .ref(`/workouts/${this.workout._id}/${fileName}`)
+        .putFile(uri);
+    });
+    logger.debug('Files uploaded!');
+  }
+
   *fetchWorkout(workoutId: string) {
     this.state = 'pending';
     if (!workoutId || workoutId === '') {
@@ -118,7 +147,7 @@ export class WorkoutDetailStore {
         `/workouts/${workoutId}`,
       );
       logger.debug('Got data: ', data);
-      runInAction(() => {
+      runInAction(async () => {
         const {
           exercises: exercisesList,
         }: {
@@ -138,8 +167,10 @@ export class WorkoutDetailStore {
           return map;
         }, this.workout.exercises);
         this.newExercises = new Map<string, WorkoutExercise>();
-        this.fetchWorkoutRatings();
+        await this.fetchWorkoutRatings();
         logger.debug('Loaded Workout: ', this.workout);
+        await this.downloadResources();
+
         this.state = 'done';
       });
     } catch (e) {
@@ -207,6 +238,7 @@ export class WorkoutDetailStore {
     this.workout.exercises.delete(exerciseId) ||
       this.newExercises.delete(exerciseId);
   }
+
   *upsertStoredWorkout() {
     const newExercisesList = Array.from(this.newExercises.values()).map(
       newExercise => {
@@ -234,6 +266,7 @@ export class WorkoutDetailStore {
           });
       this.workout._id = data._id;
       logger.info('Upsert workout Data: ', data);
+      this.uploadResources();
     } catch (err) {
       logger.error(
         'Error while trying to upsert workout:',

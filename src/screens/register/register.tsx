@@ -59,6 +59,7 @@ const RegisterScreen = ({
               email: '',
               password: '',
               role: 'Athlete',
+              phoneNumber: '',
             }}
             validate={values => {
               let errors: FormikErrors<ErrorInputProps> = {};
@@ -80,6 +81,10 @@ const RegisterScreen = ({
                 errors.password = 'Please input password';
               } else if (values.password.length < MIN_PASS_LENGTH) {
                 errors.password = 'Min password length is 5';
+              }
+
+              if (!values.phoneNumber) {
+                errors.phoneNumber = 'Please input phone number';
               }
               return errors;
             }}
@@ -128,6 +133,21 @@ const RegisterScreen = ({
                   }}
                   keyboardType='numeric'
                 />
+
+                <Input
+                  value={values.phoneNumber}
+                  placeholder='Enter your phone number'
+                  placeholderTextColor={COLORS.darkGrey}
+                  onChangeText={handleChange('phoneNumber')}
+                  labelText='Phone number'
+                  iconName='phone-outline'
+                  error={errors.phoneNumber}
+                  password={false}
+                  onFocus={() => {
+                    errors.phoneNumber = '';
+                  }}
+                />
+
                 <Input
                   value={values.email}
                   placeholder='Enter your email'
@@ -142,6 +162,7 @@ const RegisterScreen = ({
                   }}
                   keyboardType='email-address'
                 />
+
                 <Input
                   value={values.password}
                   placeholder='Enter your password'
@@ -155,6 +176,7 @@ const RegisterScreen = ({
                     errors.password = '';
                   }}
                 />
+
                 <Button title='Register' onPress={handleSubmit} />
               </>
             )}

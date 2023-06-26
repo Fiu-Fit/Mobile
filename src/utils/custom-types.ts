@@ -9,6 +9,7 @@ export type InputProps = {
   password: string;
   bodyWeight: number;
   role: string;
+  phoneNumber: string;
 };
 
 export interface UserProfileProps {
@@ -77,8 +78,9 @@ export type ProgressProps = {
   traveledDistance: number;
   timeSpent: number;
   burntCalories: number;
-  activityTypes: { [category: number]: number };
+  numberOfExercises: number;
 };
+
 export type DateState = {
   selectedDate: Date | undefined;
   displayedDate: Moment;

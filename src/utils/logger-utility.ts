@@ -28,7 +28,6 @@ const config = {
     'create-goal',
     'password-recovery',
     'home-header',
-    'social-share',
     'progress-store',
     'push-notification-manager',
     'goal-store',
@@ -42,6 +41,8 @@ const config = {
     'goal-screen',
     'home-screen',
     'chat-screen',
+    'workout-media-medial',
+    'workout-info',
   ],
   transportOptions: {
     colors: {

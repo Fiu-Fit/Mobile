@@ -3,10 +3,10 @@ import { Formik, FormikErrors } from 'formik';
 import Input from '../../components/input';
 import COLORS from '../../constants/colors';
 import Button from '../../components/button';
-import { firebase } from '@react-native-firebase/auth';
 import { PasswordRecoveryScreenNavigationProp } from '../../navigation/navigation-props';
 import FiuFitLogo from '../../components/dumb/fiuFitLogo';
 import LoggerFactory from '../../utils/logger-utility';
+import { axiosClient } from '../../utils/constants';
 
 const logger = LoggerFactory('password-recovery');
 
@@ -21,7 +21,9 @@ const PasswordRecoveryScreen = ({
 }) => {
   const handlePasswordRecovery = async (inputs: InputProps) => {
     try {
-      await firebase.auth().sendPasswordResetEmail(inputs.email);
+      await axiosClient.post('/auth/password-recovery', {
+        email: inputs.email,
+      });
     } catch (err) {
       logger.error('Error while trying to send password recovery email: ', err);
     }

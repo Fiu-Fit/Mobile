@@ -9,23 +9,24 @@ import { workoutStore } from '../../stores/workout.store';
 import { HomeNavigationProp } from '../../navigation/navigation-props';
 import { observer } from 'mobx-react';
 import { useFocusEffect } from '@react-navigation/native';
-import { action } from 'mobx';
+import { action, runInAction } from 'mobx';
 import { useCallback, useState, useEffect } from 'react';
 import RangeCalendarModal from '../../components/rangeCalendarModal';
 import { progressStore } from '../../stores/progress.store';
-import ExerciseMetricsModal from '../../components/exerciseMetricsModal';
-import MetricPeriodSelector from '../../components/metricPeriodSelector';
 import MetricCards from '../../components/metricCards';
 import {
   NotificationListener,
   requestPermissions,
 } from '../../utils/push-notification-manager';
+import WorkoutFilterModal from '../../components/workoutFilterModal';
+import { categoryMap, workoutCategoryOptions } from '../../utils/workout-types';
+import WorkoutFilter from '../../components/workoutFilter';
 
 const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
   const [showingCalendarModal, setShowingCalendarModal] = useState(false);
-  const [showingExerciseMetricsModal, setShowingExerciseMetricsModal] =
+  const [workoutTypeFilterModalVisible, setWorkoutTypeFilterModalVisible] =
     useState(false);
 
   useFocusEffect(
@@ -56,9 +57,16 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
           }}
         />
       )}
-      {showingExerciseMetricsModal && (
-        <ExerciseMetricsModal
-          onDismiss={() => setShowingExerciseMetricsModal(false)}
+      {workoutTypeFilterModalVisible && (
+        <WorkoutFilterModal
+          onDismiss={() => setWorkoutTypeFilterModalVisible(false)}
+          onSelect={(filter: number | undefined) => {
+            runInAction(() => {
+              progressStore.selectedTypeFilter = filter;
+            });
+            progressStore.fetchProgress(currentUser.id);
+          }}
+          items={workoutCategoryOptions}
         />
       )}
       <View style={{ flex: 0.1 }}>
@@ -66,10 +74,28 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
         <Divider className='mt-5' />
       </View>
       <View className='flex-row justify-around' style={{ flex: 0.2 }}>
-        <MetricCards onPress={() => setShowingExerciseMetricsModal(true)} />
+        <MetricCards />
       </View>
       <View className='justify-center items-center' style={{ flex: 0.1 }}>
-        <MetricPeriodSelector onPress={() => setShowingCalendarModal(true)} />
+        <WorkoutFilter
+          iconName='calendar'
+          text='Periodo de tiempo'
+          selectedFilter={
+            progressStore.startDate === undefined
+              ? 'Elegir'
+              : `${progressStore.startDate!.toLocaleDateString()} - ${progressStore.endDate!.toLocaleDateString()}`
+          }
+          onPress={() => setShowingCalendarModal(true)}
+        />
+        <WorkoutFilter
+          iconName='dumbbell'
+          text='Tipo de entrenamiento'
+          selectedFilter={
+            categoryMap.get(progressStore.selectedTypeFilter ?? -1) ||
+            'Desconocido'
+          }
+          onPress={() => setWorkoutTypeFilterModalVisible(true)}
+        />
       </View>
       <View style={{ flex: 0.6, backgroundColor: appTheme.colors.background }}>
         <Divider />

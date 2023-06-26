@@ -87,6 +87,7 @@ export class GoalStore {
         userId,
         deadline: deadline ? deadline : undefined,
         status: GoalStatus.INPROGRESS,
+        multimedia: [],
       });
       logger.debug('Got data: ', data);
       this.fetchGoals(userId);
