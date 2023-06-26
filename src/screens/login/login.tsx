@@ -46,19 +46,24 @@ const LoginScreen = ({
     setLoading(true);
     const { email, password } = inputs;
     try {
-      const response = await axiosClient.post('/auth/login', {
+      const { data } = await axiosClient.post('/auth/login', {
         email,
         password,
       });
-      logger.debug('Saving token: ', response.data.token);
-      await saveToken(response.data.token);
+      logger.debug('Saving token: ', data.token);
+      await saveToken(data.token);
       const { response: user, error } = await fetchUserData();
       if (error) {
         logger.error('Error while logging in: ', error);
       } else {
         logger.debug('user: ', user);
         setCurrentUser(user as User);
-        navigation.push('Home');
+
+        if (data.needsConfirmation) {
+          navigation.push('ConfirmRegistrationScreen');
+        } else {
+          navigation.push('Home');
+        }
       }
     } catch (error: any) {
       logger.error('Error while logging in: ', error);
@@ -145,6 +150,7 @@ const LoginScreen = ({
               password: '',
               role: 'Athlete',
               bodyWeight: 0,
+              phoneNumber: '',
             }}
             validate={values => {
               let errors: FormikErrors<ErrorInputProps> = {};

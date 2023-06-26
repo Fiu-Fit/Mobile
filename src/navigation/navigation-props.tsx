@@ -10,6 +10,7 @@ export type AuthStackParamList = {
   InterestsScreen: { name: string };
   PasswordRecoveryScreen: undefined;
   Home: undefined;
+  ConfirmRegistrationScreen: undefined;
 };
 
 export type WorkoutStackParamList = {
@@ -52,6 +53,11 @@ export type PasswordRecoveryScreenNavigationProp = StackNavigationProp<
 export type RegisterScreenNavigationProp = StackNavigationProp<
   AuthStackParamList,
   'RegisterScreen'
+>;
+
+export type ConfirmRegistrationScreenNavigationProp = StackNavigationProp<
+  AuthStackParamList,
+  'ConfirmRegistrationScreen'
 >;
 
 export type InterestsScreenNavigationProp = StackNavigationProp<
