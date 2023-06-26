@@ -7,6 +7,7 @@ import GoalStack from './goal-navigator';
 import NotificationStack from './notification-navigator';
 import ProfileSearchScreen from '../screens/profileSearchScreen';
 import MyProfileScreen from '../screens/myProfile';
+import UserStack from './user-navigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,6 +18,7 @@ const iconMap = new Map([
   ['Workouts', 'dumbbell'],
   ['Notifications', 'bell'],
   ['Search', 'account-search'],
+  ['Users', 'account']
 ]);
 
 const tabBarIcon = ({
@@ -49,7 +51,7 @@ const TabNavigator = () => {
       <Tab.Screen name='Goals' component={GoalStack} />
       <Tab.Screen name='Workouts' component={WorkoutStack} />
       <Tab.Screen name='Notifications' component={NotificationStack} />
-      <Tab.Screen name='Search' component={ProfileSearchScreen} />
+      <Tab.Screen name='Search' component={UserStack} />
     </Tab.Navigator>
   );
 };

@@ -1,13 +1,9 @@
-import { useUserContext } from '../../App';
-import { ProfileNavigationProp } from '../../navigation/navigation-props';
+import { UserProfileScreenNavigationProp } from '../../navigation/navigation-props';
 import UserProfile from '../../components/userProfile';
-import LoggerFactory from '../../utils/logger-utility';
-import { searchStore } from '../../stores/userSearch.store';
 import { observer } from 'mobx-react';
 
-const logger = LoggerFactory('user-profile-screen');
 type UserProfileScreenProps = {
-  navigation: ProfileNavigationProp;
+  navigation: UserProfileScreenNavigationProp;
   route: {
     params: {
       givenUserId: number;
@@ -15,6 +11,7 @@ type UserProfileScreenProps = {
     };
   };
 };
+
 const UserProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
   const { givenUserId, canEdit } = route.params;
   return (
