@@ -1,32 +1,14 @@
 import MetricCard from '../metricCard';
 import { progressStore } from '../../stores/progress.store';
 import { observer } from 'mobx-react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Text } from 'react-native-paper';
-import { View } from 'react-native';
 
-interface MetricCardsProps {
-  onPress: () => void;
-}
-
-const MetricCards = ({ onPress }: MetricCardsProps) => {
+const MetricCards = () => {
   return (
     <>
-      <View className='items-center justify-center'>
-        <TouchableOpacity
-          className='justify-center items-center'
-          onPress={onPress}>
-          <Text className='text-3xl'>
-            {Object.values(progressStore.progress.activityTypes)
-              .reduce(
-                (accumulator, currentValue) => accumulator + currentValue,
-                0,
-              )
-              .toString()}
-          </Text>
-          <Text>Ejercicios</Text>
-        </TouchableOpacity>
-      </View>
+      <MetricCard
+        title={'Ejercicios'}
+        value={progressStore.progress.numberOfExercises.toString()}
+      />
 
       <MetricCard
         title={'Calorias'}
