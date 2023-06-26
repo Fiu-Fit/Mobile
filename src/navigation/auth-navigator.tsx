@@ -25,7 +25,7 @@ const AuthStack = () => {
       <Stack.Screen name='EditProfile' component={EditProfile} />
       <Stack.Screen name='SearchedProfile' component={UserProfile} />
       <Stack.Screen
-        name='SearchedProfile'
+        name='ConfirmRegistrationScreen'
         component={ConfirmRegistrationScreen}
       />
     </Stack.Navigator>
