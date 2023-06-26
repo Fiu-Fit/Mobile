@@ -8,10 +8,11 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { Role } from './constants/roles';
 import { User } from './utils/custom-types';
 import { navigationRef } from './navigation/root-navigator';
+import { getBiometricLoginPermission } from './utils/biometrics-helpers';
 
 if (
   !new (class {
@@ -132,9 +133,13 @@ const defaultUserObject = {
 
 const UserContext = createContext<{
   currentUser: User;
+  biometricLoginState: boolean;
+  setBiometricLoginState: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
 }>({
   currentUser: defaultUserObject as unknown as User,
+  biometricLoginState: false,
+  setBiometricLoginState: () => {},
   setCurrentUser: () => {},
 });
 export const useUserContext = () => useContext(UserContext);
@@ -143,6 +148,8 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState<User>(
     defaultUserObject as unknown as User,
   );
+  const [biometricLoginState, setBiometricLoginState] =
+    useState<boolean>(false);
   const colorScheme = useColorScheme();
   const { DarkTheme } = adaptNavigationTheme({
     reactNavigationDark: DefaultTheme,
@@ -153,6 +160,14 @@ const App = () => {
   const paperTheme =
     colorScheme === 'dark' ? customDarkTheme : customLightTheme;
   const rNavTheme = colorScheme === 'dark' ? DarkTheme : LightTheme;
+  useEffect(() => {
+    const getBiometricLoginState = async () => {
+      setBiometricLoginState(
+        (await getBiometricLoginPermission()) === 'enabled',
+      );
+    };
+    getBiometricLoginState();
+  }, []);
   return (
     <PaperProvider theme={paperTheme}>
       <NavigationContainer ref={navigationRef} theme={rNavTheme}>
@@ -160,6 +175,8 @@ const App = () => {
           value={{
             currentUser,
             setCurrentUser,
+            biometricLoginState,
+            setBiometricLoginState,
           }}>
           <AuthStack />
         </UserContext.Provider>
