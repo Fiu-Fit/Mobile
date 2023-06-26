@@ -40,6 +40,14 @@ export const deviceSupportsTouchId = async () => {
   return biometryType === 'TouchID';
 };
 
+export const setBiometricLoginPermission = async (newPermission: string) => {
+  await AsyncStorage.setItem('BiometricPermission', newPermission);
+};
+
+export const getBiometricLoginPermission = async () => {
+  return await AsyncStorage.getItem('BiometricPermission');
+};
+
 export const setBiometricLoginCredentials = async (
   email: string,
   password: string,
