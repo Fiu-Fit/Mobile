@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
 import VideoPlayer from 'react-native-video-player';
 import Pagination from '../pagination';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 type ModalProps = {
   onDismiss: () => void;
@@ -13,6 +13,8 @@ type ModalProps = {
 
 const WorkoutMultimediaModal = ({ onDismiss }: ModalProps) => {
   const appTheme = useAppTheme();
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const [index, setIndex] = useState(0);
 
   const containerStyle = {
     backgroundColor: appTheme.colors.surface,
@@ -22,7 +24,6 @@ const WorkoutMultimediaModal = ({ onDismiss }: ModalProps) => {
     borderRadius: 20,
   };
 
-  const scrollX = useRef(new Animated.Value(0)).current;
   const handleOnScroll = event => {
     Animated.event(
       [
@@ -39,6 +40,14 @@ const WorkoutMultimediaModal = ({ onDismiss }: ModalProps) => {
       },
     )(event);
   };
+
+  const handleOnViewableItemsChanged = useRef(({ viewableItems }) => {
+    setIndex(viewableItems[0].index);
+  }).current;
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  }).current;
 
   return (
     <Portal>
@@ -82,6 +91,8 @@ const WorkoutMultimediaModal = ({ onDismiss }: ModalProps) => {
               pagingEnabled
               snapToAlignment='center'
               onScroll={handleOnScroll}
+              onViewableItemsChanged={handleOnViewableItemsChanged}
+              viewabilityConfig={viewabilityConfig}
               ItemSeparatorComponent={() => {
                 return (
                   <View
@@ -93,7 +104,11 @@ const WorkoutMultimediaModal = ({ onDismiss }: ModalProps) => {
                 );
               }}
             />
-            <Pagination data={workoutDetailStore.downloads} scrollX={scrollX} />
+            <Pagination
+              data={workoutDetailStore.downloads}
+              scrollX={scrollX}
+              index={index}
+            />
           </View>
         </View>
       </Modal>
