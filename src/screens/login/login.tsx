@@ -79,20 +79,23 @@ const LoginScreen = ({
     return date1.diff(date2, 'seconds').seconds;
   };
 
-  async function createNewUser(user: FirebaseAuthTypes.User) {
+  const isNewUser = (user: FirebaseAuthTypes.User): boolean => {
     const lastSignInTime = DateTime.fromISO(user.metadata.lastSignInTime || '');
     const creationTime = DateTime.fromISO(user.metadata.creationTime || '');
 
-    if (getDateDiff(lastSignInTime, creationTime) < 100) {
-      const [firstName, lastName] = user?.displayName?.split(' ') || ['', ''];
-      await axiosClient.post('users', {
-        email: user?.email || '',
-        firstName,
-        lastName,
-        uid: user.uid,
-        role: Role.Athlete,
-      });
-    }
+    return getDateDiff(lastSignInTime, creationTime) < 100;
+  };
+
+  async function createNewUser(user: FirebaseAuthTypes.User) {
+    const [firstName, lastName] = user?.displayName?.split(' ') || ['', ''];
+
+    await axiosClient.post('users', {
+      email: user?.email || '',
+      firstName,
+      lastName,
+      uid: user.uid,
+      role: Role.Athlete,
+    });
   }
 
   const handleGoogleSignIn = async () => {
@@ -111,9 +114,18 @@ const LoginScreen = ({
         await saveToken(token);
       }
 
-      await createNewUser(user);
+      if (isNewUser(user)) {
+        await createNewUser(user);
 
-      navigation.push('Home');
+        navigation.push('InterestsScreen', {
+          name: user?.displayName?.split(' ')[0] || '',
+        });
+      } else {
+        navigation.push('Home');
+      }
+
+      // Register login activity
+      await axiosClient.post('/metrics/login', { uid: user?.uid });
     } catch (error: any) {
       logger.error('Error while logging in with google: ', error.response.data);
     }
