@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { CardInfo } from '../../utils/custom-types';
 import IconButton from '../button';
+import SocialShare from '../socialShare';
 
 interface ItemCardProps<T extends CardInfo> {
   item: T;

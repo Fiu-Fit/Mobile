@@ -53,7 +53,7 @@ const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
     } catch (e) {
       logger.error('Error while saving user interests: ', e);
     }
-    navigation.navigate('Home');
+    navigation.navigate('ConfirmRegistrationScreen');
   };
 
   return (

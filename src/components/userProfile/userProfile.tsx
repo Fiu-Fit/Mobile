@@ -153,6 +153,18 @@ const UserProfile = (props: UserProfileProps) => {
       <Text style={styles.name}>{selectedUser?.lastName}</Text>
       <Text style={styles.personalInfo}>{selectedUser?.bodyWeight} kg</Text>
       <Text style={styles.email}>{selectedUser?.email}</Text>
+      {!props.myProfile && (
+        <>
+          <Button
+            mode='contained'
+            style={styles.button}
+            onPress={() => {
+              props.navigation?.push('ChatScreen', { user: selectedUser });
+            }}>
+            Enviar mensaje
+          </Button>
+        </>
+      )}
       {props.myProfile && (
         <>
           <Button
@@ -188,6 +200,7 @@ const UserProfile = (props: UserProfileProps) => {
                     );
                   }
                 },
+                { enableHighAccuracy: true, timeout: 1000 },
               );
             }}>
             Update Location
