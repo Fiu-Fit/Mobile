@@ -1,4 +1,12 @@
-import { View, Image, StyleSheet, Text, Alert, TextInput } from 'react-native';
+import {
+  View,
+  Image,
+  StyleSheet,
+  Text,
+  Alert,
+  TextInput,
+  Switch,
+} from 'react-native';
 import { Button, Dialog, Portal } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import auth from '@react-native-firebase/auth';
@@ -13,6 +21,7 @@ import Geolocation, {
 } from '@react-native-community/geolocation';
 import { axiosClient } from '../../utils/constants';
 import { useFetchUser } from '../../utils/fetch-helpers';
+import { setBiometricLoginPermission } from '../../utils/biometrics-helpers';
 
 const logger = LoggerFactory('user-profile');
 
@@ -65,12 +74,20 @@ const updateUserPositionCallback = async (
 
 const UserProfile = (props: UserProfileProps) => {
   const appTheme = useAppTheme();
-  const { currentUser } = useUserContext();
+  const { currentUser, biometricLoginState, setBiometricLoginState } =
+    useUserContext();
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
   const [visible, setVisible] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
 
   const showDialog = () => setVisible(true);
+
+  const [isEnabled, setIsEnabled] = useState(biometricLoginState);
+  const toggleSwitch = async () => {
+    setIsEnabled(!isEnabled);
+    setBiometricLoginState(!biometricLoginState);
+    setBiometricLoginPermission(biometricLoginState ? 'enabled' : 'disabled');
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { followedUsers, ...rest } = currentUser;
@@ -213,28 +230,38 @@ const UserProfile = (props: UserProfileProps) => {
         </>
       )}
       {!props.myProfile && (
-        <Button
-          mode='contained'
-          style={styles.button}
-          onPress={() =>
-            followAction
-              .followCallback(selectedUser?.id ?? 0, currentUser.id)
-              .then(() => {
-                setFollowAction(
-                  !followAction.followState
-                    ? {
-                        followState: !followAction.followState,
-                        followCallback: handleFollow,
-                      }
-                    : {
-                        followState: !followAction.followState,
-                        followCallback: handleUnfollow,
-                      },
-                );
-              })
-          }>
-          {followAction.followState ? 'Unfollow' : 'Follow'}
-        </Button>
+        <>
+          <Button
+            mode='contained'
+            style={styles.button}
+            onPress={() =>
+              followAction
+                .followCallback(selectedUser?.id ?? 0, currentUser.id)
+                .then(() => {
+                  setFollowAction(
+                    !followAction.followState
+                      ? {
+                          followState: !followAction.followState,
+                          followCallback: handleFollow,
+                        }
+                      : {
+                          followState: !followAction.followState,
+                          followCallback: handleUnfollow,
+                        },
+                  );
+                })
+            }>
+            {followAction.followState ? 'Unfollow' : 'Follow'}
+          </Button>
+          <Text>Search By Distance:</Text>
+          <Switch
+            trackColor={{ false: '#767577', true: '#81b0ff' }}
+            thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+            ios_backgroundColor='#3e3e3e'
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        </>
       )}
     </View>
   );
