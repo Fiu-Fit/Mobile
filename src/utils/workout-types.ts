@@ -110,6 +110,7 @@ export type WorkoutProps = {
   athleteIds: number[];
   authorId: number;
   updatedAt?: Date;
+  multimedia: string[];
 };
 
 export type IWorkoutHeader = {
