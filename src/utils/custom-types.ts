@@ -9,6 +9,7 @@ export type InputProps = {
   password: string;
   bodyWeight: number;
   role: string;
+  phoneNumber: string;
 };
 
 export interface UserProfileProps {

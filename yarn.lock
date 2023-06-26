@@ -7589,6 +7589,11 @@ react-native-communications@2.2.1:
   resolved "https://registry.yarnpkg.com/react-native-communications/-/react-native-communications-2.2.1.tgz#7883b56b20a002eeb790c113f8616ea8692ca795"
   integrity sha512-5+C0X9mopI0+qxyQHzOPEi5v5rxNBQjxydPPiKMQSlX1RBIcJ8uTcqUPssQ9Mo8p6c1IKIWJUSqCj4jAmD0qVQ==
   
+react-native-confirmation-code-field@^7.3.1:
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-confirmation-code-field/-/react-native-confirmation-code-field-7.3.1.tgz#e705ee5b73d7749cac29da287379fa8690904fe6"
+  integrity sha512-5vI6BclB31e4vTYg0HmV/Vy9zI5MQZfHr1EN3kYzvaZq4GMIsyr6lrSmnQW1TtWR7Z8oURrhCpwo+JsWXxCoug==
+
 react-native-daterange-picker@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/react-native-daterange-picker/-/react-native-daterange-picker-1.5.1.tgz#3f180e14c0c8089dd6fa88048ddee6d02d8abf29"
