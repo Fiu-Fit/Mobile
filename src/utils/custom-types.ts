@@ -39,6 +39,7 @@ export interface CardInfo {
   id: string | number;
   title: string;
   content: string;
+  type: string;
   imageUrl: string;
   onPressScreen?: string;
 }
