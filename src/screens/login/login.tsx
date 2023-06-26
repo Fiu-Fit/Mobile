@@ -59,11 +59,7 @@ const LoginScreen = ({
         logger.debug('user: ', user);
         setCurrentUser(user as User);
 
-        if (data.needsConfirmation) {
-          navigation.push('ConfirmRegistrationScreen');
-        } else {
-          navigation.push('Home');
-        }
+        navigation.push('Home');
       }
     } catch (error: any) {
       logger.error('Error while logging in: ', error);
