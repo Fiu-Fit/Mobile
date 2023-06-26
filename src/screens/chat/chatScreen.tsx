@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { useUserContext } from '../../App';
 import { User } from '../../utils/custom-types';
+import { axiosClient } from '../../utils/constants';
+import LoggerFactory from '../../utils/logger-utility';
+
+const logger = LoggerFactory('chat-screen');
 
 type ChatScreenProps = {
   route: {
@@ -19,7 +23,10 @@ const ChatScreen = ({
 }: ChatScreenProps) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
 
+  logger.debug('User is: ', user);
+
   const { currentUser } = useUserContext();
+  logger.info('entering chat screen');
 
   const getAllMessages = () => {
     const uid = user.uid;
@@ -73,6 +80,20 @@ const ChatScreen = ({
       .doc(chatId)
       .collection('messages')
       .add({ ...userMsg, createdAt: firestore.FieldValue.serverTimestamp() });
+
+    logger.info('message sent: ', msg);
+    await createMessageNotification();
+  };
+
+  const createMessageNotification = async () => {
+    logger.debug('Creating message notification..');
+    const notification = await axiosClient.post('/notifications/messages', {
+      userId: user.id,
+      senderId: currentUser.id,
+      senderName: currentUser.firstName + ' ' + currentUser.lastName,
+    });
+
+    logger.info('message notification: ', notification.data);
   };
 
   return (

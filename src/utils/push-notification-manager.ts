@@ -88,10 +88,10 @@ const notificationType = (remoteMessage: any) => {
   }
 
   if (Number(remoteMessage?.data.type) === NotificationType.NewMessage) {
-    if (remoteMessage?.data.messageId) {
+    if (remoteMessage?.data.senderId) {
       return {
         type: NotificationType.NewMessage,
-        id: remoteMessage?.data.messageId,
+        id: remoteMessage?.data.senderId,
       };
     } else {
       throw Error('Invalid notification: Invalid message notification');
@@ -100,20 +100,26 @@ const notificationType = (remoteMessage: any) => {
 };
 
 const navigateToScreen = (type: NotificationType, id: number) => {
-  if (type === NotificationType.GoalCompleted) {
-    logger.info('Navigating to goal screen.. ', id);
-    PushNotification.configure({
-      onNotification: function (_: Omit<ReceivedNotification, 'userInfo'>) {
-        logger.info('Goal id in onNotification: ', { id });
+  logger.info('Notification type: ', type.toString());
+
+  PushNotification.configure({
+    onNotification: async function (_: Omit<ReceivedNotification, 'userInfo'>) {
+      logger.info('Goal id in onNotification: ', { id });
+
+      if (type === NotificationType.GoalCompleted) {
         RootNavigation.navigate('Goals', {
           screen: 'GoalScreen',
-          params: { itemId: Number(id), test: 'Test' },
+          params: { itemId: Number(id) },
         });
-      },
-    });
-  } else {
-    logger.info('Navigating to chat screen.. ', id);
-  }
+      } else {
+        const user = await axiosClient.get<User>(`/users/${id}`);
+        RootNavigation.navigate('Search', {
+          screen: 'ChatScreen',
+          params: { user: user.data },
+        });
+      }
+    },
+  });
 };
 
 export const NotificationListener = () => {
