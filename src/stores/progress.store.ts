@@ -1,9 +1,8 @@
-import { makeObservable, observable, flow, runInAction, computed } from 'mobx';
+import { makeObservable, observable, flow, runInAction } from 'mobx';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
-import { CardInfo, ProgressProps } from '../utils/custom-types';
+import { ProgressProps } from '../utils/custom-types';
 import moment, { Moment } from 'moment';
-import { categoryMap } from '../utils/workout-types';
 
 const logger = LoggerFactory('progress-store');
 
@@ -41,9 +40,10 @@ export class ProgressStore {
 
       logger.debug(`Getting progress from ${startDateStr} to ${endDateStr}...`);
 
-      const filters: string = this.selectedTypeFilter !== undefined
-        ? `category=${this.selectedTypeFilter}&start=${startDateStr}&end=${endDateStr}`
-        : `start=${startDateStr}&end=${endDateStr}`;
+      const filters: string =
+        this.selectedTypeFilter !== undefined
+          ? `category=${this.selectedTypeFilter}&start=${startDateStr}&end=${endDateStr}`
+          : `start=${startDateStr}&end=${endDateStr}`;
 
       const { data } = yield axiosClient.get<ProgressProps[]>(
         `/progress/user-progress/${userId}?${filters}`,
