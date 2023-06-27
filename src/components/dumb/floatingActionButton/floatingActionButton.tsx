@@ -4,6 +4,7 @@ import { useAppTheme } from '../../../App';
 interface FloatingActionButtonProps {
   icon?: string;
   descriptive?: boolean;
+  text?: string;
   bottom?: number;
   right?: number;
   onPress?: () => void;
@@ -11,6 +12,7 @@ interface FloatingActionButtonProps {
 
 const FloatingActionButton = ({
   icon = 'plus',
+  text = 'Add',
   descriptive = false,
   bottom = 20,
   right = 20,
@@ -19,14 +21,14 @@ const FloatingActionButton = ({
   const theme = useAppTheme();
   return descriptive ? (
     <Button mode='contained' onPress={() => onPress()}>
-      Add
+      {text}
     </Button>
   ) : (
     <IconButton
       style={{ position: 'absolute', bottom, right }}
       icon={icon}
-      iconColor={theme.colors.onQuinary}
-      containerColor={theme.colors.quinary}
+      iconColor={theme.colors.onPrimary}
+      containerColor={theme.colors.primary}
       size={40}
       onPress={() => onPress()}
       mode='contained'
