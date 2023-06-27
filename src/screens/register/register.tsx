@@ -5,12 +5,13 @@ import Button from '../../components/button';
 import Loader from '../../components/loader';
 import COLORS from '../../constants/colors';
 import LoggerFactory from '../../utils/logger-utility';
-import { InputProps, ErrorInputProps } from '../../utils/custom-types';
+import { InputProps, ErrorInputProps, User } from '../../utils/custom-types';
 import { RegisterScreenNavigationProp } from '../../navigation/navigation-props';
 import { Formik, FormikErrors } from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { axiosClient } from '../../utils/constants';
-import FloatingActionButton from '../../components/dumb/floatingActionButton';
+import { fetchUserData } from '../../utils/fetch-helpers';
+import { useUserContext } from '../../App';
 
 const logger = LoggerFactory('register');
 const MIN_PASS_LENGTH = 5;
@@ -29,14 +30,22 @@ const RegisterScreen = ({
       logger.error('Error while saving user token: ', error);
     }
   };
-
+  const { setCurrentUser } = useUserContext();
   const handleSignUp = async (inputs: InputProps) => {
     setLoading(true);
     try {
       logger.info('Inputs: ', inputs);
       const response = await axiosClient.post('/auth/register', inputs);
       logger.debug('Saving token: ', response.data.token);
+      logger.debug('Registered user data: ', response.data);
       await saveToken(response.data.token);
+      const { response: user, error } = await fetchUserData();
+      if (error) {
+        logger.error('Error while logging in: ', error);
+      } else {
+        logger.debug('user: ', user);
+        setCurrentUser(user as User);
+      }
       navigation.push('InterestsScreen', { name: inputs.firstName });
     } catch (error: any) {
       logger.error('Error while registering user: ', error.response.data);
