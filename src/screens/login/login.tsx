@@ -78,6 +78,8 @@ const LoginScreen = ({
         if (!((await deviceSupportsTouchId()) && biometricLoginState)) {
           return;
         }
+        logger.info('device supports and user allowed biometrics');
+
         const biometricCredentials = await authUserFingerprint(
           'Biometric Login',
           saveToken,

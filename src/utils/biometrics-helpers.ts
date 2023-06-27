@@ -30,6 +30,7 @@ export const getBiometricLoginCredentials =
       'BiometricCredentials',
     );
     if (biometricCredentials !== null) {
+      logger.info('biometric credentials exist: ', biometricCredentials);
       return JSON.parse(biometricCredentials) as BiometricCredentials;
     }
     return biometricCredentials;
@@ -37,14 +38,17 @@ export const getBiometricLoginCredentials =
 
 export const deviceSupportsTouchId = async () => {
   const biometryType = await TouchID.isSupported();
+  logger.info('device supports: ', biometryType);
   return biometryType === 'TouchID';
 };
 
 export const setBiometricLoginPermission = async (newPermission: string) => {
+  logger.info('setting permissions: ', biometryType);
   await AsyncStorage.setItem('BiometricPermission', newPermission);
 };
 
 export const getBiometricLoginPermission = async () => {
+  logger.info('getting permissions', {});
   return await AsyncStorage.getItem('BiometricPermission');
 };
 
@@ -70,10 +74,12 @@ export const authUserFingerprint = async (
     ...optionalConfigObject,
     title,
   });
+  logger.info('authnticated');
   const biometricCredentials = await getBiometricLoginCredentials();
   if (biometricCredentials === null) {
     return;
   }
+  logger.info('got credentials after athenticating');
   const { email, password } = biometricCredentials;
   const response = await axiosClient.post('/auth/login', {
     email,
