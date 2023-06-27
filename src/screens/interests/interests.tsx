@@ -45,13 +45,12 @@ const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
     );
     try {
       logger.debug('Adding interests to user...');
-      const { data } = await axiosClient.put<User>(
-        `/users/${currentUser.id}`,
-        selectedInterests.map(str => parseInt(str, 10)),
-      );
+      const { data } = await axiosClient.put<User>(`/users/${currentUser.id}`, {
+        interests: selectedInterests.map(str => parseInt(str, 10)),
+      });
       logger.debug(`User updated: ${currentUser.id}`, data);
     } catch (e) {
-      logger.error('Error while saving user interests: ', e);
+      logger.error('Error while saving user interests: ', { e });
     }
     navigation.navigate('ConfirmRegistrationScreen');
   };
