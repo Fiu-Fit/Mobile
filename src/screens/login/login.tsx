@@ -27,7 +27,6 @@ import { fetchUserData } from '../../utils/fetch-helpers';
 import {
   authUserFingerprint,
   deviceSupportsTouchId,
-  getBiometricLoginCredentials,
   setBiometricLoginCredentials,
 } from '../../utils/biometrics-helpers';
 
@@ -58,14 +57,7 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', response.data.token);
       await saveToken(response.data.token);
-      const biometricCredentials = await getBiometricLoginCredentials();
-      if (
-        biometricCredentials === null ||
-        biometricCredentials.email !== email ||
-        biometricCredentials.password !== password
-      ) {
-        setBiometricLoginCredentials(email, password);
-      }
+      await setBiometricLoginCredentials(email, password);
       const { response: user, error } = await fetchUserData();
       if (error) {
         logger.error('Error while logging in: ', error);

@@ -253,7 +253,7 @@ const UserProfile = (props: UserProfileProps) => {
             }>
             {followAction.followState ? 'Unfollow' : 'Follow'}
           </Button>
-          <Text>Search By Distance:</Text>
+          <Text>Enable Biometric Login:</Text>
           <Switch
             trackColor={{ false: '#767577', true: '#81b0ff' }}
             thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}

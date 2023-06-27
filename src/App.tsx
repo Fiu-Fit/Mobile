@@ -12,7 +12,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { Role } from './constants/roles';
 import { User } from './utils/custom-types';
 import { navigationRef } from './navigation/root-navigator';
-import { getBiometricLoginPermission } from './utils/biometrics-helpers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 if (
   !new (class {
@@ -163,7 +163,7 @@ const App = () => {
   useEffect(() => {
     const getBiometricLoginState = async () => {
       setBiometricLoginState(
-        (await getBiometricLoginPermission()) === 'enabled',
+        (await AsyncStorage.getItem('BiometricPermission')) === 'enabled',
       );
     };
     getBiometricLoginState();
