@@ -42,6 +42,11 @@ const HomeHeader = ({ navigation }: { navigation: HomeNavigationProp }) => {
           <Text className='text-l'>Ser entrenador</Text>
         </Button>
       )}
+      {currentUser.role === Role.Trainer && (
+        <Button icon='google-fit' mode='outlined' onPress={() => {}}>
+          <Text className='text-l'>Quiero ser verificado!</Text>
+        </Button>
+      )}
     </View>
   );
 };
