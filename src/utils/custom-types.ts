@@ -1,5 +1,5 @@
 import { Role } from '../constants/roles';
-import { ProfileNavigationProp } from '../navigation/navigation-props';
+import { UserProfileScreenNavigationProp } from '../navigation/navigation-props';
 import { Moment } from 'moment';
 
 export type InputProps = {
@@ -9,6 +9,7 @@ export type InputProps = {
   password: string;
   bodyWeight: number;
   role: string;
+  phoneNumber: string;
 };
 
 export interface UserProfileProps {
@@ -17,7 +18,7 @@ export interface UserProfileProps {
     name: string;
     params: { givenUserId: number };
   };
-  navigation?: ProfileNavigationProp;
+  navigation?: UserProfileScreenNavigationProp;
   myProfile?: boolean;
 }
 
@@ -39,6 +40,7 @@ export interface CardInfo {
   id: string | number;
   title: string;
   content: string;
+  type: string;
   imageUrl: string;
   onPressScreen?: string;
 }
@@ -53,6 +55,7 @@ export type User = {
   interests: number[];
   deviceToken: string;
   coordinates: [number, number];
+  uid: string;
   followedUsers: User[];
   phoneNumber?: string;
 };
@@ -75,8 +78,9 @@ export type ProgressProps = {
   traveledDistance: number;
   timeSpent: number;
   burntCalories: number;
-  activityTypes: { [category: number]: number };
+  numberOfExercises: number;
 };
+
 export type DateState = {
   selectedDate: Date | undefined;
   displayedDate: Moment;

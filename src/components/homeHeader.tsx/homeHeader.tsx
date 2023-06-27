@@ -5,6 +5,7 @@ import { axiosClient } from '../../utils/constants';
 import LoggerFactory from '../../utils/logger-utility';
 import { useUserContext } from '../../App';
 import { Role } from '../../constants/roles';
+import { User } from '../../utils/custom-types';
 
 const logger = LoggerFactory('home-header');
 
@@ -19,9 +20,16 @@ const HomeHeader = ({ navigation }: { navigation: HomeNavigationProp }) => {
           mode='outlined'
           onPress={async () => {
             try {
-              const updatedUser = { ...currentUser };
-              updatedUser.role = Role.Trainer;
-              await axiosClient.put(`/users/${currentUser.id}`, updatedUser);
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const { followedUsers, ...rest } = currentUser;
+              const updatedUser = await axiosClient.put<User>(
+                `/users/${currentUser.id}`,
+                {
+                  ...rest,
+                  role: Role.Trainer,
+                },
+              );
+              logger.debug('Updated user: ', updatedUser);
               await axiosClient.post('/auth/logout');
               navigation.getParent()?.navigate('LoginScreen');
             } catch (err: any) {

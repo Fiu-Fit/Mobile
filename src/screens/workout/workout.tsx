@@ -17,6 +17,7 @@ import FloatingActionButton from '../../components/dumb/floatingActionButton';
 import { Role } from '../../constants/roles';
 import WorkoutCompletedModal from '../../components/workoutCompletedModal';
 import { useFocusEffect } from '@react-navigation/native';
+import WorkoutMultimediaModal from '../../components/workoutMultimediaModal';
 
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
@@ -35,6 +36,8 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
   >(undefined);
   const [ratingModalVisible, setRatingModalVisible] = React.useState(false);
   const [completedWorkoutModalVisible, setCompletedWorkoutModalVisible] =
+    React.useState(false);
+  const [multimediaModalVisible, setMultimediaModalVisible] =
     React.useState(false);
   const { itemId } = route.params;
 
@@ -61,7 +64,8 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
       <WorkoutHeader />
       <WorkoutInfo
         workoutHeader={workoutDetailStore.workoutHeader}
-        onPressModal={() => setRatingModalVisible(true)}
+        onPressRatingModal={() => setRatingModalVisible(true)}
+        onPressMultimediaModal={() => setMultimediaModalVisible(true)}
       />
       <View
         className='mt-5'
@@ -92,6 +96,14 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
               navigation.goBack();
             }}
             workoutItem={workoutDetailStore.workout}
+          />
+        )}
+
+        {multimediaModalVisible && (
+          <WorkoutMultimediaModal
+            onDismiss={() => {
+              setMultimediaModalVisible(false);
+            }}
           />
         )}
       </View>

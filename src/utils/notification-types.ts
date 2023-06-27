@@ -1,5 +1,5 @@
 export const GOAL_NOTIFICATION_TITLE = 'Meta cumplida';
-export const MESSAGE_NOTIFICATION_TITLE = 'Nuevo mensaje';
+export const MESSAGE_NOTIFICATION_TITLE = 'Mensaje nuevo';
 
 export const GOAL_NOTIFICATION_CONTENT = (goalName: string) => {
   return `Completaste la meta "${goalName}"!`;
@@ -20,9 +20,9 @@ export interface GoalNotificationProps {
 export interface MessageNotificationProps {
   _id: number;
   athleteId: number;
-  messageId: string;
-  receivedAt: Date;
+  senderId: string;
   senderName: string;
+  receivedAt: Date;
 }
 
 export enum NotificationType {

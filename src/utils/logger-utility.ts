@@ -41,6 +41,9 @@ const config = {
     'goal-screen',
     'home-screen',
     'boimetrics-helper',
+    'chat-screen',
+    'workout-media-medial',
+    'workout-info',
   ],
   transportOptions: {
     colors: {

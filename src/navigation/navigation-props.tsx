@@ -1,6 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { UserProfileProps } from '../utils/custom-types';
+import { User, UserProfileProps } from '../utils/custom-types';
 
 export type AuthStackParamList = {
   LoginScreen: undefined;
@@ -10,6 +10,7 @@ export type AuthStackParamList = {
   InterestsScreen: { name: string };
   PasswordRecoveryScreen: undefined;
   Home: undefined;
+  ConfirmRegistrationScreen: undefined;
 };
 
 export type WorkoutStackParamList = {
@@ -28,15 +29,24 @@ export type NotificationStackParamList = {
   NotificationScreen: undefined;
 };
 
+export type UserStackParamList = {
+  UserSearchScreen: undefined;
+  ChatScreen: { user: User };
+  UserProfileScreen: {
+    givenUserId: number;
+    canEdit: boolean;
+  };
+};
+
 export type TabParamList = {
   WorkoutScreen: Omit<WorkoutStackParamList, 'WorkoutsScreen'>;
   Workouts: undefined;
   Goals: undefined;
   Profile: undefined;
   HomeTab: undefined;
-  UserSearch: undefined;
   LoginScreen: undefined;
-  Notification: undefined;
+  Users: undefined;
+  Notifications: undefined;
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<
@@ -52,6 +62,11 @@ export type PasswordRecoveryScreenNavigationProp = StackNavigationProp<
 export type RegisterScreenNavigationProp = StackNavigationProp<
   AuthStackParamList,
   'RegisterScreen'
+>;
+
+export type ConfirmRegistrationScreenNavigationProp = StackNavigationProp<
+  AuthStackParamList,
+  'ConfirmRegistrationScreen'
 >;
 
 export type InterestsScreenNavigationProp = StackNavigationProp<
@@ -113,9 +128,24 @@ export type HomeNavigationProp = BottomTabNavigationProp<
 
 export type NotificationsNavigationProp = BottomTabNavigationProp<
   TabParamList,
-  'Notification'
+  'Notifications'
 >;
-export type UserSearchNavigationProp = BottomTabNavigationProp<
+export type UsersNavigationProp = BottomTabNavigationProp<
   TabParamList,
-  'UserSearch'
+  'Users'
+>;
+
+export type ChatScreenNavigationProp = StackNavigationProp<
+  UserStackParamList,
+  'ChatScreen'
+>;
+
+export type UserSearchScreenNavigationProp = StackNavigationProp<
+  UserStackParamList,
+  'UserSearchScreen'
+>;
+
+export type UserProfileScreenNavigationProp = StackNavigationProp<
+  UserStackParamList,
+  'UserProfileScreen'
 >;

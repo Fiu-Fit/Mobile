@@ -17,6 +17,7 @@ export class GoalStore {
         id: goal.id,
         title: goal.title,
         content: goal.status,
+        type: 'goal',
         imageUrl:
           'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
       }),
@@ -86,6 +87,7 @@ export class GoalStore {
         userId,
         deadline: deadline ? deadline : undefined,
         status: GoalStatus.INPROGRESS,
+        multimedia: [],
       });
       logger.debug('Got data: ', data);
       this.fetchGoals(userId);
