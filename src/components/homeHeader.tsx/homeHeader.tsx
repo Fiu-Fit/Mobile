@@ -6,11 +6,15 @@ import LoggerFactory from '../../utils/logger-utility';
 import { useUserContext } from '../../App';
 import { Role } from '../../constants/roles';
 import { User } from '../../utils/custom-types';
+import { useState } from 'react';
+import VerificationModal from '../VerificationModal';
 
 const logger = LoggerFactory('home-header');
 
 const HomeHeader = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const { currentUser } = useUserContext();
+  const [verificationModalOpen, setVerficationModalOpen] =
+    useState<boolean>(false);
   return (
     <View className='flex-row mx-5 mt-5 justify-between'>
       <Text className='text-xl mt-2'>FiuFit</Text>
@@ -43,9 +47,17 @@ const HomeHeader = ({ navigation }: { navigation: HomeNavigationProp }) => {
         </Button>
       )}
       {currentUser.role === Role.Trainer && (
-        <Button icon='google-fit' mode='outlined' onPress={() => {}}>
+        <Button
+          icon='google-fit'
+          mode='outlined'
+          onPress={() => {
+            setVerficationModalOpen(true);
+          }}>
           <Text className='text-l'>Quiero ser verificado!</Text>
         </Button>
+      )}
+      {verificationModalOpen && (
+        <VerificationModal onDismiss={() => setVerficationModalOpen(false)} />
       )}
     </View>
   );
