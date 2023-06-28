@@ -7,6 +7,8 @@ import LoggerFactory from '../../utils/logger-utility';
 import { useState } from 'react';
 import storage from '@react-native-firebase/storage';
 import { axiosClient } from '../../utils/constants';
+import VideoPlayer from 'react-native-video-player';
+
 
 type ModalProps = {
   onDismiss: () => void;
@@ -45,16 +47,25 @@ const VerificationModal = ({ onDismiss }: ModalProps) => {
             <Text
               className='text-xl'
               style={{ color: appTheme.colors.onBackground }}>
-              Subí un comprobante de tus estudios y nuestros especialistas
+              Subí un video comprobando tu identidad y nuestros especialistas
               revisarán tu aplicación lo antes posible.
             </Text>
-            <View className='items-center mt-2' style={{ flex: 1 }}>
+            <View className='items-center mt-2' style={{ flex: 4 }}>
               {selectedMultimedia && (
-                <Text
-                  className='text-l'
-                  style={{ color: appTheme.colors.outline }}>
-                  {selectedMultimedia.slice(59)}
-                </Text>
+                <>
+                  <Text
+                    className='text-l'
+                    style={{ color: appTheme.colors.outline }}>
+                    {selectedMultimedia.slice(59)}
+                  </Text>
+                  <VideoPlayer
+                    video={{
+                      uri: selectedMultimedia,
+                    }}
+                    videoWidth={400}
+                    videoHeight={450}
+                  />
+                </>
               )}
             </View>
             <View style={{ flex: 1 }}>
