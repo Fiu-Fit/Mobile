@@ -6,6 +6,7 @@ import {
   Alert,
   TextInput,
   Switch,
+  ActivityIndicator,
 } from 'react-native';
 import { Button, Dialog, Portal } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
@@ -20,7 +21,6 @@ import Geolocation, {
 import { axiosClient } from '../../utils/constants';
 import { fetchUserData, useFetchUser } from '../../utils/fetch-helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Role } from '../../constants/roles';
 
 const logger = LoggerFactory('user-profile');
 
@@ -78,7 +78,7 @@ const UserProfile = (props: UserProfileProps) => {
   const [visible, setVisible] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isEnabled, setIsEnabled] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   const toggleSwitch = async () => {
     await AsyncStorage.setItem(
       'biometricLoginState',
@@ -110,12 +110,15 @@ const UserProfile = (props: UserProfileProps) => {
     followState: false,
     followCallback: handleFollow,
   });
-  useFocusEffect(() => {
+  useEffect(() => {
+    setIsLoading(true);
     logger.info(`Selected User: ${props.route?.params.givenUserId}`);
+    const verifyBiometricPermissionsState = async () => {
+      const permissions = await AsyncStorage.getItem('biometricLoginState');
+      setIsEnabled(permissions === 'enabled' ? true : false);
+    };
     const getSelectedUser = async () => {
-      const fetchedUser = props.myProfile
-        ? await fetchUserData()
-        : await fetchUserData(props.route?.params.givenUserId);
+      const fetchedUser = await fetchUserData(props.route?.params.givenUserId);
       if (fetchedUser.error !== null) {
         logger.error('an error ocurred while trying to fetch a user: ', {
           fetchedUser,
@@ -124,23 +127,23 @@ const UserProfile = (props: UserProfileProps) => {
       }
       setSelectedUser(fetchedUser.response);
     };
-    getSelectedUser();
-  });
-  useEffect(() => {
+    verifyBiometricPermissionsState();
+    getSelectedUser()
+      .then(() => {
+        setFollowAction(
+          following
+            ? { followState: following, followCallback: handleUnfollow }
+            : { followState: following, followCallback: handleFollow },
+        );
+        setIsLoading(false);
+      })
+      .catch(error =>
+        logger.error('an error ocurred while updateing the user: ', { error }),
+      );
     const following = Boolean(
       currentUser.followedUsers.find(user => user?.id === selectedUser?.id),
     );
-    const verifyBiometricPermissionsState = async () => {
-      const permissions = await AsyncStorage.getItem('biometricLoginState');
-      setIsEnabled(permissions === 'enabled' ? true : false);
-    };
-    verifyBiometricPermissionsState();
-    setFollowAction(
-      following
-        ? { followState: following, followCallback: handleUnfollow }
-        : { followState: following, followCallback: handleFollow },
-    );
-  }, [followAction.followState, currentUser, selectedUser]);
+  }, [followAction.followState, props.route?.params.givenUserId]);
   const handleSignOut = async () => {
     try {
       await axiosClient.post('/auth/logout');
@@ -156,7 +159,9 @@ const UserProfile = (props: UserProfileProps) => {
     'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80';
 
   useFetchUser({ observables: [followAction.followState] });
-  return (
+  return isLoading ? (
+    <ActivityIndicator size='large' color='#0000ff' />
+  ) : (
     <View
       style={[
         styles.container,
