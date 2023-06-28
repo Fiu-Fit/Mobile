@@ -151,6 +151,15 @@ const UserProfile = (props: UserProfileProps) => {
       <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
       <Text style={styles.name}>{selectedUser?.firstName}</Text>
       <Text style={styles.name}>{selectedUser?.lastName}</Text>
+      {props.myProfile && selectedUser?.verification && (
+        <Text style={styles.personalInfo}>
+          Estado de Verificación: {selectedUser?.verification?.status}
+        </Text>
+      )}
+      {!props.myProfile &&
+        selectedUser?.verification?.status === 'Approved' && (
+          <Text style={styles.personalInfo}>Trainer Verificado!</Text>
+        )}
       <Text style={styles.personalInfo}>{selectedUser?.bodyWeight} kg</Text>
       <Text style={styles.email}>{selectedUser?.email}</Text>
       {!props.myProfile && (
@@ -159,7 +168,9 @@ const UserProfile = (props: UserProfileProps) => {
             mode='contained'
             style={styles.button}
             onPress={() => {
-              props.navigation?.push('ChatScreen', { user: selectedUser });
+              if (selectedUser) {
+                props.navigation?.push('ChatScreen', { user: selectedUser });
+              }
             }}>
             Enviar mensaje
           </Button>

@@ -43,6 +43,7 @@ const config = {
     'chat-screen',
     'workout-media-medial',
     'workout-info',
+    'verification-modal',
   ],
   transportOptions: {
     colors: {
