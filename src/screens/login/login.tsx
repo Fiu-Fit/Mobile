@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import {
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -55,6 +56,7 @@ const LoginScreen = ({
       const { response: user, error } = await fetchUserData();
       if (error) {
         logger.error('Error while logging in: ', error);
+        Alert.alert('Error de login! Usuario o password inválidos.');
       } else {
         logger.debug('user: ', user);
         setCurrentUser(user as User);
@@ -63,6 +65,7 @@ const LoginScreen = ({
       }
     } catch (error: any) {
       logger.error('Error while logging in: ', error);
+      Alert.alert('Error de login!');
     }
     setLoading(false);
   };
@@ -129,6 +132,7 @@ const LoginScreen = ({
       await axiosClient.post('/metrics/login', { uid: user?.uid });
     } catch (error: any) {
       logger.error('Error while logging in with google: ', error.response.data);
+      Alert.alert('Error al querer loguearse usando Google!');
     }
   };
 
