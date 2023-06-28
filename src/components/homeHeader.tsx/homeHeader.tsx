@@ -46,7 +46,7 @@ const HomeHeader = ({ navigation }: { navigation: HomeNavigationProp }) => {
           <Text className='text-l'>Ser entrenador</Text>
         </Button>
       )}
-      {currentUser.role === Role.Trainer && (
+      {currentUser.role === Role.Trainer && !currentUser.verification && (
         <Button
           icon='google-fit'
           mode='outlined'
