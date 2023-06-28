@@ -17,6 +17,7 @@ export type WorkoutStackParamList = {
   WorkoutScreen: { itemId: string | number };
   WorkoutsScreen: undefined;
   UpsertWorkoutScreen: { itemId?: string | number };
+  WorkoutMetricsScreen: undefined;
 };
 
 export type GoalStackParamList = {

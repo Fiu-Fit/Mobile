@@ -63,6 +63,20 @@ export const difficultyMap = new Map<number, string>([
   [-1, 'Cualquiera'],
 ]);
 
+export const workoutMetricYear = [
+  { label: '2023', key: 2023 },
+  { label: '2022', key: 2022 },
+  { label: '2021', key: 2021 },
+  { label: '2020', key: 2020 },
+];
+
+export const yearMap = new Map<number, string>([
+  [2023, '2023'],
+  [2022, '2022'],
+  [2021, '2021'],
+  [2020, '2020'],
+]);
+
 export enum Unit {
   SECONDS = 0,
   REPETITIONS = 1,
@@ -129,4 +143,15 @@ export type WorkoutRatingProps = {
   rating: number;
   comment?: string;
   ratedAt: Date;
+};
+
+export type RatingCount = {
+  rating: number;
+  count: number;
+};
+
+export type WorkoutMetric = {
+  favoriteCount: number;
+  averageRating: number;
+  ratings: RatingCount[];
 };

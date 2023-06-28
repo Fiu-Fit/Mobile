@@ -11,6 +11,7 @@ import {
   ExerciseCardInfo,
   IWorkoutHeader,
   WorkoutExercise,
+  WorkoutMetric,
   WorkoutProps,
   WorkoutRatingProps,
 } from '../utils/workout-types';
@@ -42,6 +43,7 @@ export class WorkoutDetailStore {
   newExercises = new Map<string, WorkoutExercise>();
   ratings: WorkoutRatingProps[] = [];
   downloads: string[] = [];
+  metrics: WorkoutMetric[] = [];
   state = 'pending';
 
   get workoutHeader(): IWorkoutHeader {
@@ -93,6 +95,7 @@ export class WorkoutDetailStore {
       newExercises: observable,
       ratings: observable,
       downloads: observable,
+      metrics: observable,
       exerciseCards: computed,
       workoutHeader: computed,
       workoutComments: computed,
@@ -106,6 +109,7 @@ export class WorkoutDetailStore {
       completeWorkout: flow,
       removeWorkoutAsFavourite: flow,
       createWorkoutRating: flow,
+      fetchWorkoutMetrics: flow,
     });
   }
 
@@ -218,6 +222,26 @@ export class WorkoutDetailStore {
       this.state = 'done';
     } catch (e) {
       logger.error('Error while removing favorite workout:', { e });
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
+  *fetchWorkoutMetrics() {
+    this.state = 'pending';
+    try {
+      logger.debug('Getting workout metrics...');
+      const { data } = yield axiosClient.get<WorkoutMetric[]>(
+        `/workouts/${this.workout._id}/metrics`,
+      );
+      logger.debug('Got data: ', data);
+      runInAction(() => {
+        this.metrics = data;
+        this.state = 'done';
+      });
+    } catch (e) {
+      logger.error('Error while fetching workout metrics:', { e });
       runInAction(() => {
         this.state = 'error';
       });

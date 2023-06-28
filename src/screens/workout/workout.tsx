@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { Button, Text } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import React, { useCallback } from 'react';
@@ -8,7 +9,6 @@ import Loader from '../../components/loader';
 import { action } from 'mobx';
 import WorkoutHeader from '../../components/workoutHeader';
 import WorkoutInfo from '../../components/workoutInfo';
-import Button from '../../components/button';
 import ItemCardList from '../../components/itemCardList';
 import ExerciseModal from '../../components/exerciseModal';
 import { ExerciseCardInfo } from '../../utils/workout-types';
@@ -114,6 +114,17 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
             icon='pencil'
           />
         )}
+
+      {currentUser.role !== Role.Athlete &&
+        currentUser.id === workoutDetailStore.workout.authorId && (
+          <Button
+            icon='google-fit'
+            mode='outlined'
+            onPress={() => navigation.push('WorkoutMetricsScreen')}>
+            <Text className='text-l'>Metricas</Text>
+          </Button>
+        )}
+
       <View className='mb-10 mx-10' style={{ flex: 0.1 }}>
         <Button title='Completar' onPress={() => handleCompletedWorkout()} />
       </View>
