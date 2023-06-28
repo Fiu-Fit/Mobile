@@ -45,6 +45,16 @@ export interface CardInfo {
   onPressScreen?: string;
 }
 
+export type VerificationStatus = 'Pending' | 'Declined' | 'Approved';
+
+export type Verification = {
+  id: number;
+  userId: number;
+  status: VerificationStatus;
+  resourceId: string;
+  receivedAt: Date;
+};
+
 export type User = {
   id: number;
   firstName: string;
@@ -58,6 +68,7 @@ export type User = {
   uid: string;
   followedUsers: User[];
   phoneNumber?: string;
+  verification?: Verification;
 };
 
 export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
