@@ -22,6 +22,7 @@ import Geolocation, {
 import { axiosClient } from '../../utils/constants';
 import { useFetchUser } from '../../utils/fetch-helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Role } from '../../constants/roles';
 
 const logger = LoggerFactory('user-profile');
 
@@ -137,8 +138,24 @@ const UserProfile = (props: UserProfileProps) => {
     );
   }, [followAction.followState, currentUser, selectedUser]);
   const handleSignOut = async () => {
-    await auth().signOut();
-    props.navigation?.getParent()?.navigate('LoginScreen');
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const updatedUser = await axiosClient.put<User>(
+        `/users/${currentUser.id}`,
+        {
+          ...rest,
+          role: Role.Trainer,
+        },
+      );
+      logger.debug('Updated user: ', updatedUser);
+      await axiosClient.post('/auth/logout');
+      props.navigation?.getParent()?.navigate('LoginScreen');
+    } catch (err: any) {
+      logger.error(
+        'Error while trying to make user a Trainer:',
+        err.response.data,
+      );
+    }
   };
   const pictureUrl =
     'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80';
