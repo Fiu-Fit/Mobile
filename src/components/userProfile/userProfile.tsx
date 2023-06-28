@@ -9,18 +9,16 @@ import {
 } from 'react-native';
 import { Button, Dialog, Portal } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
-import auth from '@react-native-firebase/auth';
 import { User, UserProfileProps } from '../../utils/custom-types';
 import { useFocusEffect } from '@react-navigation/native';
 import { observer } from 'mobx-react';
 import LoggerFactory from '../../utils/logger-utility';
-import { searchStore } from '../../stores/userSearch.store';
 import { useEffect, useState } from 'react';
 import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
 import { axiosClient } from '../../utils/constants';
-import { useFetchUser } from '../../utils/fetch-helpers';
+import { fetchUserData, useFetchUser } from '../../utils/fetch-helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Role } from '../../constants/roles';
 
@@ -114,13 +112,19 @@ const UserProfile = (props: UserProfileProps) => {
   });
   useFocusEffect(() => {
     logger.info(`Selected User: ${props.route?.params.givenUserId}`);
-    setSelectedUser(
-      props.myProfile
-        ? currentUser
-        : searchStore.results.find(
-            user => user.id === props.route?.params.givenUserId,
-          ),
-    );
+    const getSelectedUser = async () => {
+      const fetchedUser = props.myProfile
+        ? await fetchUserData()
+        : await fetchUserData(props.route?.params.givenUserId);
+      if (fetchedUser.error !== null) {
+        logger.error('an error ocurred while trying to fetch a user: ', {
+          fetchedUser,
+        });
+        return;
+      }
+      setSelectedUser(fetchedUser.response);
+    };
+    getSelectedUser();
   });
   useEffect(() => {
     const following = Boolean(
@@ -139,15 +143,6 @@ const UserProfile = (props: UserProfileProps) => {
   }, [followAction.followState, currentUser, selectedUser]);
   const handleSignOut = async () => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const updatedUser = await axiosClient.put<User>(
-        `/users/${currentUser.id}`,
-        {
-          ...rest,
-          role: Role.Trainer,
-        },
-      );
-      logger.debug('Updated user: ', updatedUser);
       await axiosClient.post('/auth/logout');
       props.navigation?.getParent()?.navigate('LoginScreen');
     } catch (err: any) {
