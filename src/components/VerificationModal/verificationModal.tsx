@@ -64,7 +64,7 @@ const VerificationModal = ({ onDismiss }: ModalProps) => {
                 onPress={async () => {
                   launchImageLibrary(
                     {
-                      mediaType: 'photo',
+                      mediaType: 'video',
                       includeBase64: false,
                       maxHeight: 200,
                       maxWidth: 200,
