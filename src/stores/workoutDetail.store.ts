@@ -118,25 +118,37 @@ export class WorkoutDetailStore {
   async downloadResources() {
     logger.debug('Downloading files: ', this.workout.multimedia);
     this.downloads = [];
-    this.workout.multimedia.map(async uri => {
-      const lastSlashIndex = uri.lastIndexOf('/');
-      const fileName = uri.substring(lastSlashIndex + 1);
-      const download = await storage()
-        .ref(`/workouts/${this.workout._id}/${fileName}`)
-        .getDownloadURL();
-      this.downloads.push(download + uri.slice(uri.lastIndexOf('.')));
-    });
+    await Promise.all(
+      this.workout.multimedia.map(async uri => {
+        const lastSlashIndex = uri.lastIndexOf('/');
+        const fileName = uri.substring(lastSlashIndex + 1);
+        try {
+          const download = await storage()
+            .ref(`/workouts/${this.workout._id}/${fileName}`)
+            .getDownloadURL();
+          this.downloads.push(download + uri.slice(uri.lastIndexOf('.')));
+        } catch (e) {
+          logger.debug('Error while download workout multimedia: ', e);
+        }
+      }),
+    );
   }
 
   async uploadResources() {
     logger.debug('Uploading files: ', this.workout.multimedia);
-    this.workout.multimedia.map(async uri => {
-      const lastSlashIndex = uri.lastIndexOf('/');
-      const fileName = uri.substring(lastSlashIndex + 1);
-      await storage()
-        .ref(`/workouts/${this.workout._id}/${fileName}`)
-        .putFile(uri);
-    });
+    await Promise.all(
+      this.workout.multimedia.map(async uri => {
+        const lastSlashIndex = uri.lastIndexOf('/');
+        const fileName = uri.substring(lastSlashIndex + 1);
+        try {
+          await storage()
+            .ref(`/workouts/${this.workout._id}/${fileName}`)
+            .putFile(uri);
+        } catch (e) {
+          logger.debug('Error while uploading workout multimedia: ', e);
+        }
+      }),
+    );
     logger.debug('Files uploaded!');
   }
 
@@ -292,7 +304,7 @@ export class WorkoutDetailStore {
           });
       this.workout._id = data._id;
       logger.info('Upsert workout Data: ', data);
-      this.uploadResources();
+      yield this.uploadResources();
     } catch (err) {
       logger.error(
         'Error while trying to upsert workout:',

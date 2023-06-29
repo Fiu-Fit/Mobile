@@ -12,6 +12,7 @@ import EditGoalModal from '../../components/editGoalModal';
 import LoggerFactory from '../../utils/logger-utility';
 import SocialShare from '../../components/socialShare';
 import { GoalStatus } from '../../utils/goal-types';
+import MultimediaModal from '../../components/multimediaModal/multimediaModal';
 
 const logger = LoggerFactory('goal-screen');
 
@@ -27,6 +28,7 @@ type GoalScreenProps = {
 const GoalScreen = (props: GoalScreenProps) => {
   const appTheme = useAppTheme();
   const [showingEditGoalModal, setShowingEditGoalModal] = useState(false);
+  const [showingMultimediaModal, setShowingMultimediaModal] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -92,9 +94,18 @@ const GoalScreen = (props: GoalScreenProps) => {
         <TouchableOpacity onPress={() => setShowingEditGoalModal(true)}>
           <Icon size={50} name={'pencil'} />
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowingMultimediaModal(true)}>
+          <Icon size={50} name={'attachment'} />
+        </TouchableOpacity>
       </View>
       {showingEditGoalModal && (
         <EditGoalModal onDismiss={() => setShowingEditGoalModal(false)} />
+      )}
+      {showingMultimediaModal && (
+        <MultimediaModal
+          onDismiss={() => setShowingMultimediaModal(false)}
+          store={goalStore}
+        />
       )}
     </View>
   );
