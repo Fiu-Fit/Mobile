@@ -96,3 +96,8 @@ export type DateState = {
   selectedDate: Date | undefined;
   displayedDate: Moment;
 };
+
+export type BarData = {
+  value: number;
+  label: string;
+};
