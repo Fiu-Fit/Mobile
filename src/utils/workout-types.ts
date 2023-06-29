@@ -30,6 +30,57 @@ export const categoryMap = new Map<number, string>([
   [-1, 'Cualquiera'],
 ]);
 
+export const imageMap = new Map<number, string>([
+  [
+    0,
+    'https://static.vecteezy.com/system/resources/previews/004/234/261/original/physical-exercise-concepts-vector.jpg',
+  ],
+  [
+    1,
+    'https://static.vecteezy.com/system/resources/previews/006/417/775/original/man-doing-plank-abdominals-exercise-flat-illustration-isolated-on-white-background-free-vector.jpg',
+  ],
+  [
+    2,
+    'https://static.vecteezy.com/system/resources/previews/004/233/642/original/physical-exercise-concepts-vector.jpg',
+  ],
+  [
+    3,
+    'https://static.vecteezy.com/system/resources/previews/004/233/960/original/dumbbells-exercise-concepts-vector.jpg',
+  ],
+  [
+    4,
+    'https://static.vecteezy.com/system/resources/previews/008/573/028/non_2x/man-doing-side-plank-abdominals-exercise-flat-illustration-isolated-on-white-background-vector.jpg',
+  ],
+  [
+    5,
+    'https://static.vecteezy.com/system/resources/previews/004/234/270/original/physical-exercise-concepts-vector.jpg',
+  ],
+  [
+    6,
+    'https://static.vecteezy.com/system/resources/previews/004/233/657/original/stretch-muscle-exercise-vector.jpg',
+  ],
+  [
+    7,
+    'https://static.vecteezy.com/system/resources/previews/004/233/960/original/dumbbells-exercise-concepts-vector.jpg',
+  ],
+  [
+    8,
+    'https://static.vecteezy.com/system/resources/previews/004/233/588/non_2x/ball-exercise-concepts-vector.jpg',
+  ],
+  [
+    9,
+    'https://static.vecteezy.com/system/resources/previews/015/397/736/original/man-doing-head-to-knee-forward-bend-pose-janu-sirsasana-exercise-flat-illustration-isolated-on-white-background-vector.jpg',
+  ],
+  [
+    10,
+    'https://static.vecteezy.com/system/resources/previews/004/233/593/original/barbells-exercise-concepts-vector.jpg',
+  ],
+  [
+    -1,
+    'https://static.vecteezy.com/system/resources/previews/005/197/576/original/error-flat-icon-free-vector.jpg',
+  ],
+]);
+
 export const workoutCategoryOptions = [
   { label: 'Piernas', key: 0 },
   { label: 'Pecho', key: 1 },

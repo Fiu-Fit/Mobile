@@ -56,7 +56,7 @@ const ItemCard = <T extends CardInfo>({
             key={`card-image-${item.id}`}
             style={styles.logo}
             source={{
-              uri: 'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
+              uri: item.imageUrl,
             }}
             resizeMode='cover'
           />
