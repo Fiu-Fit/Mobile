@@ -45,6 +45,7 @@ export class WorkoutDetailStore {
   downloads: string[] = [];
   metrics: WorkoutMetric[] = [];
   state = 'pending';
+  selectedYearFilter: Number = new Date().getFullYear();
 
   get workoutHeader(): IWorkoutHeader {
     const { name, description, duration, exercises, averageRating } =
@@ -96,6 +97,7 @@ export class WorkoutDetailStore {
       ratings: observable,
       downloads: observable,
       metrics: observable,
+      selectedYearFilter: observable,
       exerciseCards: computed,
       workoutHeader: computed,
       workoutComments: computed,
@@ -233,7 +235,7 @@ export class WorkoutDetailStore {
     try {
       logger.debug('Getting workout metrics...');
       const { data } = yield axiosClient.get<WorkoutMetric[]>(
-        `/workouts/${this.workout._id}/metrics`,
+        `/workouts/${this.workout._id}/metrics?year=${this.selectedYearFilter}`,
       );
       logger.debug('Got data: ', data);
       runInAction(() => {
