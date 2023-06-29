@@ -250,7 +250,7 @@ const LoginScreen = ({
               <>
                 <Input
                   value={values.email}
-                  placeholder='Enter your email'
+                  placeholder='Ingresa tu email'
                   placeholderTextColor={COLORS.darkGrey}
                   onChangeText={handleChange('email')}
                   labelText='Email'
@@ -263,10 +263,10 @@ const LoginScreen = ({
                 />
                 <Input
                   value={values.password}
-                  placeholder='Enter your password'
+                  placeholder='Ingresa tu contraseña'
                   placeholderTextColor={COLORS.darkGrey}
                   iconName='lock-outline'
-                  labelText='Password'
+                  labelText='Contraseña'
                   onChangeText={handleChange('password')}
                   password
                   error={errors.password}
@@ -274,7 +274,18 @@ const LoginScreen = ({
                     errors.password = '';
                   }}
                 />
-                <Button title='Login' onPress={handleSubmit} />
+                <View className='mt-3'>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={handleSubmit}
+                    className='bg-primary-color h-12 w-full justify-center items-center mb-5 rounded-md'>
+                    <View className='flex flex-row'>
+                      <Text className='text-white text-lg text-bold align-center'>
+                        {'Ingresar'}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </>
             )}
           </Formik>
@@ -285,12 +296,12 @@ const LoginScreen = ({
             className='bg-primary-color h-12 w-full justify-center items-center mb-5 rounded-md'>
             <View className='flex flex-row'>
               <Image
-                className='h-8 w-8'
+                className='h-8 w-8 mr-5'
                 source={require('../../imgs/google-logo.png')}
               />
 
               <Text className='text-white text-lg text-bold align-center'>
-                {'Sign in with Google'}
+                {'Ingresar con Google'}
               </Text>
             </View>
           </TouchableOpacity>
@@ -300,14 +311,15 @@ const LoginScreen = ({
             className='bg-primary-color h-12 w-full justify-center items-center mb-5 rounded-md'>
             <View className='flex flex-row'>
               <Text className='text-white text-lg text-bold align-center'>
-                {"Don't have an account? Register"}
+                {'¿No tienes una cuenta?'}
               </Text>
             </View>
           </TouchableOpacity>
-          <Button
-            onPress={() => navigation.push('PasswordRecoveryScreen')}
-            title='Olvidaste tu contraseña?'
-          />
+          <TouchableOpacity
+            className='justify-center items-center'
+            onPress={() => navigation.push('PasswordRecoveryScreen')}>
+            <Text>Olvidaste tu contraseña?</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </ScrollView>

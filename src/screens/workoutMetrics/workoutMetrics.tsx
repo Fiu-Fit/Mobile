@@ -17,6 +17,8 @@ import BarChart from '../../components/barChart';
 import { BarData } from '../../utils/custom-types';
 import WorkoutHeader from '../../components/workoutHeader';
 import { Divider, Text } from 'react-native-paper';
+import ChartSlider from '../../components/chartSlider/chartSlider';
+import GroupedBarChart from '../../components/groupedBarChart';
 
 const WorkoutMetricsScreen = () => {
   const appTheme = useAppTheme();
@@ -29,7 +31,7 @@ const WorkoutMetricsScreen = () => {
     useCallback(() => {
       action(() => {
         logger.info('Getting workout metrics..');
-        workoutDetailStore.fetchWorkoutMetrics();
+        //workoutDetailStore.fetchWorkoutMetrics();
         const { favorites, averageRatings } = setWorkoutMetricsData();
         setFavoritesData(favorites);
         setAverageRatingsData(averageRatings);
@@ -62,10 +64,10 @@ const WorkoutMetricsScreen = () => {
   // const setRatingValuesData = () => {
 
   //}
-  const barData = [
-    { value: 250, label: 'Enero', frontColor: '#177AD5' },
-    { value: 500, label: 'Febrero', frontColor: '#177AD5' },
-    { value: 745, label: 'Marzo', frontColor: '#177AD5' },
+  const favoriteBarData = [
+    { value: 250, label: 'Enero' },
+    { value: 500, label: 'Febrero' },
+    { value: 745, label: 'Marzo' },
     { value: 320, label: 'Abril' },
     { value: 600, label: 'Mayo' },
     { value: 256, label: 'Junio' },
@@ -75,6 +77,66 @@ const WorkoutMetricsScreen = () => {
     { value: 300, label: 'Octubre' },
     { value: 300, label: 'Noviembre' },
     { value: 300, label: 'Diciembre' },
+  ];
+
+  const ratingBarData = [
+    { value: 100, label: 'Enero' },
+    { value: 200, label: 'Febrero' },
+    { value: 300, label: 'Marzo' },
+    { value: 600, label: 'Abril' },
+    { value: 600, label: 'Mayo' },
+    { value: 256, label: 'Junio' },
+    { value: 200, label: 'Julio' },
+    { value: 300, label: 'Agosto' },
+    { value: 150, label: 'Septiembre' },
+    { value: 300, label: 'Octubre' },
+    { value: 300, label: 'Noviembre' },
+    { value: 300, label: 'Diciembre' },
+  ];
+
+  const ratingTerribleBarData = [
+    { value: 20, label: 'Enero' },
+    { value: 30, label: 'Febrero' },
+    { value: 10, label: 'Marzo' },
+    { value: 12, label: 'Abril' },
+    { value: 35, label: 'Mayo' },
+    { value: 50, label: 'Junio' },
+    { value: 21, label: 'Julio' },
+    { value: 10, label: 'Agosto' },
+    { value: 15, label: 'Septiembre' },
+    { value: 30, label: 'Octubre' },
+    { value: 32, label: 'Noviembre' },
+    { value: 80, label: 'Diciembre' },
+  ];
+
+  const ratingBadBarData = [
+    { value: 20, label: 'Enero' },
+    { value: 30, label: 'Febrero' },
+    { value: 10, label: 'Marzo' },
+    { value: 12, label: 'Abril' },
+    { value: 35, label: 'Mayo' },
+    { value: 50, label: 'Junio' },
+    { value: 21, label: 'Julio' },
+    { value: 10, label: 'Agosto' },
+    { value: 15, label: 'Septiembre' },
+    { value: 30, label: 'Octubre' },
+    { value: 32, label: 'Noviembre' },
+    { value: 80, label: 'Diciembre' },
+  ];
+
+  const ratingGoodBarData = [
+    { value: 10, label: 'Enero' },
+    { value: 30, label: 'Febrero' },
+    { value: 10, label: 'Marzo' },
+    { value: 18, label: 'Abril' },
+    { value: 70, label: 'Mayo' },
+    { value: 50, label: 'Junio' },
+    { value: 40, label: 'Julio' },
+    { value: 50, label: 'Agosto' },
+    { value: 15, label: 'Septiembre' },
+    { value: 30, label: 'Octubre' },
+    { value: 10, label: 'Noviembre' },
+    { value: 20, label: 'Diciembre' },
   ];
 
   return (
@@ -94,11 +156,15 @@ const WorkoutMetricsScreen = () => {
         />
       )}
       <View
-        style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }}>
+        style={{ flex: 0.1, alignItems: 'center', justifyContent: 'center' }}>
         <Text style={{ fontSize: 40 }}>{workoutDetailStore.workout.name}</Text>
       </View>
       <View
-        style={{ flex: 0.1, alignItems: 'center', justifyContent: 'center' }}>
+        style={{
+          flex: 0.1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
         <WorkoutFilter
           iconName='calendar'
           text='Año'
@@ -111,24 +177,22 @@ const WorkoutMetricsScreen = () => {
       </View>
       <View
         style={{
-          flex: 0.7,
+          flex: 0.8,
           alignItems: 'center',
           justifyContent: 'center',
           marginHorizontal: 4,
         }}>
-        <View style={{ flex: 0.1 }}>
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 20,
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}>
-            Cantidad de favoritos
-          </Text>
-        </View>
-        <View style={{ flex: 0.9, marginTop: 10, backgroundColor: 'green' }}>
-          <BarChart data={barData} />
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+          }}>
+          <ChartSlider
+            favoriteData={favoriteBarData}
+            ratingData={ratingBarData}
+            ratings={[ratingTerribleBarData, ratingGoodBarData]}
+          />
         </View>
       </View>
     </View>

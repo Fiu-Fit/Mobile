@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import React, { useCallback } from 'react';
@@ -18,6 +18,7 @@ import { Role } from '../../constants/roles';
 import WorkoutCompletedModal from '../../components/workoutCompletedModal';
 import { useFocusEffect } from '@react-navigation/native';
 import MultimediaModal from '../../components/multimediaModal';
+import Button from '../../components/button';
 
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
@@ -110,23 +111,20 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
       </View>
       {currentUser.role !== Role.Athlete &&
         currentUser.id === workoutDetailStore.workout.authorId && (
-          <FloatingActionButton
-            onPress={() => navigation.push('UpsertWorkoutScreen', { itemId })}
-            icon='pencil'
-          />
+          <View>
+            <FloatingActionButton
+              onPress={() => navigation.push('UpsertWorkoutScreen', { itemId })}
+              icon='pencil'
+            />
+            <FloatingActionButton
+              onPress={() => navigation.push('WorkoutMetricsScreen')}
+              icon='chart-bar'
+              right={320}
+            />
+          </View>
         )}
 
-      {currentUser.role !== Role.Athlete &&
-        currentUser.id === workoutDetailStore.workout.authorId && (
-          <Button
-            icon='google-fit'
-            mode='outlined'
-            onPress={() => navigation.push('WorkoutMetricsScreen')}>
-            <Text className='text-l'>Metricas</Text>
-          </Button>
-        )}
-
-      <View className='mb-10 mx-10' style={{ flex: 0.1 }}>
+      <View style={{ flex: 0.1, marginHorizontal: 130, marginTop: 30 }}>
         <Button title='Completar' onPress={() => handleCompletedWorkout()} />
       </View>
     </View>

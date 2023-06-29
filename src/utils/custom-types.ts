@@ -101,3 +101,5 @@ export type BarData = {
   value: number;
   label: string;
 };
+
+export type BarChartProps = { label: string; value: number }[];

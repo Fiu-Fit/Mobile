@@ -42,7 +42,7 @@ const WorkoutInfo = ({
               marginRight: 30,
               marginLeft: 5,
             }}
-            name={'comment-outline'}
+            name={'star'}
           />
         </TouchableOpacity>
         <TouchableOpacity

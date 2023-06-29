@@ -102,11 +102,11 @@ const UpsertWorkoutScreen = ({
           handleSubmitWorkout();
         }}>
         {({ values, errors, handleChange, handleSubmit }) => (
-          <>
+          <View className='mx-5'>
             <Input
               key={'upsertWorkout-name-input'}
               value={values.name}
-              placeholder='Workout name'
+              placeholder='Nombre'
               placeholderTextColor={appTheme.colors.background}
               onChangeText={text => {
                 runInAction(() => {
@@ -115,8 +115,8 @@ const UpsertWorkoutScreen = ({
                 });
               }}
               multiline={true}
-              labelText='Workout name'
-              iconName='comment-outline'
+              iconName='dumbbell'
+              labelText='Nombre'
               error={errors.name}
               password={false}
               onFocus={() => {
@@ -126,7 +126,7 @@ const UpsertWorkoutScreen = ({
             <Input
               key={'upsertWorkout-description-input'}
               value={values.description}
-              placeholder='Workout description'
+              placeholder='Descripción'
               placeholderTextColor={appTheme.colors.background}
               onChangeText={text => {
                 runInAction(() => {
@@ -135,8 +135,8 @@ const UpsertWorkoutScreen = ({
                 });
               }}
               multiline={true}
-              labelText='Workout description'
-              iconName='comment-outline'
+              iconName='dumbbell'
+              labelText='Descripción'
               error={errors.description}
               password={false}
               onFocus={() => {
@@ -146,7 +146,7 @@ const UpsertWorkoutScreen = ({
             <Input
               key={'upsertWorkout-difficulty-input'}
               value={values.difficulty}
-              placeholder='Workout difficulty'
+              placeholder='Dificultad'
               placeholderTextColor={appTheme.colors.background}
               onChangeText={text => {
                 runInAction(() => {
@@ -155,8 +155,8 @@ const UpsertWorkoutScreen = ({
                 });
               }}
               multiline={true}
-              labelText='Workout difficulty'
-              iconName='comment-outline'
+              labelText='Dificultad'
+              iconName='dumbbell'
               error={errors.difficulty}
               password={false}
               onFocus={() => {
@@ -262,7 +262,7 @@ const UpsertWorkoutScreen = ({
               title='Enviar'
               onPress={handleSubmit}
             />
-          </>
+          </View>
         )}
       </Formik>
       {selectedExercise && (

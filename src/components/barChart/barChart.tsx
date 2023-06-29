@@ -1,40 +1,51 @@
-import { View } from 'react-native';
-import { BarChart as RNBarChart } from 'react-native-gifted-charts';
-import { VictoryChart, VictoryGroup, VictoryBar } from 'victory-native';
-
-type BarChartProps = { label: string; value: number }[];
+import {
+  VictoryChart,
+  VictoryBar,
+  VictoryTheme,
+  VictoryAxis,
+} from 'victory-native';
+import COLORS from '../../constants/colors';
+import { BarChartProps } from '../../utils/custom-types';
 
 const BarChart = ({ data }: { data: BarChartProps }) => {
+  console.log('BarChar: ', data);
   return (
-    <VictoryChart>
-      <VictoryGroup>
-        <VictoryBar data={data} style={{ data: { fill: 'blue' } }} />
-      </VictoryGroup>
+    <VictoryChart theme={VictoryTheme.grayscale}>
+      <VictoryAxis
+        style={{
+          axis: { stroke: '#E0F2F1' },
+          axisLabel: { fontSize: 16, fill: '#E0F2F1' },
+          ticks: { stroke: '#ccc' },
+          tickLabels: { fontSize: 14, fill: '#E0F2F1', fontWeight: 'bold' },
+          grid: { stroke: '#B3E5FC', strokeWidth: 0.25 },
+        }}
+        dependentAxis
+      />
+      <VictoryAxis
+        style={{
+          axis: { stroke: '#E0F2F1' },
+          axisLabel: { fontSize: 16 },
+          ticks: { stroke: '#ccc' },
+          tickLabels: {
+            fontSize: 10,
+            fill: '#E0F2F1',
+            fontWeight: 'bold',
+            angle: -45,
+          },
+        }}
+      />
+      <VictoryBar
+        data={data}
+        x='label'
+        y='value'
+        animate={{
+          duration: 2000,
+          onLoad: { duration: 1000 },
+        }}
+        style={{ data: { fill: COLORS.blue } }}
+      />
     </VictoryChart>
   );
 };
 
 export default BarChart;
-
-// eslint-disable-next-line no-lone-blocks
-{
-  /*return (
-  <RNBarChart
-    barStyle={{ margin: 10 }}
-    horizontal
-    barWidth={20}
-    noOfSections={3}
-    barBorderRadius={4}
-    frontColor='lightgray'
-    data={data}
-    yAxisThickness={0}
-    xAxisThickness={0}
-    width={550}
-    height={100}
-    hideRules
-    isAnimated
-    spacing={15}
-  />
-);
-*/
-}

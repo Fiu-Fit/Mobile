@@ -1,5 +1,6 @@
 import { Animated, Dimensions, StyleSheet, View } from 'react-native';
 import COLORS from '../../constants/colors';
+import { BarChartProps } from '../../utils/custom-types';
 
 const { width } = Dimensions.get('screen');
 const Pagination = ({
@@ -7,7 +8,7 @@ const Pagination = ({
   scrollX,
   index,
 }: {
-  data: string[];
+  data: string[] | BarChartProps[];
   scrollX: Animated.Value;
   index: number;
 }) => {
@@ -28,11 +29,7 @@ const Pagination = ({
         return (
           <Animated.View
             key={idx.toString()}
-            style={[
-              styles.dot,
-              { width: dotWidth, backgroundColor },
-              //idx === index && styles.dotActive,
-            ]}
+            style={[styles.dot, { width: dotWidth, backgroundColor }]}
           />
         );
       })}

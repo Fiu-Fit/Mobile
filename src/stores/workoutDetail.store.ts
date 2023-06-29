@@ -46,6 +46,7 @@ export class WorkoutDetailStore {
   metrics: WorkoutMetric[] = [];
   state = 'pending';
   selectedYearFilter: Number = new Date().getFullYear();
+  authorName: string = 'Author';
 
   get workoutHeader(): IWorkoutHeader {
     const { name, description, duration, exercises, averageRating } =
@@ -54,7 +55,7 @@ export class WorkoutDetailStore {
       name,
       description,
       duration,
-      author: 'Jorge', // @TODO Backend: attach User Object in Author instead of AuthorID
+      author: this.authorName,
       averageRating: averageRating ?? 'No ratings!',
       exerciseCount: exercises.size,
     };
@@ -98,6 +99,7 @@ export class WorkoutDetailStore {
       downloads: observable,
       metrics: observable,
       selectedYearFilter: observable,
+      authorName: observable,
       exerciseCards: computed,
       workoutHeader: computed,
       workoutComments: computed,
@@ -112,6 +114,7 @@ export class WorkoutDetailStore {
       removeWorkoutAsFavourite: flow,
       createWorkoutRating: flow,
       fetchWorkoutMetrics: flow,
+      fetchAuthor: flow,
     });
   }
 
@@ -152,6 +155,25 @@ export class WorkoutDetailStore {
     logger.debug('Files uploaded!');
   }
 
+  *fetchAuthor() {
+    this.state = 'pending';
+    try {
+      logger.debug(
+        `Getting author ${this.workout.authorId} for workout ${this.workout._id}`,
+      );
+      const { data } = yield axiosClient.get(`/users/${this.workout.authorId}`);
+      logger.debug('Got author ', data);
+      runInAction(() => {
+        this.authorName = data.name;
+      });
+      this.state = 'done';
+    } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
   *fetchWorkout(workoutId: string) {
     this.state = 'pending';
     if (!workoutId || workoutId === '') {
@@ -188,7 +210,7 @@ export class WorkoutDetailStore {
         await this.fetchWorkoutRatings();
         logger.debug('Loaded Workout: ', this.workout);
         await this.downloadResources();
-
+        await this.fetchAuthor();
         this.state = 'done';
       });
     } catch (e) {
