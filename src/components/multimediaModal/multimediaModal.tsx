@@ -4,10 +4,11 @@ import { Modal, Portal } from 'react-native-paper';
 import { observer } from 'mobx-react';
 import { WorkoutDetailStore } from '../../stores/workoutDetail.store';
 import Slider from '../slider';
+import { GoalStore } from '../../stores/goal.store';
 
 type ModalProps = {
   onDismiss: () => void;
-  store: WorkoutDetailStore;
+  store: WorkoutDetailStore | GoalStore;
 };
 
 const MultimediaModal = ({ onDismiss, store }: ModalProps) => {

@@ -13,6 +13,7 @@ export type GoalsProps = {
   deadline?: Date;
   exerciseId: string;
   status: GoalStatus;
+  multimedia: string[];
 };
 
 export type GoalInputProps = {

@@ -3,12 +3,26 @@ import { GoalInputProps, GoalStatus, GoalsProps } from '../utils/goal-types';
 import LoggerFactory from '../utils/logger-utility';
 import { CardInfo } from '../utils/custom-types';
 import { axiosClient } from '../utils/constants';
+import storage from '@react-native-firebase/storage';
 
 const logger = LoggerFactory('goal-store');
 
+const defaultGoal = {
+  id: 0,
+  title: '',
+  description: '',
+  userId: 0,
+  targetValue: 0,
+  deadline: new Date(),
+  exerciseId: '',
+  status: GoalStatus.INPROGRESS,
+  multimedia: [],
+};
+
 export class GoalStore {
   goals: GoalsProps[] = [];
-  currentGoal: GoalsProps | undefined = undefined;
+  currentGoal: GoalsProps = defaultGoal;
+  downloads: string[] = [];
   state = 'pending';
 
   get cardsInfo(): CardInfo[] {
@@ -28,6 +42,7 @@ export class GoalStore {
     makeObservable(this, {
       goals: observable,
       currentGoal: observable,
+      downloads: observable,
       cardsInfo: computed,
       fetchGoals: flow,
       fetchGoal: flow,
@@ -35,6 +50,43 @@ export class GoalStore {
       deleteGoal: flow,
       editGoal: flow,
     });
+  }
+
+  async downloadResources() {
+    logger.debug('Downloading files: ', this.currentGoal.multimedia);
+    this.downloads = [];
+    await Promise.all(
+      this.currentGoal.multimedia.map(async uri => {
+        const lastSlashIndex = uri.lastIndexOf('/');
+        const fileName = uri.substring(lastSlashIndex + 1);
+        try {
+          const download = await storage()
+            .ref(`/goals/${this.currentGoal!.id}/${fileName}`)
+            .getDownloadURL();
+          this.downloads.push(download + uri.slice(uri.lastIndexOf('.')));
+        } catch (err) {
+          logger.error('Error while downloading goal multimedia:', { err });
+        }
+      }),
+    );
+  }
+
+  async uploadResources() {
+    logger.debug('Uploading files: ', this.currentGoal.multimedia);
+    await Promise.all(
+      this.currentGoal.multimedia.map(async uri => {
+        const lastSlashIndex = uri.lastIndexOf('/');
+        const fileName = uri.substring(lastSlashIndex + 1);
+        try {
+          await storage()
+            .ref(`/goals/${this.currentGoal.id}/${fileName}`)
+            .putFile(uri);
+        } catch (err) {
+          logger.error('Error while uploading files:', { err });
+        }
+      }),
+    );
+    logger.debug('Files uploaded!');
   }
 
   *fetchGoals(userId: number) {
@@ -58,12 +110,12 @@ export class GoalStore {
   }
 
   *fetchGoal(goalId: number) {
-    this.currentGoal = undefined;
     this.state = 'pending';
     try {
       logger.debug(`Getting goal with id ${goalId}`);
       const { data } = yield axiosClient.get<GoalsProps>(`/goals/${goalId}`);
       logger.debug('Got data: ', data);
+      yield this.downloadResources();
       runInAction(() => {
         this.currentGoal = data;
         this.state = 'done';
@@ -87,6 +139,7 @@ export class GoalStore {
         userId,
         deadline: deadline ? deadline : undefined,
         status: GoalStatus.INPROGRESS,
+        multimedia: [],
       });
       logger.debug('Got data: ', data);
       this.fetchGoals(userId);
@@ -105,7 +158,7 @@ export class GoalStore {
       yield axiosClient.delete(`/goals/${this.currentGoal?.id}`);
       logger.debug('Deleted goal with id:', this.currentGoal?.id);
       this.fetchGoals(this.currentGoal!.userId);
-      this.currentGoal = undefined;
+      //this.currentGoal = undefined;
     } catch (e) {
       logger.error('Error while deleting goal:', { e });
       runInAction(() => {
@@ -124,13 +177,15 @@ export class GoalStore {
       };
 
       logger.debug('Old description: ', description);
+      logger.debug('New media: ', this.currentGoal.multimedia);
       logger.debug('Editing goal with id: ', id);
       const { data } = yield axiosClient.put(`/goals/${id}`, {
         ...goalPayload,
       });
       logger.debug('Got data: ', data);
-      this.fetchGoal(this.currentGoal!.id);
-      this.fetchGoals(this.currentGoal!.userId);
+      yield this.uploadResources();
+      yield this.fetchGoal(this.currentGoal!.id);
+      yield this.fetchGoals(this.currentGoal!.userId);
     } catch (e: any) {
       logger.error('Got error while editing goal description:', { e });
       runInAction(() => {

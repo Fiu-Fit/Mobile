@@ -1,15 +1,15 @@
 import { useRef, useState } from 'react';
-import { Animated, FlatList, Image, View } from 'react-native';
+import { Animated, FlatList, Image, View, ViewToken } from 'react-native';
 import { WorkoutDetailStore } from '../../stores/workoutDetail.store';
 import { GoalStore } from '../../stores/goal.store';
 import VideoPlayer from 'react-native-video-player';
 import Pagination from '../pagination';
 
-const Slider = ({ store }: { store: WorkoutDetailStore }) => {
+const Slider = ({ store }: { store: WorkoutDetailStore | GoalStore }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [index, setIndex] = useState(0);
 
-  const handleOnScroll = event => {
+  const handleOnScroll = (event: any) => {
     Animated.event(
       [
         {
@@ -26,9 +26,13 @@ const Slider = ({ store }: { store: WorkoutDetailStore }) => {
     )(event);
   };
 
-  const handleOnViewableItemsChanged = useRef(({ viewableItems }) => {
-    setIndex(viewableItems[0].index);
-  }).current;
+  const handleOnViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+      if (viewableItems && viewableItems.length > 0 && viewableItems[0]) {
+        setIndex(viewableItems[0].index ?? 0);
+      }
+    },
+  ).current;
 
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
@@ -39,11 +43,11 @@ const Slider = ({ store }: { store: WorkoutDetailStore }) => {
       className='mb-10 mx-5 items-center justify-center'>
       <FlatList
         data={store.downloads}
-        renderItem={({ item, index }) => (
+        renderItem={({ item, index: i }) => (
           <View className='items-center justify-center'>
             {item.slice(item.lastIndexOf('.')) === '.jpg' ? (
               <Image
-                key={index}
+                key={i}
                 source={{
                   uri: item,
                 }}
@@ -51,7 +55,7 @@ const Slider = ({ store }: { store: WorkoutDetailStore }) => {
               />
             ) : (
               <VideoPlayer
-                key={index}
+                key={i}
                 video={{
                   uri: item,
                 }}
