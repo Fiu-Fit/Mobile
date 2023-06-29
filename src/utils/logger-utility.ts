@@ -40,8 +40,10 @@ const config = {
     'notifications-screen',
     'goal-screen',
     'home-screen',
+    'chat-screen',
     'workout-media-medial',
     'workout-info',
+    'verification-modal',
   ],
   transportOptions: {
     colors: {

@@ -39,22 +39,48 @@ export const useFetchUser = ({
 };
 
 export const fetchUserData = async (id?: number) => {
+  let data;
+  let followedUsers;
+  let verification;
   try {
     logger.debug(`Fetching user: ${id}`);
-    const { data } = !id
-      ? await axiosClient.post('/users/me')
-      : await axiosClient.get(`/users/${id}`);
+    data = !id
+      ? (await axiosClient.post('/users/me')).data
+      : (await axiosClient.get(`/users/${id}`)).data;
     logger.debug('Got user: ', data);
-    const { data: followedUsers } = await axiosClient.get(
-      `/followers/following?userId=${data.id}`,
-    );
-    logger.debug('followed users:', followedUsers?.rows);
-    return {
-      response: { ...data, followedUsers: followedUsers?.rows ?? [] },
-      error: null,
-    };
   } catch (err: any) {
     logger.error('An error ocurred while fetching the user: ', { error: err });
     return { response: null, error: err };
   }
+
+  try {
+    followedUsers = (
+      await axiosClient.get(`/followers/following?userId=${data.id}`)
+    ).data;
+    logger.debug('followed users:', followedUsers?.rows);
+  } catch (err: any) {
+    logger.error(
+      `An error ocurred while fetching followed users for user: ${data.id}`,
+      { error: err },
+    );
+  }
+  try {
+    verification = (await axiosClient.get(`/verifications/user/${data.id}`))
+      .data;
+  } catch (err: any) {
+    if (err.response.status === 404) {
+      logger.warning(`No user verification found for user: ${data.id}`);
+    } else {
+      logger.error(`Error while fetching verification for user: ${data.id}`);
+    }
+  }
+
+  return {
+    response: {
+      ...data,
+      followedUsers: followedUsers?.rows ?? [],
+      verification,
+    },
+    error: null,
+  };
 };

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import {
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -24,8 +25,21 @@ import { DateTime } from 'luxon';
 import FiuFitLogo from '../../components/dumb/fiuFitLogo';
 import { useUserContext } from '../../App';
 import { fetchUserData } from '../../utils/fetch-helpers';
+import TouchID from 'react-native-touch-id';
 
 const logger = LoggerFactory('login');
+
+const optionalConfigObject = {
+  title: 'Authentication Required', // Android
+  imageColor: '#e00606', // Android
+  imageErrorColor: '#ff0000', // Android
+  sensorDescription: 'Touch sensor', // Android
+  sensorErrorDescription: 'Failed', // Android
+  cancelText: 'Cancel', // Android
+  fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+  unifiedErrors: false, // use unified error messages (default false)
+  passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
+};
 
 const LoginScreen = ({
   navigation,
@@ -52,9 +66,15 @@ const LoginScreen = ({
       });
       logger.debug('Saving token: ', data.token);
       await saveToken(data.token);
+      await AsyncStorage.setItem(
+        'BiometricCredentials',
+        JSON.stringify({ email, password }),
+      );
+      logger.info('Saved biometric credentials: ');
       const { response: user, error } = await fetchUserData();
       if (error) {
         logger.error('Error while logging in: ', error);
+        Alert.alert('Error de login! Datos biometricos inválidos.');
       } else {
         logger.debug('user: ', user);
         setCurrentUser(user as User);
@@ -63,17 +83,81 @@ const LoginScreen = ({
       }
     } catch (error: any) {
       logger.error('Error while logging in: ', error);
+      Alert.alert('Error de login!');
+    }
+    setLoading(false);
+  };
+
+  const handleSignInWithBiometrics = async (
+    email: string,
+    password: string,
+  ) => {
+    setLoading(true);
+    try {
+      const { data } = await axiosClient.post('/auth/login', {
+        email,
+        password,
+      });
+      logger.debug('Saving token: ', data.token);
+      await saveToken(data.token);
+      const { response: user, error } = await fetchUserData();
+      if (error) {
+        logger.error('Error while logging in: ', error);
+        Alert.alert('Error de login! Usuario o password inválidos.');
+      } else {
+        logger.debug('user: ', user);
+        setCurrentUser(user as User);
+
+        navigation.push('Home');
+      }
+    } catch (error: any) {
+      logger.error('Error while logging in: ', error);
+      Alert.alert('Error de login!');
     }
     setLoading(false);
   };
 
   useEffect(() => {
+    const loginWithBiometricCredentials = async () => {
+      try {
+        if (!(await TouchID.isSupported())) {
+          logger.info('TouchID is not supported ', {
+            suoprtedVersion: await TouchID.isSupported(),
+          });
+          return;
+        }
+        logger.info('TouchID is supported');
+        logger.info('getting BiometricCredentials');
+        const storedBiometricCredentials = await AsyncStorage.getItem(
+          'BiometricCredentials',
+        );
+        if (storedBiometricCredentials === null) {
+          return;
+        }
+        const permissions = await AsyncStorage.getItem('biometricLoginState');
+        if (permissions !== 'enabled') {
+          return;
+        }
+        await TouchID.authenticate(undefined, optionalConfigObject);
+        const biometricCredentials = JSON.parse(storedBiometricCredentials) as {
+          email: string;
+          password: string;
+        };
+        await handleSignInWithBiometrics(
+          biometricCredentials.email,
+          biometricCredentials.password,
+        );
+      } catch (error) {
+        logger.error('touchID not suported: ', { error });
+      }
+    };
     GoogleSignin.configure({
       scopes: ['email'],
       webClientId:
         '649565336432-aftssi22monbq7e2egkrufg8uou85kac.apps.googleusercontent.com',
       offlineAccess: true,
     });
+    loginWithBiometricCredentials();
   }, []);
 
   const getDateDiff = (date1: DateTime, date2: DateTime): number => {
@@ -129,6 +213,7 @@ const LoginScreen = ({
       await axiosClient.post('/metrics/login', { uid: user?.uid });
     } catch (error: any) {
       logger.error('Error while logging in with google: ', error.response.data);
+      Alert.alert('Error al querer loguearse usando Google!');
     }
   };
 

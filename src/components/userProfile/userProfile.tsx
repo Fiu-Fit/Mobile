@@ -1,4 +1,12 @@
-import { View, Image, StyleSheet, Text, Alert, TextInput } from 'react-native';
+import {
+  View,
+  Image,
+  StyleSheet,
+  Text,
+  Alert,
+  TextInput,
+  Switch,
+} from 'react-native';
 import { Button, Dialog, Portal } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import auth from '@react-native-firebase/auth';
@@ -13,6 +21,7 @@ import Geolocation, {
 } from '@react-native-community/geolocation';
 import { axiosClient } from '../../utils/constants';
 import { useFetchUser } from '../../utils/fetch-helpers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const logger = LoggerFactory('user-profile');
 
@@ -69,7 +78,15 @@ const UserProfile = (props: UserProfileProps) => {
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
   const [visible, setVisible] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [isEnabled, setIsEnabled] = useState(false);
 
+  const toggleSwitch = async () => {
+    await AsyncStorage.setItem(
+      'biometricLoginState',
+      isEnabled ? 'disabled' : 'enabled',
+    );
+    setIsEnabled(!isEnabled);
+  };
   const showDialog = () => setVisible(true);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -108,6 +125,11 @@ const UserProfile = (props: UserProfileProps) => {
     const following = Boolean(
       currentUser.followedUsers.find(user => user?.id === selectedUser?.id),
     );
+    const verifyBiometricPermissionsState = async () => {
+      const permissions = await AsyncStorage.getItem('biometricLoginState');
+      setIsEnabled(permissions === 'enabled' ? true : false);
+    };
+    verifyBiometricPermissionsState();
     setFollowAction(
       following
         ? { followState: following, followCallback: handleUnfollow }
@@ -151,6 +173,15 @@ const UserProfile = (props: UserProfileProps) => {
       <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
       <Text style={styles.name}>{selectedUser?.firstName}</Text>
       <Text style={styles.name}>{selectedUser?.lastName}</Text>
+      {props.myProfile && selectedUser?.verification && (
+        <Text style={styles.personalInfo}>
+          Estado de Verificación: {selectedUser?.verification?.status}
+        </Text>
+      )}
+      {!props.myProfile &&
+        selectedUser?.verification?.status === 'Approved' && (
+          <Text style={styles.personalInfo}>Trainer Verificado!</Text>
+        )}
       <Text style={styles.personalInfo}>{selectedUser?.bodyWeight} kg</Text>
       <Text style={styles.email}>{selectedUser?.email}</Text>
       {!props.myProfile && (
@@ -159,7 +190,9 @@ const UserProfile = (props: UserProfileProps) => {
             mode='contained'
             style={styles.button}
             onPress={() => {
-              props.navigation?.push('ChatScreen', { user: selectedUser });
+              if (selectedUser) {
+                props.navigation?.push('ChatScreen', { user: selectedUser });
+              }
             }}>
             Enviar mensaje
           </Button>
@@ -217,6 +250,14 @@ const UserProfile = (props: UserProfileProps) => {
           <Button mode='contained' style={styles.button} onPress={showDialog}>
             Add Number
           </Button>
+          <Text> Permitir Login Con Biometria: </Text>
+          <Switch
+            trackColor={{ false: '#767577', true: '#81b0ff' }}
+            thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+            ios_backgroundColor='#3e3e3e'
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
           <Button
             mode='contained'
             style={styles.button}
