@@ -78,6 +78,9 @@ const UserProfile = (props: UserProfileProps) => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isEnabled, setIsEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [iAmSelected, setIAmSelected] = useState(
+    currentUser.id === selectedUser?.id,
+  );
   const toggleSwitch = async () => {
     await AsyncStorage.setItem(
       'biometricLoginState',
@@ -134,6 +137,7 @@ const UserProfile = (props: UserProfileProps) => {
             ? { followState: following, followCallback: handleUnfollow }
             : { followState: following, followCallback: handleFollow },
         );
+        setIAmSelected(currentUser.id === selectedUser?.id);
         setIsLoading(false);
       })
       .catch(error =>
@@ -142,7 +146,7 @@ const UserProfile = (props: UserProfileProps) => {
     const following = Boolean(
       currentUser.followedUsers.find(user => user?.id === selectedUser?.id),
     );
-  }, [followAction.followState, props.route?.params.givenUserId]);
+  }, [followAction.followState, props.route?.params.givenUserId, iAmSelected]);
   const handleSignOut = async () => {
     try {
       await axiosClient.post('/auth/logout');
@@ -189,18 +193,17 @@ const UserProfile = (props: UserProfileProps) => {
       <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
       <Text style={styles.name}>{selectedUser?.firstName}</Text>
       <Text style={styles.name}>{selectedUser?.lastName}</Text>
-      {selectedUser?.id === currentUser.id && selectedUser?.verification && (
+      {iAmSelected && selectedUser?.verification && (
         <Text style={styles.personalInfo}>
           Estado de Verificación: {selectedUser?.verification?.status}
         </Text>
       )}
-      {selectedUser?.id !== currentUser.id &&
-        selectedUser?.verification?.status === 'Approved' && (
-          <Text style={styles.personalInfo}>Trainer Verificado!</Text>
-        )}
+      {!iAmSelected && selectedUser?.verification?.status === 'Approved' && (
+        <Text style={styles.personalInfo}>Trainer Verificado!</Text>
+      )}
       <Text style={styles.personalInfo}>{selectedUser?.bodyWeight} kg</Text>
       <Text style={styles.email}>{selectedUser?.email}</Text>
-      {selectedUser?.id !== currentUser.id && (
+      {!iAmSelected && (
         <>
           <Button
             mode='contained'
@@ -214,7 +217,7 @@ const UserProfile = (props: UserProfileProps) => {
           </Button>
         </>
       )}
-      {selectedUser?.id === currentUser.id && (
+      {iAmSelected && (
         <>
           <Button
             mode='contained'
@@ -282,7 +285,7 @@ const UserProfile = (props: UserProfileProps) => {
           </Button>
         </>
       )}
-      {selectedUser?.id !== currentUser.id && (
+      {!iAmSelected && (
         <Button
           mode='contained'
           style={styles.button}
