@@ -11,7 +11,6 @@ import {
 import { Button, Dialog, Portal } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import { User, UserProfileProps } from '../../utils/custom-types';
-import { useFocusEffect } from '@react-navigation/native';
 import { observer } from 'mobx-react';
 import LoggerFactory from '../../utils/logger-utility';
 import { useEffect, useState } from 'react';
