@@ -6,21 +6,19 @@ import {
   Alert,
   TextInput,
   Switch,
+  ActivityIndicator,
 } from 'react-native';
 import { Button, Dialog, Portal } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
-import auth from '@react-native-firebase/auth';
 import { User, UserProfileProps } from '../../utils/custom-types';
-import { useFocusEffect } from '@react-navigation/native';
 import { observer } from 'mobx-react';
 import LoggerFactory from '../../utils/logger-utility';
-import { searchStore } from '../../stores/userSearch.store';
 import { useEffect, useState } from 'react';
 import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
 import { axiosClient } from '../../utils/constants';
-import { useFetchUser } from '../../utils/fetch-helpers';
+import { fetchUserData, useFetchUser } from '../../utils/fetch-helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const logger = LoggerFactory('user-profile');
@@ -79,7 +77,7 @@ const UserProfile = (props: UserProfileProps) => {
   const [visible, setVisible] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isEnabled, setIsEnabled] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   const toggleSwitch = async () => {
     await AsyncStorage.setItem(
       'biometricLoginState',
@@ -111,40 +109,58 @@ const UserProfile = (props: UserProfileProps) => {
     followState: false,
     followCallback: handleFollow,
   });
-  useFocusEffect(() => {
-    logger.info(`Selected User: ${props.route?.params.givenUserId}`);
-    setSelectedUser(
-      props.myProfile
-        ? currentUser
-        : searchStore.results.find(
-            user => user.id === props.route?.params.givenUserId,
-          ),
-    );
-  });
   useEffect(() => {
-    const following = Boolean(
-      currentUser.followedUsers.find(user => user?.id === selectedUser?.id),
-    );
+    setIsLoading(true);
+    logger.info(`Selected User: ${props.route?.params.givenUserId}`);
     const verifyBiometricPermissionsState = async () => {
       const permissions = await AsyncStorage.getItem('biometricLoginState');
       setIsEnabled(permissions === 'enabled' ? true : false);
     };
+    const getSelectedUser = async () => {
+      const fetchedUser = await fetchUserData(props.route?.params.givenUserId);
+      if (fetchedUser.error !== null) {
+        logger.error('an error ocurred while trying to fetch a user: ', {
+          fetchedUser,
+        });
+        return;
+      }
+      setSelectedUser(fetchedUser.response);
+    };
     verifyBiometricPermissionsState();
-    setFollowAction(
-      following
-        ? { followState: following, followCallback: handleUnfollow }
-        : { followState: following, followCallback: handleFollow },
+    getSelectedUser()
+      .then(() => {
+        setFollowAction(
+          following
+            ? { followState: following, followCallback: handleUnfollow }
+            : { followState: following, followCallback: handleFollow },
+        );
+        setIsLoading(false);
+      })
+      .catch(error =>
+        logger.error('an error ocurred while updateing the user: ', { error }),
+      );
+    const following = Boolean(
+      currentUser.followedUsers.find(user => user?.id === selectedUser?.id),
     );
-  }, [followAction.followState, currentUser, selectedUser]);
+  }, [followAction.followState, props.route?.params.givenUserId]);
   const handleSignOut = async () => {
-    await auth().signOut();
-    props.navigation?.getParent()?.navigate('LoginScreen');
+    try {
+      await axiosClient.post('/auth/logout');
+      props.navigation?.getParent()?.navigate('LoginScreen');
+    } catch (err: any) {
+      logger.error(
+        'Error while trying to make user a Trainer:',
+        err.response.data,
+      );
+    }
   };
   const pictureUrl =
     'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80';
 
   useFetchUser({ observables: [followAction.followState] });
-  return (
+  return isLoading ? (
+    <ActivityIndicator size='large' color='#0000ff' />
+  ) : (
     <View
       style={[
         styles.container,
@@ -173,18 +189,18 @@ const UserProfile = (props: UserProfileProps) => {
       <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
       <Text style={styles.name}>{selectedUser?.firstName}</Text>
       <Text style={styles.name}>{selectedUser?.lastName}</Text>
-      {props.myProfile && selectedUser?.verification && (
+      {selectedUser?.id === currentUser.id && selectedUser?.verification && (
         <Text style={styles.personalInfo}>
           Estado de Verificación: {selectedUser?.verification?.status}
         </Text>
       )}
-      {!props.myProfile &&
+      {selectedUser?.id !== currentUser.id &&
         selectedUser?.verification?.status === 'Approved' && (
           <Text style={styles.personalInfo}>Trainer Verificado!</Text>
         )}
       <Text style={styles.personalInfo}>{selectedUser?.bodyWeight} kg</Text>
       <Text style={styles.email}>{selectedUser?.email}</Text>
-      {!props.myProfile && (
+      {selectedUser?.id !== currentUser.id && (
         <>
           <Button
             mode='contained'
@@ -198,7 +214,7 @@ const UserProfile = (props: UserProfileProps) => {
           </Button>
         </>
       )}
-      {props.myProfile && (
+      {selectedUser?.id === currentUser.id && (
         <>
           <Button
             mode='contained'
@@ -266,7 +282,7 @@ const UserProfile = (props: UserProfileProps) => {
           </Button>
         </>
       )}
-      {!props.myProfile && (
+      {selectedUser?.id !== currentUser.id && (
         <Button
           mode='contained'
           style={styles.button}
