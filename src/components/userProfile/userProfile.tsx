@@ -190,18 +190,18 @@ const UserProfile = (props: UserProfileProps) => {
       <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
       <Text style={styles.name}>{selectedUser?.firstName}</Text>
       <Text style={styles.name}>{selectedUser?.lastName}</Text>
-      {props.myProfile && selectedUser?.verification && (
+      {selectedUser?.id === currentUser.id && selectedUser?.verification && (
         <Text style={styles.personalInfo}>
           Estado de Verificación: {selectedUser?.verification?.status}
         </Text>
       )}
-      {!props.myProfile &&
+      {selectedUser?.id !== currentUser.id &&
         selectedUser?.verification?.status === 'Approved' && (
           <Text style={styles.personalInfo}>Trainer Verificado!</Text>
         )}
       <Text style={styles.personalInfo}>{selectedUser?.bodyWeight} kg</Text>
       <Text style={styles.email}>{selectedUser?.email}</Text>
-      {!props.myProfile && (
+      {selectedUser?.id !== currentUser.id && (
         <>
           <Button
             mode='contained'
@@ -215,7 +215,7 @@ const UserProfile = (props: UserProfileProps) => {
           </Button>
         </>
       )}
-      {props.myProfile && (
+      {selectedUser?.id === currentUser.id && (
         <>
           <Button
             mode='contained'
@@ -283,7 +283,7 @@ const UserProfile = (props: UserProfileProps) => {
           </Button>
         </>
       )}
-      {!props.myProfile && (
+      {selectedUser?.id !== currentUser.id && (
         <Button
           mode='contained'
           style={styles.button}
