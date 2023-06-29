@@ -7,7 +7,6 @@ const MyProfileScreen = ({ navigation }: any) => {
   return (
     <UserProfile
       navigation={navigation}
-      myProfile
       route={{
         key: String(currentUser.id),
         name: String(currentUser.id),
