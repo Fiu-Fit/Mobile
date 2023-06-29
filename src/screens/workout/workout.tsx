@@ -17,7 +17,7 @@ import FloatingActionButton from '../../components/dumb/floatingActionButton';
 import { Role } from '../../constants/roles';
 import WorkoutCompletedModal from '../../components/workoutCompletedModal';
 import { useFocusEffect } from '@react-navigation/native';
-import WorkoutMultimediaModal from '../../components/workoutMultimediaModal';
+import MultimediaModal from '../../components/multimediaModal';
 
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
@@ -100,10 +100,11 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
         )}
 
         {multimediaModalVisible && (
-          <WorkoutMultimediaModal
+          <MultimediaModal
             onDismiss={() => {
               setMultimediaModalVisible(false);
             }}
+            store={workoutDetailStore}
           />
         )}
       </View>
