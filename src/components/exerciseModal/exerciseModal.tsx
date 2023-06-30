@@ -31,9 +31,7 @@ const ExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
             style={{ flex: 0.5 }}>
             <Image
               style={{ width: 300, height: '100%' }}
-              source={{
-                uri: 'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
-              }}
+              source={exerciseItem.imageUrl}
             />
           </View>
           <View

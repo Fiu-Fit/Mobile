@@ -5,8 +5,9 @@ import { observer } from 'mobx-react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { CardInfo } from '../../utils/custom-types';
 import IconButton from '../button';
-import SocialShare from '../socialShare';
+import LoggerFactory from '../../utils/logger-utility';
 
+const logger = LoggerFactory('item-card');
 interface ItemCardProps<T extends CardInfo> {
   item: T;
   onPress?: () => void;
@@ -37,7 +38,7 @@ const ItemCard = <T extends CardInfo>({
   onRemovePress,
 }: ItemCardProps<T>) => {
   const appTheme = useAppTheme();
-
+  logger.debug('Item: ', item);
   return (
     <TouchableOpacity onPress={onPress}>
       <Card
@@ -55,9 +56,7 @@ const ItemCard = <T extends CardInfo>({
           <Image
             key={`card-image-${item.id}`}
             style={styles.logo}
-            source={{
-              uri: item.imageUrl,
-            }}
+            source={item.imageUrl}
             resizeMode='cover'
           />
           <View

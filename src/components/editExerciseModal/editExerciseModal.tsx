@@ -6,6 +6,7 @@ import {
   ExerciseCardInfo,
   Unit,
   WorkoutExercise,
+  imageMap,
   unitMap,
 } from '../../utils/workout-types';
 import { Formik, isNaN } from 'formik';
@@ -95,9 +96,9 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
             <Image
               key={'edit-exercise-modal-image'}
               style={{ width: 300, height: '100%' }}
-              source={{
-                uri: 'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
-              }}
+              source={imageMap.get(
+                selectedExercise?.category ?? require('../../imgs/error.png'),
+              )}
             />
           </View>
           <ScrollView
@@ -141,11 +142,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                           key: 'edit-exercise-modal-exercises-icon',
                           ...props,
                         })
-                      }
-                      onPress={() => {
-                        setSelectedExercise(undefined);
-                      }}
-                      expanded={!selectedExercise}>
+                      }>
                       {exerciseList.map(exercise => (
                         <List.Item
                           key={`edit-exercise-modal-exercises-dropdown-${exercise._id}`}

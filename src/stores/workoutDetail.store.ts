@@ -73,7 +73,9 @@ export class WorkoutDetailStore {
           content: `${workoutExercise.sets} x ${workoutExercise.reps}`,
           type: 'exercise',
           exercise: workoutExercise.exercise,
-          imageUrl: imageMap.get(workoutExercise.exercise.category),
+          imageUrl:
+            imageMap.get(workoutExercise.category) ??
+            require('../imgs/error.png'),
         };
       },
     );

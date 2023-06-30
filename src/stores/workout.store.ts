@@ -24,9 +24,7 @@ export class WorkoutStore {
         title: workout.name,
         content: categoryMap.get(workout.category) || 'undefined',
         type: 'workout',
-        imageUrl:
-          imageMap.get(workout.category) ??
-          'https://static.vecteezy.com/system/resources/previews/005/197/576/original/error-flat-icon-free-vector.jpg',
+        imageUrl: imageMap.get(workout.category) ?? require('../imgs/error.png'),
       }),
     );
   }
