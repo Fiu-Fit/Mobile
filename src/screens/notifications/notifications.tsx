@@ -37,12 +37,18 @@ const NotificactionsScreen = ({
               });
             } else {
               logger.debug('Message notification');
-              const user = await axiosClient.get<User>(`/users/${item.id}`);
-              logger.debug('Got user: ', user.data);
-              RootNavigation.navigate('Search', {
-                screen: 'ChatScreen',
-                params: { user: user.data },
-              });
+              try {
+                const user = await axiosClient.get<User>(`/users/${item.id}`);
+                logger.debug('Got user: ', user.data);
+                RootNavigation.navigate('Search', {
+                  screen: 'ChatScreen',
+                  params: { user: user.data },
+                });
+              } catch (err) {
+                logger.error(`Error while fetching user with ID ${item.id}`, {
+                  err,
+                });
+              }
             }
           }}
         />

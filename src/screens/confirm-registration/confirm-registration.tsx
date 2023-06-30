@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, SafeAreaView, StyleSheet } from 'react-native';
+import { Text, SafeAreaView, StyleSheet, Alert } from 'react-native';
 import { RegisterScreenNavigationProp } from '../../navigation/navigation-props';
 import {
   CodeField,
@@ -10,7 +10,9 @@ import {
 import { Button } from 'react-native-paper';
 import { axiosClient } from '../../utils/constants';
 import { useUserContext } from '../../App';
+import LoggerFactory from '../../utils/logger-utility';
 
+const logger = LoggerFactory('confirm-registration-screen');
 const styles = StyleSheet.create({
   root: { flex: 1, padding: 20 },
   title: { textAlign: 'center', fontSize: 30 },
@@ -46,11 +48,16 @@ const ConfirmRegistrationScreen = ({
   const { currentUser } = useUserContext();
 
   const handleConfirmRegistration = async () => {
-    await axiosClient.patch('/auth/confirm-registration', {
-      confirmationPIN: pin,
-      userId: currentUser.id,
-    });
-    navigation.push('Home');
+    try {
+      await axiosClient.patch('/auth/confirm-registration', {
+        confirmationPIN: pin,
+        userId: currentUser.id,
+      });
+      navigation.push('Home');
+    } catch (err) {
+      logger.error('Error while confirming registration:', { err });
+      Alert.alert('Error al confirmar el registro!');
+    }
   };
 
   return (

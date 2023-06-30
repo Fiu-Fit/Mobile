@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import { ProfileNavigationProp } from '../../navigation/navigation-props';
 import { axiosClient } from '../../utils/constants';
+import LoggerFactory from '../../utils/logger-utility';
+import { fetchUserData } from '../../utils/fetch-helpers';
+
+const logger = LoggerFactory('edit-profile');
 
 const EditProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
   const appTheme = useAppTheme();
@@ -11,14 +15,31 @@ const EditProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
   const [editedFirstName, setEditedFirstName] = useState(currentUser.firstName);
   const [editedLastName, setEditedLastName] = useState(currentUser.lastName);
   const [editedWeight, setEditedWeight] = useState('' + currentUser.bodyWeight);
+  const [editedPhoneNumber, setEditedPhoneNumber] = useState(
+    currentUser.phoneNumber,
+  );
 
   const handleSave = async () => {
-    const updatedUser = { ...currentUser };
-    updatedUser.firstName = editedFirstName;
-    updatedUser.lastName = editedLastName;
-    updatedUser.bodyWeight = Number(editedWeight);
-    await axiosClient.put(`/users/${updatedUser.id}`, updatedUser);
-    setCurrentUser(updatedUser);
+    const { verification, interests, followedUsers, ...userData } = currentUser;
+    userData.firstName = editedFirstName;
+    userData.lastName = editedLastName;
+    userData.bodyWeight = Number(editedWeight);
+    userData.phoneNumber = editedPhoneNumber;
+    try {
+      await axiosClient.put(`/users/${userData.id}`, userData);
+      Alert.alert('Se actualizaron los datos del usuario!');
+    } catch (err) {
+      logger.error('Error while editing Profile:', { err });
+      Alert.alert('Error al actualizar los datos del usuario');
+    }
+    const fetchedUser = await fetchUserData(currentUser.id);
+    if (fetchedUser.error !== null) {
+      logger.error('an error ocurred while trying to fetch a user: ', {
+        fetchedUser,
+      });
+      return;
+    }
+    setCurrentUser(fetchedUser.response);
     navigation.navigate('Profile');
   };
 
@@ -52,6 +73,12 @@ const EditProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
         onChangeText={setEditedWeight}
         style={styles.input}
         keyboardType='numeric'
+      />
+      <TextInput
+        label='Phone Number'
+        value={editedPhoneNumber ?? ''}
+        onChangeText={setEditedPhoneNumber}
+        style={styles.input}
       />
       <Button mode='contained' style={styles.button} onPress={handleSave}>
         Save

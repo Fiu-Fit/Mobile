@@ -173,14 +173,19 @@ const LoginScreen = ({
 
   async function createNewUser(user: FirebaseAuthTypes.User) {
     const [firstName, lastName] = user?.displayName?.split(' ') || ['', ''];
-
-    await axiosClient.post('users', {
-      email: user?.email || '',
-      firstName,
-      lastName,
-      uid: user.uid,
-      role: Role.Athlete,
-    });
+    try {
+      await axiosClient.post('users', {
+        email: user?.email || '',
+        firstName,
+        lastName,
+        uid: user.uid,
+        role: Role.Athlete,
+      });
+    } catch (err) {
+      logger.error('Error while creating new user:', { err });
+      // For it to be handled in parent call.
+      throw err;
+    }
   }
 
   const handleGoogleSignIn = async () => {

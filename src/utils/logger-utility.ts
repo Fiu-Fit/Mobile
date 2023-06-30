@@ -44,6 +44,8 @@ const config = {
     'workout-media-medial',
     'workout-info',
     'verification-modal',
+    'edit-profile',
+    'confirm-registration-screen',
   ],
   transportOptions: {
     colors: {

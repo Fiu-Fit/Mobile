@@ -1,4 +1,4 @@
-import { SafeAreaView, View } from 'react-native';
+import { Alert, SafeAreaView, View } from 'react-native';
 import { Formik, FormikErrors } from 'formik';
 import Input from '../../components/input';
 import COLORS from '../../constants/colors';
@@ -26,6 +26,7 @@ const PasswordRecoveryScreen = ({
       });
     } catch (err) {
       logger.error('Error while trying to send password recovery email: ', err);
+      Alert.alert('Error al enviar el email de recuperación de contraseña!');
     }
 
     navigation.push('LoginScreen');

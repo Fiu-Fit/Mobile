@@ -4,11 +4,10 @@ import {
   StyleSheet,
   Text,
   Alert,
-  TextInput,
   Switch,
   ActivityIndicator,
 } from 'react-native';
-import { Button, Dialog, Portal } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import { User, UserProfileProps } from '../../utils/custom-types';
 import { observer } from 'mobx-react';
@@ -20,6 +19,7 @@ import Geolocation, {
 import { axiosClient } from '../../utils/constants';
 import { fetchUserData, useFetchUser } from '../../utils/fetch-helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const logger = LoggerFactory('user-profile');
 
@@ -60,27 +60,34 @@ const updateUserPositionCallback = async (
   position: GeolocationResponse,
   currentUser: User,
 ) => {
-  const updatedUser = { ...currentUser };
+  // We need to do this to update the user.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { verification, interests, followedUsers, ...data } = currentUser;
+  const updatedUser = { ...data };
   const { latitude, longitude } = position.coords;
   logger.info('Updating with info:', {
     latitude,
     longitude,
   });
   updatedUser.coordinates = [longitude, latitude];
-  await axiosClient.put(`/users/${updatedUser.id}`, updatedUser);
+  try {
+    await axiosClient.put(`/users/${updatedUser.id}`, updatedUser);
+  } catch (err) {
+    logger.error('Error while updating location:', { err });
+    Alert.alert(
+      'Error actualizando geolocalización',
+      'Ocurrió un error, intente más tarde!',
+    );
+  }
 };
 
 const UserProfile = (props: UserProfileProps) => {
   const appTheme = useAppTheme();
   const { currentUser } = useUserContext();
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
-  const [visible, setVisible] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isEnabled, setIsEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [iAmSelected, setIAmSelected] = useState(
-    currentUser.id === selectedUser?.id,
-  );
+  const iAmSelected = currentUser.id === selectedUser?.id;
   const toggleSwitch = async () => {
     await AsyncStorage.setItem(
       'biometricLoginState',
@@ -88,29 +95,19 @@ const UserProfile = (props: UserProfileProps) => {
     );
     setIsEnabled(!isEnabled);
   };
-  const showDialog = () => setVisible(true);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { followedUsers, ...rest } = currentUser;
 
-  const addNumber = async () => {
-    logger.debug('New phone number: ', phoneNumber);
-    const { data } = await axiosClient.put(`/users/${currentUser.id}`, {
-      ...rest,
-      phoneNumber,
-    });
-    logger.debug('Updated user: ', data);
-    hideDialog();
-  };
-
-  const hideDialog = () => {
-    setVisible(false);
-    setPhoneNumber('');
-  };
-
   const [followAction, setFollowAction] = useState({
     followState: false,
     followCallback: handleFollow,
+  });
+  useFocusEffect(() => {
+    if (iAmSelected) {
+      setSelectedUser(currentUser);
+      logger.debug('hola desde el focus efect');
+    }
   });
   useEffect(() => {
     setIsLoading(true);
@@ -137,7 +134,6 @@ const UserProfile = (props: UserProfileProps) => {
             ? { followState: following, followCallback: handleUnfollow }
             : { followState: following, followCallback: handleFollow },
         );
-        setIAmSelected(currentUser.id === selectedUser?.id);
         setIsLoading(false);
       })
       .catch(error =>
@@ -146,7 +142,8 @@ const UserProfile = (props: UserProfileProps) => {
     const following = Boolean(
       currentUser.followedUsers.find(user => user?.id === selectedUser?.id),
     );
-  }, [followAction.followState, props.route?.params.givenUserId, iAmSelected]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [followAction.followState, props.route?.params.givenUserId]);
   const handleSignOut = async () => {
     try {
       await axiosClient.post('/auth/logout');
@@ -172,24 +169,6 @@ const UserProfile = (props: UserProfileProps) => {
           backgroundColor: appTheme.colors.surfaceVariant,
         },
       ]}>
-      <Portal>
-        <Dialog visible={visible} onDismiss={hideDialog}>
-          <Dialog.Title>New Number</Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-              placeholder='11-2233-4455'
-              keyboardType='numeric'
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-              style={styles.input}
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => hideDialog()}>Cancel</Button>
-            <Button onPress={() => addNumber()}>Accept</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
       <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
       <Text style={styles.name}>{selectedUser?.firstName}</Text>
       <Text style={styles.name}>{selectedUser?.lastName}</Text>
@@ -237,15 +216,15 @@ const UserProfile = (props: UserProfileProps) => {
                               positionOnError,
                               currentUser,
                             );
-                            Alert.alert('Location Updated');
+                            Alert.alert('Geolocalización Actualizada!');
                           },
                         );
                       },
                       errorRequest => {
                         if (errorRequest.PERMISSION_DENIED) {
                           Alert.alert(
-                            'Missing Permission',
-                            'The Geolocation permission is needed to update the user location.',
+                            'Faltan Permisos',
+                            'Se necesita el permiso de Geolocalización para actualizarla.',
                           );
                         }
                       },
@@ -255,7 +234,7 @@ const UserProfile = (props: UserProfileProps) => {
                 { enableHighAccuracy: true, timeout: 1000 },
               );
             }}>
-            Update Location
+            Actualizar geolocalización
           </Button>
           <Button
             mode='contained'
@@ -264,10 +243,7 @@ const UserProfile = (props: UserProfileProps) => {
               logger.info('Navigation:', props.navigation);
               props.navigation?.getParent()?.navigate('EditProfile');
             }}>
-            Edit
-          </Button>
-          <Button mode='contained' style={styles.button} onPress={showDialog}>
-            Add Number
+            Editar
           </Button>
           <Text> Permitir Login Con Biometria: </Text>
           <Switch
@@ -281,7 +257,7 @@ const UserProfile = (props: UserProfileProps) => {
             mode='contained'
             style={styles.button}
             onPress={handleSignOut}>
-            Cerrar sesion
+            Cerrar sesión
           </Button>
         </>
       )}
@@ -306,7 +282,7 @@ const UserProfile = (props: UserProfileProps) => {
                 );
               })
           }>
-          {followAction.followState ? 'Unfollow' : 'Follow'}
+          {followAction.followState ? 'Dejar de seguir' : 'Seguir'}
         </Button>
       )}
     </View>

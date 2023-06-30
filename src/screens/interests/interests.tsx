@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { InterestsScreenNavigationProp } from '../../navigation/navigation-props';
 import { useAppTheme, useUserContext } from '../../App';
@@ -51,6 +51,7 @@ const InterestsScreen = ({ navigation, route }: InterestsScreenProps) => {
       logger.debug(`User updated: ${currentUser.id}`, data);
     } catch (e) {
       logger.error('Error while saving user interests: ', { e });
+      Alert.alert('Error al actualizar intereses!');
     }
     navigation.navigate('ConfirmRegistrationScreen');
   };
