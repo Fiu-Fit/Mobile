@@ -74,12 +74,13 @@ export class WorkoutDetailStore {
           type: 'exercise',
           exercise: workoutExercise.exercise,
           imageUrl:
-            imageMap.get(workoutExercise.category) ??
+            imageMap.get(workoutExercise.exercise.category) ??
             require('../imgs/error.png'),
         };
       },
     );
   }
+// Sisi, me refiero a que quizas te tengas que cambiar de ramaah sisis esta bien
 
   get exercises(): WorkoutExercise[] {
     return Array.from(this.workout.exercises.values());
@@ -273,7 +274,7 @@ export class WorkoutDetailStore {
       const { data } = yield axiosClient.get<WorkoutMetric[]>(
         `/workouts/${this.workout._id}/metrics?year=${this.selectedYearFilter}`,
       );
-      logger.debug('Got data: ', data);
+      logger.debug('Got workout metrics');
       runInAction(() => {
         this.metrics = data;
         this.state = 'done';

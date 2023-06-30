@@ -31,21 +31,22 @@ const WorkoutMetricsScreen = () => {
       action(() => {
         logger.info('Getting workout metrics..');
         workoutDetailStore.fetchWorkoutMetrics();
-        const { favorites, averageRatings, ratings } = setWorkoutMetricsData();
-        logger.debug('favorites: ', favorites);
-        logger.debug('averageRatings: ', averageRatings);
-        logger.debug('ratings: ', ratings);
-
-        setFavoritesData(favorites);
-        setAverageRatingsData(averageRatings);
-        setRatingsData(ratings);
       })();
+      const { favorites, averageRatings, ratings } = setWorkoutMetricsData();
+      //logger.debug('favorites: ', favorites);
+      //logger.debug('averageRatings: ', averageRatings);
+      logger.info('ratings: ', ratings);
+
+      setFavoritesData(favorites);
+      setAverageRatingsData(averageRatings);
+      setRatingsData(ratings);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
 
   const setWorkoutMetricsData = () => {
     const workoutMetrics = workoutDetailStore.metrics;
+    logger.info('setting data for graphics..');
     const favorites = workoutMetrics.map((metric, index) => {
       const label = monthMap.get(index) || '';
       const value = metric.favoriteCount;
@@ -55,7 +56,7 @@ const WorkoutMetricsScreen = () => {
 
     const averageRatings = workoutMetrics.map((metric, index) => {
       const label = monthMap.get(index) || '';
-      const value = metric.averageRating;
+      const value = metric.averageRating ? metric.averageRating : 5;
 
       return { value, label };
     });
@@ -198,8 +199,8 @@ const WorkoutMetricsScreen = () => {
           }}>
           <ChartSlider
             favoriteData={favoritesData}
-            ratingData={ratingBarData}
-            ratings={[ratingTerribleBarData, ratingGoodBarData]}
+            ratingData={averageRatingsData}
+            ratings={[ratingBadBarData, ratingGoodBarData]}
           />
         </View>
       </View>

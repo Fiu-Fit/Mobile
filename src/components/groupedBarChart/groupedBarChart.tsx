@@ -10,7 +10,7 @@ import COLORS from '../../constants/colors';
 import { BarChartProps } from '../../utils/custom-types';
 
 const GroupedBarChart = ({ data }: { data: BarChartProps[] }) => {
-  console.log('BarChar: ', data);
+  console.log('GroupedBarChart data: ', data);
   return (
     <VictoryChart theme={VictoryTheme.grayscale} height={550}>
       <VictoryLegend

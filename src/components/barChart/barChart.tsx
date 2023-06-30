@@ -8,7 +8,7 @@ import COLORS from '../../constants/colors';
 import { BarChartProps } from '../../utils/custom-types';
 
 const BarChart = ({ data }: { data: BarChartProps }) => {
-  console.log('BarChar: ', data);
+  console.log('BarChart data: ', data);
   return (
     <VictoryChart theme={VictoryTheme.grayscale}>
       <VictoryAxis
