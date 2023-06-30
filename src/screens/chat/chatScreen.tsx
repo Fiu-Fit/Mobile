@@ -5,6 +5,7 @@ import { useUserContext } from '../../App';
 import { User } from '../../utils/custom-types';
 import { axiosClient } from '../../utils/constants';
 import LoggerFactory from '../../utils/logger-utility';
+import { Alert } from 'react-native';
 
 const logger = LoggerFactory('chat-screen');
 
@@ -85,6 +86,7 @@ const ChatScreen = ({
       await createMessageNotification();
     } catch (err) {
       logger.error('Error while sending chat message:', { err });
+      Alert.alert('Error al enviar el mensaje!');
     }
   };
 
