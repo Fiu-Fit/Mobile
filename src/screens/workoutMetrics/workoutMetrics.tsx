@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import { observer } from 'mobx-react';
 import { View } from 'react-native';
 import { useAppTheme } from '../../App';
@@ -13,12 +14,9 @@ import {
   workoutMetricYear,
   yearMap,
 } from '../../utils/workout-types';
-import BarChart from '../../components/barChart';
 import { BarData } from '../../utils/custom-types';
-import WorkoutHeader from '../../components/workoutHeader';
-import { Divider, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import ChartSlider from '../../components/chartSlider/chartSlider';
-import GroupedBarChart from '../../components/groupedBarChart';
 
 const WorkoutMetricsScreen = () => {
   const appTheme = useAppTheme();
@@ -26,15 +24,21 @@ const WorkoutMetricsScreen = () => {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [favoritesData, setFavoritesData] = useState<BarData[]>([]);
   const [averageRatingsData, setAverageRatingsData] = useState<BarData[]>([]);
+  const [ratingsData, setRatingsData] = useState<BarData[][]>([]);
 
   useFocusEffect(
     useCallback(() => {
       action(() => {
         logger.info('Getting workout metrics..');
-        //workoutDetailStore.fetchWorkoutMetrics();
-        const { favorites, averageRatings } = setWorkoutMetricsData();
+        workoutDetailStore.fetchWorkoutMetrics();
+        const { favorites, averageRatings, ratings } = setWorkoutMetricsData();
+        logger.debug('favorites: ', favorites);
+        logger.debug('averageRatings: ', averageRatings);
+        logger.debug('ratings: ', ratings);
+
         setFavoritesData(favorites);
         setAverageRatingsData(averageRatings);
+        setRatingsData(ratings);
       })();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
@@ -42,28 +46,32 @@ const WorkoutMetricsScreen = () => {
 
   const setWorkoutMetricsData = () => {
     const workoutMetrics = workoutDetailStore.metrics;
-    const favorites: BarData[] = workoutMetrics.map((metric, index) => {
+    const favorites = workoutMetrics.map((metric, index) => {
       const label = monthMap.get(index) || '';
-      const frontColor = '#177AD5';
       const value = metric.favoriteCount;
 
-      return { value, label, frontColor };
+      return { value, label };
     });
 
     const averageRatings = workoutMetrics.map((metric, index) => {
       const label = monthMap.get(index) || '';
-      const frontColor = '#23A7F3';
       const value = metric.averageRating;
 
-      return { value, label, frontColor };
+      return { value, label };
     });
 
-    return { favorites, averageRatings };
+    const ratings = workoutMetrics.map((metric, index) => {
+      const label = monthMap.get(index) || '';
+      const ratingData = metric.ratings.map(rating => {
+        return { value: rating.count, label };
+      });
+
+      return ratingData;
+    });
+
+    return { favorites, averageRatings, ratings };
   };
 
-  // const setRatingValuesData = () => {
-
-  //}
   const favoriteBarData = [
     { value: 250, label: 'Enero' },
     { value: 500, label: 'Febrero' },
@@ -189,7 +197,7 @@ const WorkoutMetricsScreen = () => {
             height: '100%',
           }}>
           <ChartSlider
-            favoriteData={favoriteBarData}
+            favoriteData={favoritesData}
             ratingData={ratingBarData}
             ratings={[ratingTerribleBarData, ratingGoodBarData]}
           />
