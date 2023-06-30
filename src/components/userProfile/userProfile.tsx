@@ -60,7 +60,9 @@ const updateUserPositionCallback = async (
   position: GeolocationResponse,
   currentUser: User,
 ) => {
-  const updatedUser = { ...currentUser };
+  // We need to do this to update the user.
+  const { verification, interests, followedUsers, ...data } = currentUser;
+  const updatedUser = { ...data };
   const { latitude, longitude } = position.coords;
   logger.info('Updating with info:', {
     latitude,
@@ -78,9 +80,7 @@ const UserProfile = (props: UserProfileProps) => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isEnabled, setIsEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [iAmSelected, setIAmSelected] = useState(
-    currentUser.id === selectedUser?.id,
-  );
+  const iAmSelected = currentUser.id === selectedUser?.id;
   const toggleSwitch = async () => {
     await AsyncStorage.setItem(
       'biometricLoginState',
@@ -137,7 +137,6 @@ const UserProfile = (props: UserProfileProps) => {
             ? { followState: following, followCallback: handleUnfollow }
             : { followState: following, followCallback: handleFollow },
         );
-        setIAmSelected(currentUser.id === selectedUser?.id);
         setIsLoading(false);
       })
       .catch(error =>
@@ -146,7 +145,7 @@ const UserProfile = (props: UserProfileProps) => {
     const following = Boolean(
       currentUser.followedUsers.find(user => user?.id === selectedUser?.id),
     );
-  }, [followAction.followState, props.route?.params.givenUserId, iAmSelected]);
+  }, [followAction.followState, props.route?.params.givenUserId]);
   const handleSignOut = async () => {
     try {
       await axiosClient.post('/auth/logout');
