@@ -16,16 +16,16 @@ export enum CategoryType {
 }
 
 export const categoryMap = new Map<number, string>([
-  [0, 'Piernas'],
-  [1, 'Pecho'],
-  [2, 'Espalda'],
-  [3, 'Hombros'],
-  [4, 'Brazos'],
-  [5, 'Core'],
-  [6, 'Cardio'],
-  [7, 'Fullbody'],
-  [8, 'Peso Libre'],
-  [9, 'Estiramiento'],
+  [0, 'Piernas'], x
+  [1, 'Pecho'], x
+  [2, 'Espalda'], x
+  [3, 'Hombros'], x
+  [4, 'Brazos'], x
+  [5, 'Core'], x
+  [6, 'Cardio'], x
+  [7, 'Fullbody'], x
+  [8, 'Peso Libre'], x
+  [9, 'Estiramiento'], x
   [10, 'Fuerza'],
   [-1, 'Cualquiera'],
 ]);
@@ -33,7 +33,7 @@ export const categoryMap = new Map<number, string>([
 export const imageMap = new Map<number, string>([
   [
     0,
-    'https://static.vecteezy.com/system/resources/previews/004/234/261/original/physical-exercise-concepts-vector.jpg',
+    '../imgs/category0.png',
   ],
   [
     1,
