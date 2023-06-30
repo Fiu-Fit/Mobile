@@ -19,6 +19,7 @@ import Geolocation, {
 import { axiosClient } from '../../utils/constants';
 import { fetchUserData, useFetchUser } from '../../utils/fetch-helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const logger = LoggerFactory('user-profile');
 
@@ -101,6 +102,12 @@ const UserProfile = (props: UserProfileProps) => {
   const [followAction, setFollowAction] = useState({
     followState: false,
     followCallback: handleFollow,
+  });
+  useFocusEffect(() => {
+    if (iAmSelected) {
+      setSelectedUser(currentUser);
+      logger.debug('hola desde el focus efect');
+    }
   });
   useEffect(() => {
     setIsLoading(true);

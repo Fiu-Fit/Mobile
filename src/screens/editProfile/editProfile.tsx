@@ -5,6 +5,7 @@ import { useAppTheme, useUserContext } from '../../App';
 import { ProfileNavigationProp } from '../../navigation/navigation-props';
 import { axiosClient } from '../../utils/constants';
 import LoggerFactory from '../../utils/logger-utility';
+import { fetchUserData } from '../../utils/fetch-helpers';
 
 const logger = LoggerFactory('edit-profile');
 
@@ -31,7 +32,14 @@ const EditProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
       logger.error('Error while editing Profile:', { err });
       Alert.alert('Error al actualizar los datos del usuario');
     }
-    setCurrentUser({ ...userData, verification, interests, followedUsers });
+    const fetchedUser = await fetchUserData(currentUser.id);
+    if (fetchedUser.error !== null) {
+      logger.error('an error ocurred while trying to fetch a user: ', {
+        fetchedUser,
+      });
+      return;
+    }
+    setCurrentUser(fetchedUser.response);
     navigation.navigate('Profile');
   };
 
