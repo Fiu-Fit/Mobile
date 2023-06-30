@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, SafeAreaView, ScrollView, View } from 'react-native';
+import { Text, SafeAreaView, ScrollView, View, Alert } from 'react-native';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Loader from '../../components/loader';
@@ -49,6 +49,7 @@ const RegisterScreen = ({
       navigation.push('InterestsScreen', { name: inputs.firstName });
     } catch (error: any) {
       logger.error('Error while registering user: ', error.response.data);
+      Alert.alert('Error al registrar usuario!');
     }
     setLoading(false);
   };
