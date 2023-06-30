@@ -74,26 +74,32 @@ const ChatScreen = ({
       uid > currentUser.uid
         ? currentUser.uid + '-' + uid
         : uid + '-' + currentUser.uid;
+    try {
+      await firestore()
+        .collection('Chats')
+        .doc(chatId)
+        .collection('messages')
+        .add({ ...userMsg, createdAt: firestore.FieldValue.serverTimestamp() });
 
-    await firestore()
-      .collection('Chats')
-      .doc(chatId)
-      .collection('messages')
-      .add({ ...userMsg, createdAt: firestore.FieldValue.serverTimestamp() });
-
-    logger.info('message sent: ', msg);
-    await createMessageNotification();
+      logger.info('message sent: ', msg);
+      await createMessageNotification();
+    } catch (err) {
+      logger.error('Error while sending chat message:', { err });
+    }
   };
 
   const createMessageNotification = async () => {
     logger.debug('Creating message notification..');
-    const notification = await axiosClient.post('/notifications/messages', {
-      userId: user.id,
-      senderId: currentUser.id,
-      senderName: currentUser.firstName + ' ' + currentUser.lastName,
-    });
-
-    logger.info('message notification: ', notification.data);
+    try {
+      const notification = await axiosClient.post('/notifications/messages', {
+        userId: user.id,
+        senderId: currentUser.id,
+        senderName: currentUser.firstName + ' ' + currentUser.lastName,
+      });
+      logger.info('message notification: ', notification.data);
+    } catch (err) {
+      logger.error('Error while creating message notification:', { err });
+    }
   };
 
   return (
