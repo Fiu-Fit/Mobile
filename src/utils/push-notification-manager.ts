@@ -136,6 +136,7 @@ export const NotificationListener = () => {
       }
 
       PushNotification.localNotification({
+        channelId: 'fiu-fit-notification-channel',
         title: remoteMessage.notification?.title,
         message: remoteMessage.notification?.body || '',
       });
