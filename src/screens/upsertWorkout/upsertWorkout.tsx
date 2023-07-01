@@ -66,7 +66,7 @@ const UpsertWorkoutScreen = ({
     navigation.navigate('Workouts', {
       screen: 'WorkoutScreen',
       params: { itemId: workoutDetailStore.workout._id },
-    })
+    });
   };
 
   return workoutDetailStore.state === 'pending' ? (
@@ -88,7 +88,6 @@ const UpsertWorkoutScreen = ({
           authorId: currentUser.id,
           averageRating: workoutDetailStore.workout.averageRating,
         }}
-        key={'upsertWorkout-formik-form'}
         onSubmit={values => {
           runInAction(() => {
             workoutDetailStore.workout._id = values._id;
@@ -104,7 +103,6 @@ const UpsertWorkoutScreen = ({
         {({ values, errors, handleChange, handleSubmit }) => (
           <>
             <Input
-              key={'upsertWorkout-name-input'}
               value={values.name}
               placeholder='Workout name'
               placeholderTextColor={appTheme.colors.background}
@@ -124,7 +122,6 @@ const UpsertWorkoutScreen = ({
               }}
             />
             <Input
-              key={'upsertWorkout-description-input'}
               value={values.description}
               placeholder='Workout description'
               placeholderTextColor={appTheme.colors.background}
@@ -144,7 +141,6 @@ const UpsertWorkoutScreen = ({
               }}
             />
             <Input
-              key={'upsertWorkout-difficulty-input'}
               value={values.difficulty}
               placeholder='Workout difficulty'
               placeholderTextColor={appTheme.colors.background}
@@ -170,25 +166,24 @@ const UpsertWorkoutScreen = ({
               render={arrayHelpers => (
                 <>
                   {workoutDetailStore.exerciseCards.map((exercise, index) => (
-                    <>
-                      <ItemCard<ExerciseCardInfo>
-                        key={`upsertWorkout-itemcard-exercise-${exercise.id}`}
-                        item={exercise}
-                        onPress={() => {
-                          setSelectedExercise(exercise);
-                        }}
-                        onRemovePress={() =>
-                          runInAction(() => {
-                            logger.info('Removing ID: ', exercise.id);
-                            workoutDetailStore.removeExercise(`${exercise.id}`);
-                            arrayHelpers.remove(index);
-                          })
-                        }
-                      />
-                    </>
+                    <ItemCard<ExerciseCardInfo>
+                      key={`upsertWorkout-${index}-${exercise.id}-key`}
+                      keyPrefix={`upsertWorkout-${index}-${exercise.id}`}
+                      item={exercise}
+                      onPress={() => {
+                        setSelectedExercise(exercise);
+                      }}
+                      onRemovePress={() =>
+                        runInAction(() => {
+                          logger.info('Removing ID: ', exercise.id);
+                          workoutDetailStore.removeExercise(`${exercise.id}`);
+                          arrayHelpers.remove(index);
+                        })
+                      }
+                    />
                   ))}
                   <CustomButton
-                    key={'upsertWorkout-add-exercise-button'}
+                    keyPrefix={'upsertWorkout-add-exercise-button'}
                     icon='plus'
                     onPress={() => {
                       workoutDetailStore.addNewExercise({
@@ -249,7 +244,7 @@ const UpsertWorkoutScreen = ({
                 {selectedMultimedia.map((filename, index) => (
                   <Text
                     className='text-l'
-                    key={index}
+                    key={`selected-multimedia-${index}`}
                     style={{ color: appTheme.colors.outline }}>
                     {filename.slice(59)}
                   </Text>
@@ -258,7 +253,7 @@ const UpsertWorkoutScreen = ({
             </View>
 
             <CustomButton
-              key={'upsertWorkout-send-workout-button'}
+              keyPrefix={'upsertWorkout-send-workout-button'}
               title='Enviar'
               onPress={handleSubmit}
             />

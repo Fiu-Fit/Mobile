@@ -16,6 +16,7 @@ interface ButtonProps {
   textColor?: string;
   size?: number;
   onPress?: () => void;
+  keyPrefix?: string;
 }
 
 const CustomButton = ({
@@ -26,10 +27,12 @@ const CustomButton = ({
   textColor,
   size,
   onPress = () => {},
+  keyPrefix,
 }: RequireAtLeastOne<ButtonProps, 'title' | 'icon'>) => {
   const theme = useAppTheme();
   return title ? (
     <Button
+      key={`${keyPrefix}-custom-button`}
       icon={icon}
       onPress={onPress}
       mode={mode ?? 'contained'}
@@ -38,7 +41,12 @@ const CustomButton = ({
       {title}
     </Button>
   ) : (
-    <IconButton icon={icon ?? 'alert'} size={size} onPress={onPress} />
+    <IconButton
+      key={`${keyPrefix}-custom-icon-button`}
+      icon={icon ?? 'alert'}
+      size={size}
+      onPress={onPress}
+    />
   );
 };
 

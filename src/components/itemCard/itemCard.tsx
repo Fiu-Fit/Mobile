@@ -5,13 +5,13 @@ import { observer } from 'mobx-react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { CardInfo } from '../../utils/custom-types';
 import IconButton from '../button';
-import SocialShare from '../socialShare';
 
 interface ItemCardProps<T extends CardInfo> {
   item: T;
   onPress?: () => void;
   onEditPress?: () => void;
   onRemovePress?: () => void;
+  keyPrefix?: string;
 }
 
 const styles = StyleSheet.create({
@@ -35,13 +35,16 @@ const ItemCard = <T extends CardInfo>({
   onPress,
   onEditPress,
   onRemovePress,
+  keyPrefix,
 }: ItemCardProps<T>) => {
   const appTheme = useAppTheme();
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity
+      key={`${item.type}-${keyPrefix}-touchable-opacity-${item.id}`}
+      onPress={onPress}>
       <Card
-        key={`card-${item.id}`}
+        key={`${item.type}-${keyPrefix}-card-${item.id}`}
         className='my-2 mx-5'
         style={[
           styles.cardPadding,
@@ -50,10 +53,10 @@ const ItemCard = <T extends CardInfo>({
           },
         ]}>
         <Card.Content
-          key={`card-content-container-${item.id}`}
+          key={`${item.type}-${keyPrefix}-card-content-container-${item.id}`}
           className='flex-row justify-center items-center h-36'>
           <Image
-            key={`card-image-${item.id}`}
+            key={`${item.type}-${keyPrefix}-card-image-${item.id}`}
             style={styles.logo}
             source={{
               uri: 'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
@@ -61,30 +64,32 @@ const ItemCard = <T extends CardInfo>({
             resizeMode='cover'
           />
           <View
-            key={`card-view-${item.id}`}
+            key={`${item.type}-${keyPrefix}-card-view-${item.id}`}
             className='items-center'
             style={{ flex: 2 }}>
             <Paragraph
-              key={`card-title-${item.id}`}
+              key={`${item.type}-${keyPrefix}-card-title-${item.id}`}
               style={{ color: appTheme.colors.onBackground }}
               className='text-2xl'>
               {item.title}
             </Paragraph>
             <Paragraph
-              key={`card-content-${item.id}`}
+              key={`${item.type}-${keyPrefix}-card-content-${item.id}`}
               style={{ color: appTheme.colors.onSurfaceVariant }}>
               {item.content}
             </Paragraph>
             {onEditPress && (
               <IconButton
-                key={`card-edit-buton-${item.id}`}
+                key={`${item.type}-${keyPrefix}-card-edit-buton-${item.id}-key`}
+                keyPrefix={`${item.type}-${keyPrefix}-card-edit-buton-${item.id}`}
                 icon={'pencil-outline'}
                 onPress={onEditPress}
               />
             )}
             {onRemovePress && (
               <IconButton
-                key={`card-remove-button-${item.id}`}
+                key={`${item.type}-${keyPrefix}-card-remove-button-${item.id}-key`}
+                keyPrefix={`${item.type}-${keyPrefix}-card-remove-button-${item.id}`}
                 icon={'minus-circle'}
                 onPress={onRemovePress}
               />

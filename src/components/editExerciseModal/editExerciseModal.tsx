@@ -146,9 +146,9 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                         setSelectedExercise(undefined);
                       }}
                       expanded={!selectedExercise}>
-                      {exerciseList.map(exercise => (
+                      {exerciseList.map((exercise, index) => (
                         <List.Item
-                          key={`edit-exercise-modal-exercises-dropdown-${exercise._id}`}
+                          key={`edit-exercise-modal-exercises-dropdown-${exercise._id}-${index}`}
                           title={exercise.name}
                           description={exercise.description}
                           onPress={() => {
@@ -179,16 +179,18 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                         setSelectedUnit(undefined);
                       }}
                       expanded={selectedUnit === undefined}>
-                      {Array.from(unitMap.entries()).map(([key, value]) => (
-                        <List.Item
-                          key={`edit-exercise-modal-unit-${key}`}
-                          title={value}
-                          onPress={() => {
-                            values.unit = key;
-                            setSelectedUnit(key);
-                          }}
-                        />
-                      ))}
+                      {Array.from(unitMap.entries()).map(
+                        ([key, value], index) => (
+                          <List.Item
+                            key={`edit-exercise-modal-unit-${key}-${value}-${index}`}
+                            title={value}
+                            onPress={() => {
+                              values.unit = key;
+                              setSelectedUnit(key);
+                            }}
+                          />
+                        ),
+                      )}
                     </List.Accordion>
                   </List.Section>
                   <Input
