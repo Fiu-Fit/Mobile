@@ -6,7 +6,7 @@ import React, { useCallback } from 'react';
 import WorkoutRatingModal from '../../components/workoutRatingModal';
 import { observer } from 'mobx-react';
 import Loader from '../../components/loader';
-import { action } from 'mobx';
+import { action, runInAction } from 'mobx';
 import WorkoutHeader from '../../components/workoutHeader';
 import WorkoutInfo from '../../components/workoutInfo';
 import ItemCardList from '../../components/itemCardList';
@@ -44,9 +44,9 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
 
   useFocusEffect(
     useCallback(() => {
-      action(() => {
+      runInAction(() => {
         workoutDetailStore.fetchWorkout(itemId);
-      })();
+      });
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );

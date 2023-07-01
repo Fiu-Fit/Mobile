@@ -15,6 +15,7 @@ import {
   WorkoutProps,
   WorkoutRatingProps,
   imageMap,
+  monthMap,
 } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
@@ -49,6 +50,9 @@ export class WorkoutDetailStore {
   selectedYearFilter: Number = new Date().getFullYear();
   authorName: string = 'Author';
 
+  get downloadList(): string[] {
+    return this.downloads;
+  }
   get workoutHeader(): IWorkoutHeader {
     const { name, description, duration, exercises, averageRating } =
       this.workout;
@@ -80,7 +84,7 @@ export class WorkoutDetailStore {
       },
     );
   }
-// Sisi, me refiero a que quizas te tengas que cambiar de ramaah sisis esta bien
+  // Sisi, me refiero a que quizas te tengas que cambiar de ramaah sisis esta bien
 
   get exercises(): WorkoutExercise[] {
     return Array.from(this.workout.exercises.values());
@@ -93,6 +97,33 @@ export class WorkoutDetailStore {
     return comments;
   }
 
+  get favoritesData() {
+    return this.metrics.map((metric, index) => {
+      const label = monthMap.get(index) || '';
+      const value = metric.favoriteCount;
+
+      return { value, label };
+    });
+  }
+
+  get averageRatingsData() {
+    return this.metrics.map((metric, index) => {
+      const label = monthMap.get(index) || '';
+      const value = metric.averageRating ? metric.averageRating : 5;
+
+      return { value, label };
+    });
+  }
+  get ratingsData() {
+    return this.metrics.map((metric, index) => {
+      const label = monthMap.get(index) || '';
+      const ratingData = metric.ratings.map(rating => {
+        return { value: rating.count, label };
+      });
+
+      return ratingData;
+    });
+  }
   constructor() {
     makeObservable(this, {
       workout: observable,
@@ -103,9 +134,13 @@ export class WorkoutDetailStore {
       metrics: observable,
       selectedYearFilter: observable,
       authorName: observable,
+      downloadList: computed,
       exerciseCards: computed,
       workoutHeader: computed,
       workoutComments: computed,
+      favoritesData: computed,
+      averageRatingsData: computed,
+      ratingsData: computed,
       addNewExercise: action,
       editExercise: action,
       removeExercise: action,
@@ -190,7 +225,7 @@ export class WorkoutDetailStore {
         `/workouts/${workoutId}`,
       );
       logger.debug('Got data: ', data);
-      runInAction(async () => {
+      yield runInAction(async () => {
         const {
           exercises: exercisesList,
         }: {
@@ -210,12 +245,12 @@ export class WorkoutDetailStore {
           return map;
         }, this.workout.exercises);
         this.newExercises = new Map<string, WorkoutExercise>();
-        await this.fetchWorkoutRatings();
         logger.debug('Loaded Workout: ', this.workout);
-        await this.downloadResources();
-        await this.fetchAuthor();
         this.state = 'done';
       });
+      yield this.fetchWorkoutRatings();
+      yield this.downloadResources();
+      yield this.fetchAuthor();
     } catch (e) {
       runInAction(() => {
         this.state = 'error';
@@ -327,7 +362,9 @@ export class WorkoutDetailStore {
             _id,
             ...workoutPayload,
           });
-      this.workout._id = data._id;
+      runInAction(() => {
+        this.workout._id = data._id;
+      });
       logger.info('Upsert workout Data: ', data);
       yield this.uploadResources();
     } catch (err) {

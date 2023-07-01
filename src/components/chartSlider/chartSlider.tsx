@@ -6,17 +6,18 @@ import BarChart from '../barChart';
 import { Text } from 'react-native-paper';
 import GroupedBarChart from '../groupedBarChart';
 import { Bar } from 'victory-native';
+import { observer } from 'mobx-react';
 
 type ChartSliderProps = {
-  favoriteData: BarChartProps;
-  ratingData: BarChartProps;
-  ratings: BarChartProps[];
+  favoritesData: BarChartProps;
+  averageRatingsData: BarChartProps;
+  ratingsData: BarChartProps[];
 };
 
 const ChartSlider = ({
-  favoriteData,
-  ratingData,
-  ratings,
+  favoritesData,
+  averageRatingsData,
+  ratingsData,
 }: ChartSliderProps) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [index, setIndex] = useState(0);
@@ -53,17 +54,28 @@ const ChartSlider = ({
   return (
     <View style={{ flex: 1 }} className='mb-10 items-center justify-center'>
       <FlatList
-        data={[favoriteData, ratingData, ratings]}
+        data={[favoritesData, averageRatingsData, ratingsData]}
         renderItem={({ item, index: i }) => (
-          <View className='items-center justify-center'>
-            {i === 0 && <Text>Cantidad de favoritos</Text>}
-            {i === 1 && <Text>Rating promedio</Text>}
-            {i === 2 && <Text>Puntuaciones</Text>}
+          <View key={`view-list-${i}`} className='items-center justify-center'>
+            {i === 0 && (
+              <Text key={`favorite-chart-text-${i}`}>
+                Cantidad de favoritos
+              </Text>
+            )}
+            {i === 1 && (
+              <Text key={`avg-rating-chart-text-${i}`}>Rating promedio</Text>
+            )}
+            {i === 2 && (
+              <Text key={`rating-chart-text-${i}`}>Puntuaciones</Text>
+            )}
 
             {i !== 2 ? (
-              <BarChart data={item as BarChartProps} />
+              <BarChart key={`bar-chart-${i}`} data={item as BarChartProps} />
             ) : (
-              <GroupedBarChart data={item as BarChartProps[]} />
+              <GroupedBarChart
+                key={`grouped-bar-chart-${i}`}
+                data={item as BarChartProps[]}
+              />
             )}
           </View>
         )}
@@ -76,7 +88,7 @@ const ChartSlider = ({
         viewabilityConfig={viewabilityConfig}
       />
       <Pagination
-        data={[favoriteData, ratingData, ratingData]}
+        data={[favoritesData, averageRatingsData, ratingsData]}
         scrollX={scrollX}
         index={index}
       />
@@ -84,4 +96,4 @@ const ChartSlider = ({
   );
 };
 
-export default ChartSlider;
+export default observer(ChartSlider);

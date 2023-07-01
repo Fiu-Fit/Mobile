@@ -5,10 +5,9 @@ import { BarChartProps } from '../../utils/custom-types';
 const { width } = Dimensions.get('screen');
 const Pagination = ({
   data,
-  scrollX,
-  index,
+  scrollX
 }: {
-  data: string[] | BarChartProps[];
+  data: string[] | (BarChartProps | BarChartProps[])[];
   scrollX: Animated.Value;
   index: number;
 }) => {

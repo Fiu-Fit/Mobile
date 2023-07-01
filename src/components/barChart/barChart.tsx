@@ -6,6 +6,7 @@ import {
 } from 'victory-native';
 import COLORS from '../../constants/colors';
 import { BarChartProps } from '../../utils/custom-types';
+import { observer } from 'mobx-react';
 
 const BarChart = ({ data }: { data: BarChartProps }) => {
   console.log('BarChart data: ', data);
@@ -48,4 +49,4 @@ const BarChart = ({ data }: { data: BarChartProps }) => {
   );
 };
 
-export default BarChart;
+export default observer(BarChart);

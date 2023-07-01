@@ -6,8 +6,8 @@ import {
   VictoryGroup,
   VictoryLegend,
 } from 'victory-native';
-import COLORS from '../../constants/colors';
 import { BarChartProps } from '../../utils/custom-types';
+import { observer } from 'mobx-react';
 
 const GroupedBarChart = ({ data }: { data: BarChartProps[] }) => {
   console.log('GroupedBarChart data: ', data);
@@ -25,8 +25,9 @@ const GroupedBarChart = ({ data }: { data: BarChartProps[] }) => {
         orientation='horizontal'
       />
       <VictoryGroup offset={8} colorScale={'qualitative'}>
-        {data.map(item => (
+        {data.map((item, index) => (
           <VictoryBar
+            key={`bar-chart-${index}`}
             horizontal
             barWidth={5}
             data={item}
@@ -66,4 +67,4 @@ const GroupedBarChart = ({ data }: { data: BarChartProps[] }) => {
   );
 };
 
-export default GroupedBarChart;
+export default observer(GroupedBarChart);

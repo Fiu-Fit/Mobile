@@ -48,7 +48,7 @@ const WorkoutInfo = ({
         <TouchableOpacity
           className='flex-row justify-center'
           onPress={() => {
-            logger.debug('downloads: ', workoutDetailStore.downloads);
+            logger.debug('downloads: ', workoutDetailStore.downloadList);
             onPressMultimediaModal();
           }}>
           <Icon
