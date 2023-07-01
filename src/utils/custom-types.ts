@@ -66,6 +66,7 @@ export type User = {
   coordinates: [number, number];
   uid: string;
   followedUsers: User[];
+  followers: User[];
   phoneNumber?: string;
   verification?: Verification;
   profilePicture?: string;
