@@ -233,9 +233,31 @@ const UserProfile = (props: UserProfileProps) => {
               value={isEnabled}
             />
           </View>
-
+          <View
+            className='flex-row justify-between mx-10 mb-5'
+            style={{ width: '100%' }}>
+            <Button
+              mode='contained'
+              style={styles.smallButton}
+              onPress={() => {
+                props.navigation?.getParent()?.navigate('UserListScreen', {
+                  showFollowers: true,
+                });
+              }}>
+              Ver Seguidores
+            </Button>
+            <Button
+              mode='contained'
+              style={styles.smallButton}
+              onPress={() => {
+                props.navigation?.getParent()?.navigate('UserListScreen');
+              }}>
+              Ver Seguidos
+            </Button>
+          </View>
           <Button
             mode='contained'
+            className='w-50'
             style={styles.button}
             onPress={() => {
               Geolocation.getCurrentPosition(
@@ -343,6 +365,11 @@ const styles = StyleSheet.create({
   button: {
     marginVertical: 10,
     width: '100%',
+    borderRadius: 5,
+  },
+  smallButton: {
+    marginVertical: 10,
+    width: '48%',
     borderRadius: 5,
   },
   input: {
