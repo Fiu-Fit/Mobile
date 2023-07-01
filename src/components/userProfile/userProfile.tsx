@@ -106,7 +106,6 @@ const UserProfile = (props: UserProfileProps) => {
   useFocusEffect(() => {
     if (iAmSelected) {
       setSelectedUser(currentUser);
-      logger.debug('hola desde el focus efect');
     }
   });
   useEffect(() => {
