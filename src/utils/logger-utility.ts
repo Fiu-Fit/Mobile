@@ -46,6 +46,7 @@ const config = {
     'verification-modal',
     'edit-profile',
     'confirm-registration-screen',
+    'user-list',
   ],
   transportOptions: {
     colors: {
