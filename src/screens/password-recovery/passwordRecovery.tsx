@@ -21,11 +21,18 @@ const PasswordRecoveryScreen = ({
 }) => {
   const handlePasswordRecovery = async (inputs: InputProps) => {
     try {
-      await axiosClient.post('/auth/password-recovery', {
+      logger.info('Sending password recovery email to: ', inputs.email);
+      await axiosClient.post('/auth/password-reset', {
         email: inputs.email,
       });
+      logger.info('Email sent!');
+      Alert.alert(
+        'Reset enviado! Si no encuentra el email, revise su bandeja de Spam.',
+      );
     } catch (err) {
-      logger.error('Error while trying to send password recovery email: ', err);
+      logger.error('Error while trying to send password recovery email: ', {
+        err,
+      });
       Alert.alert('Error al enviar el email de recuperación de contraseña!');
     }
 
