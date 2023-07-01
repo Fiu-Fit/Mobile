@@ -20,6 +20,9 @@ import { axiosClient } from '../../utils/constants';
 import { fetchUserData, useFetchUser } from '../../utils/fetch-helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import { searchStore } from '../../stores/userSearch.store';
+import COLORS from '../../constants/colors';
+import FloatingActionButton from '../dumb/floatingActionButton';
 
 const logger = LoggerFactory('user-profile');
 
@@ -143,6 +146,7 @@ const UserProfile = (props: UserProfileProps) => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [followAction.followState, props.route?.params.givenUserId]);
+
   const handleSignOut = async () => {
     try {
       await axiosClient.post('/auth/logout');
@@ -154,10 +158,9 @@ const UserProfile = (props: UserProfileProps) => {
       );
     }
   };
-  const pictureUrl =
-    'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80';
 
   useFetchUser({ observables: [followAction.followState] });
+
   return isLoading ? (
     <ActivityIndicator size='large' color='#0000ff' />
   ) : (
@@ -165,22 +168,43 @@ const UserProfile = (props: UserProfileProps) => {
       style={[
         styles.container,
         {
-          backgroundColor: appTheme.colors.surfaceVariant,
+          backgroundColor: appTheme.colors.background,
         },
       ]}>
-      <Image source={{ uri: pictureUrl }} style={styles.profilePicture} />
-      <Text style={styles.name}>{selectedUser?.firstName}</Text>
-      <Text style={styles.name}>{selectedUser?.lastName}</Text>
+      <Image
+        source={{ uri: searchStore.profilePicture }}
+        style={styles.profilePicture}
+      />
+      <Text style={styles.name}>
+        {selectedUser?.firstName} {selectedUser?.lastName}
+      </Text>
       {iAmSelected && selectedUser?.verification && (
-        <Text style={styles.personalInfo}>
-          Estado de Verificación: {selectedUser?.verification?.status}
-        </Text>
+        <View
+          className='flex-row justify-between mx-10 mb-5'
+          style={{ width: '100%' }}>
+          <Text style={styles.personalInfo}>Estado de Verificación:</Text>
+          <Text style={{ color: COLORS.blue }}>
+            {selectedUser?.verification?.status}
+          </Text>
+        </View>
       )}
       {!iAmSelected && selectedUser?.verification?.status === 'Approved' && (
         <Text style={styles.personalInfo}>Trainer Verificado!</Text>
       )}
-      <Text style={styles.personalInfo}>{selectedUser?.bodyWeight} kg</Text>
-      <Text style={styles.email}>{selectedUser?.email}</Text>
+      <View
+        className='flex-row justify-between mx-10 mb-5'
+        style={{ width: '100%' }}>
+        <Text style={styles.personalInfo}>Peso:</Text>
+        <Text style={{ color: COLORS.blue }}>
+          {selectedUser?.bodyWeight} kg
+        </Text>
+      </View>
+      <View
+        className='flex-row justify-between mx-10 mb-5'
+        style={{ width: '100%' }}>
+        <Text style={styles.personalInfo}>Email:</Text>
+        <Text style={{ color: COLORS.blue }}>{selectedUser?.email}</Text>
+      </View>
       {!iAmSelected && (
         <>
           <Button
@@ -197,6 +221,19 @@ const UserProfile = (props: UserProfileProps) => {
       )}
       {iAmSelected && (
         <>
+          <View
+            className='flex-row justify-between mb-5'
+            style={{ width: '100%' }}>
+            <Text>Login Con Biometria: </Text>
+            <Switch
+              trackColor={{ false: '#767577', true: '#81b0ff' }}
+              thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+              ios_backgroundColor='#3e3e3e'
+              onValueChange={toggleSwitch}
+              value={isEnabled}
+            />
+          </View>
+
           <Button
             mode='contained'
             style={styles.button}
@@ -235,22 +272,12 @@ const UserProfile = (props: UserProfileProps) => {
             }}>
             Actualizar geolocalización
           </Button>
-          <Button
-            mode='contained'
-            style={styles.button}
+          <FloatingActionButton
             onPress={() => {
               logger.info('Navigation:', props.navigation);
               props.navigation?.getParent()?.navigate('EditProfile');
-            }}>
-            Editar
-          </Button>
-          <Text> Permitir Login Con Biometria: </Text>
-          <Switch
-            trackColor={{ false: '#767577', true: '#81b0ff' }}
-            thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-            ios_backgroundColor='#3e3e3e'
-            onValueChange={toggleSwitch}
-            value={isEnabled}
+            }}
+            icon='pencil'
           />
           <Button
             mode='contained'
@@ -303,7 +330,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 30,
   },
   personalInfo: {
     fontSize: 16,
