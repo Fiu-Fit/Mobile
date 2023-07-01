@@ -1,6 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import { useEffect, useState } from 'react';
-import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import { GiftedChat, IMessage, InputToolbar } from 'react-native-gifted-chat';
 import { useUserContext } from '../../App';
 import { User } from '../../utils/custom-types';
 import { axiosClient } from '../../utils/constants';
@@ -106,12 +106,24 @@ const ChatScreen = ({
 
   return (
     <GiftedChat
+      renderInputToolbar={renderInputToolbar}
       messages={messages}
       onSend={text => onSend(text)}
       user={{
         _id: currentUser.uid,
         name: `${currentUser.firstName} ${currentUser.lastName}`,
       }}
+    />
+  );
+};
+
+const renderInputToolbar = props => {
+  //Add the extra styles via containerStyle
+  return (
+    <InputToolbar
+      {...props}
+      textInputStyle={{ color: 'black' }}
+      containerStyle={{ borderTopWidth: 1.5, borderTopColor: '#333' }}
     />
   );
 };
