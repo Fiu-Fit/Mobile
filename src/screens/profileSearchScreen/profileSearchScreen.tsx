@@ -39,9 +39,9 @@ const ProfileSearchScreen = ({
   return (
     <View style={styles.container}>
       <Appbar.Header style={{ backgroundColor: appTheme.colors.primary }}>
-        <Appbar.Content title='Profile Search' />
+        <Appbar.Content title='Búsqueda de perfiles' />
       </Appbar.Header>
-      <Text>Search By Distance:</Text>
+      <Text>Buscar por cercanía:</Text>
       <Switch
         trackColor={{ false: '#767577', true: '#81b0ff' }}
         thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
@@ -51,7 +51,7 @@ const ProfileSearchScreen = ({
       />
       {isEnabled ? (
         <Searchbar
-          placeholder='Distance'
+          placeholder='Distancia'
           onChangeText={handleSearchByDistance}
           value={searchStore.distance ? `${searchStore.distance}` : ''}
           style={styles.searchBar}
@@ -60,7 +60,7 @@ const ProfileSearchScreen = ({
         />
       ) : (
         <Searchbar
-          placeholder='Name'
+          placeholder='Nombre'
           onChangeText={handleSearchByName}
           value={searchStore.query}
           style={styles.searchBar}

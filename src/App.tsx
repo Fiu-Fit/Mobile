@@ -12,6 +12,7 @@ import { createContext, useContext, useState } from 'react';
 import { Role } from './constants/roles';
 import { User } from './utils/custom-types';
 import { navigationRef } from './navigation/root-navigator';
+import PushNotification from 'react-native-push-notification';
 
 if (
   !new (class {
@@ -138,6 +139,13 @@ const UserContext = createContext<{
   setCurrentUser: () => {},
 });
 export const useUserContext = () => useContext(UserContext);
+PushNotification.createChannel(
+  {
+    channelId: 'fiu-fit-notification-channel', // (required)
+    channelName: 'Fiu Fit Notifications', // (required)
+  },
+  created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+);
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState<User>(

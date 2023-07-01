@@ -22,7 +22,7 @@ export const requestPermissions = async (user: User) => {
 
       const token = await getFCMToken();
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { followedUsers, ...rest } = user;
+      const { followedUsers, verification, interests, ...rest } = user;
 
       const updatedUser = await axiosClient.put<User>(`/users/${user.id}`, {
         ...rest,
@@ -124,6 +124,9 @@ const navigateToScreen = (type: NotificationType, id: number) => {
 
 export const NotificationListener = () => {
   messaging().onMessage(remoteMessage => {
+    if (!remoteMessage) {
+      return;
+    }
     logger.info('remote message on foreground!', JSON.stringify(remoteMessage));
 
     try {
@@ -133,6 +136,7 @@ export const NotificationListener = () => {
       }
 
       PushNotification.localNotification({
+        channelId: 'fiu-fit-notification-channel',
         title: remoteMessage.notification?.title,
         message: remoteMessage.notification?.body || '',
       });
@@ -144,11 +148,13 @@ export const NotificationListener = () => {
   });
 
   messaging().onNotificationOpenedApp(remoteMessage => {
+    if (!remoteMessage) {
+      return;
+    }
     logger.info(
       'Notification caused app to open from background state:',
       remoteMessage.notification,
     );
-
     try {
       const result = notificationType(remoteMessage);
 
@@ -165,12 +171,14 @@ export const NotificationListener = () => {
   messaging()
     .getInitialNotification()
     .then(remoteMessage => {
-      if (remoteMessage) {
-        logger.info(
-          'Notification caused app to open from quit state:',
-          remoteMessage.notification,
-        );
+      if (!remoteMessage) {
+        return;
       }
+
+      logger.info(
+        'Notification caused app to open from quit state:',
+        remoteMessage.notification,
+      );
 
       try {
         const result = notificationType(remoteMessage);

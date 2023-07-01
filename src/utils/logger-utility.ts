@@ -45,6 +45,8 @@ const config = {
     'workout-info',
     'verification-modal',
     'item-card',
+    'edit-profile',
+    'confirm-registration-screen',
   ],
   transportOptions: {
     colors: {

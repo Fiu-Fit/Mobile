@@ -19,7 +19,6 @@ export interface UserProfileProps {
     params: { givenUserId: number };
   };
   navigation?: UserProfileScreenNavigationProp;
-  myProfile?: boolean;
 }
 
 export type ErrorInputProps = Omit<InputProps, 'role'>;
