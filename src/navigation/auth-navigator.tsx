@@ -8,6 +8,7 @@ import TabNavigator from './main-navigator';
 import EditProfile from '../screens/editProfile';
 import UserProfile from '../components/userProfile';
 import ConfirmRegistrationScreen from '../screens/confirm-registration';
+import UserListScreen from '../screens/userList';
 
 const Stack = createStackNavigator<AuthStackParamList>();
 
@@ -24,6 +25,7 @@ const AuthStack = () => {
       <Stack.Screen name='RegisterScreen' component={RegisterScreen} />
       <Stack.Screen name='EditProfile' component={EditProfile} />
       <Stack.Screen name='SearchedProfile' component={UserProfile} />
+      <Stack.Screen name='UserListScreen' component={UserListScreen} />
       <Stack.Screen
         name='ConfirmRegistrationScreen'
         component={ConfirmRegistrationScreen}

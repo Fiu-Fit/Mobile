@@ -38,6 +38,12 @@ export type UserStackParamList = {
   };
 };
 
+export type UserListParamList = {
+  UserListScreen: {
+    showFollowers?: boolean;
+  };
+};
+
 export type TabParamList = {
   WorkoutScreen: Omit<WorkoutStackParamList, 'WorkoutsScreen'>;
   Workouts: undefined;
@@ -148,4 +154,9 @@ export type UserSearchScreenNavigationProp = StackNavigationProp<
 export type UserProfileScreenNavigationProp = StackNavigationProp<
   UserStackParamList,
   'UserProfileScreen'
+>;
+
+export type UserListScreenScreenNavigationProp = StackNavigationProp<
+  UserListParamList,
+  'UserListScreen'
 >;
