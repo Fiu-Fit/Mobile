@@ -3,6 +3,7 @@ import { UserStackParamList } from './navigation-props';
 import UserProfileScreen from '../screens/userProfile';
 import ChatScreen from '../screens/chat/chatScreen';
 import ProfileSearchScreen from '../screens/profileSearchScreen';
+import UserListScreen from '../screens/userList';
 
 const Stack = createStackNavigator<UserStackParamList>();
 
@@ -12,6 +13,7 @@ const UserStack = () => {
       <Stack.Screen name='UserSearchScreen' component={ProfileSearchScreen} />
       <Stack.Screen name='UserProfileScreen' component={UserProfileScreen} />
       <Stack.Screen name='ChatScreen' component={ChatScreen} />
+      <Stack.Screen name='UserListScreen' component={UserListScreen} />
     </Stack.Navigator>
   );
 };

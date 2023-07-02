@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import { useUserContext } from '../../App';
-import UserProfile from '../../components/userProfile';
 import { observer } from 'mobx-react';
 import ItemCardList from '../../components/itemCardList';
 import LoggerFactory from '../../utils/logger-utility';
@@ -19,7 +18,7 @@ type UserListScreennProps = {
   };
 };
 
-const UserListScreen = ({ navigation, route }: UserListScreennProps) => {
+const UserListScreen = ({ route }: UserListScreennProps) => {
   const { currentUser } = useUserContext();
   const [usersToShow, setUsersToShow] = useState(
     route.params?.showFollowers

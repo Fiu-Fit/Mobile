@@ -37,9 +37,6 @@ export type UserStackParamList = {
     givenUserId: number;
     canEdit: boolean;
   };
-};
-
-export type UserListParamList = {
   UserListScreen: {
     showFollowers?: boolean;
   };
@@ -158,6 +155,6 @@ export type UserProfileScreenNavigationProp = StackNavigationProp<
 >;
 
 export type UserListScreenScreenNavigationProp = StackNavigationProp<
-  UserListParamList,
+  UserStackParamList,
   'UserListScreen'
 >;
