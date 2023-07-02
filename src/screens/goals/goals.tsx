@@ -44,6 +44,7 @@ const GoalsScreen = ({
       </View>
       <FloatingActionButton
         onPress={() => navigation.push('CreateGoalScreen')}
+        top={700}
       />
     </View>
   );
