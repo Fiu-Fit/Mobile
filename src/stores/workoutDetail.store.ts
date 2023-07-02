@@ -22,6 +22,7 @@ import LoggerFactory from '../utils/logger-utility';
 import { workoutStore } from './workout.store';
 import { goalStore } from './goal.store';
 import storage from '@react-native-firebase/storage';
+import { BarChartProps } from '../utils/custom-types';
 
 const logger = LoggerFactory('workout-detail-store');
 
@@ -114,16 +115,24 @@ export class WorkoutDetailStore {
       return { value, label };
     });
   }
+
   get ratingsData() {
-    return this.metrics.map((metric, index) => {
-      const label = monthMap.get(index) || '';
-      const ratingData = metric.ratings.map(rating => {
-        return { value: rating.count, label };
+    const ratingsData: BarChartProps[] = [];
+
+    for (let i = 0; i < 5; i++) {
+      const ratingData = this.metrics.map((metric, index) => {
+        const label = monthMap.get(index) || '';
+        const value = metric.ratings[i].count || 0;
+
+        return { value, label };
       });
 
-      return ratingData;
-    });
+      ratingsData.push(ratingData);
+    }
+
+    return ratingsData;
   }
+
   constructor() {
     makeObservable(this, {
       workout: observable,
@@ -193,7 +202,7 @@ export class WorkoutDetailStore {
     logger.debug('Files uploaded!');
   }
 
-  *fetchAuthor() {
+  *fetchAuthor(isNested: boolean = false) {
     this.state = 'pending';
     try {
       logger.debug(
@@ -204,7 +213,9 @@ export class WorkoutDetailStore {
       runInAction(() => {
         this.authorName = data.name;
       });
-      this.state = 'done';
+      if (!isNested) {
+        this.state = 'done';
+      }
     } catch (e) {
       runInAction(() => {
         this.state = 'error';
@@ -246,11 +257,11 @@ export class WorkoutDetailStore {
         }, this.workout.exercises);
         this.newExercises = new Map<string, WorkoutExercise>();
         logger.debug('Loaded Workout: ', this.workout);
-        this.state = 'done';
       });
-      yield this.fetchWorkoutRatings();
+      yield this.fetchWorkoutRatings(true);
       yield this.downloadResources();
-      yield this.fetchAuthor();
+      yield this.fetchAuthor(true);
+      this.state = 'done';
     } catch (e) {
       runInAction(() => {
         this.state = 'error';
@@ -395,7 +406,7 @@ export class WorkoutDetailStore {
     }
   }
 
-  *fetchWorkoutRatings() {
+  *fetchWorkoutRatings(isNested: boolean = false) {
     this.ratings = [];
     this.state = 'pending';
     try {
@@ -414,7 +425,9 @@ export class WorkoutDetailStore {
       logger.debug(`Got data for workout: ${this.workout._id}`, data);
       runInAction(() => {
         this.ratings = data;
-        this.state = 'done';
+        if (!isNested) {
+          this.state = 'done';
+        }
       });
     } catch (e) {
       logger.error('Error while fetching ratings:', { e });
