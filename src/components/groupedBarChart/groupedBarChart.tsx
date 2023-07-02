@@ -8,7 +8,7 @@ import {
 } from 'victory-native';
 import { BarChartProps } from '../../utils/custom-types';
 import { observer } from 'mobx-react';
-
+ 
 const GroupedBarChart = ({ data }: { data: BarChartProps[] }) => {
   console.log('GroupedBarChart data: ', data);
   return (
@@ -24,12 +24,12 @@ const GroupedBarChart = ({ data }: { data: BarChartProps[] }) => {
         colorScale={'qualitative'}
         orientation='horizontal'
       />
-      <VictoryGroup offset={8} colorScale={'qualitative'}>
+      <VictoryGroup offset={6} colorScale={'qualitative'}>
         {data.map((item, index) => (
           <VictoryBar
             key={`bar-chart-${index}`}
             horizontal
-            barWidth={5}
+            barWidth={4}
             data={item}
             x='label'
             y='value'

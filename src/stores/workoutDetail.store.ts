@@ -130,6 +130,7 @@ export class WorkoutDetailStore {
       ratingsData.push(ratingData);
     }
 
+    logger.info('Ratings data: ', ratingsData);
     return ratingsData;
   }
 
