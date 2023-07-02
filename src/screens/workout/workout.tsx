@@ -79,6 +79,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
         )}
 
         <ItemCardList
+          keyPrefix='workout-exercise-cards'
           items={workoutDetailStore.exerciseCards}
           onPress={item => setSelectedExercise(item)}
         />

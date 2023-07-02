@@ -80,6 +80,7 @@ const CreateGoalScreen = ({
       {showExerciseList ? (
         <View className='mt-5'>
           <ItemCardList
+            keyPrefix='goal-exercise'
             items={exerciseStore.cardsInfo}
             onPress={item => {
               setSelectedExercise(item);

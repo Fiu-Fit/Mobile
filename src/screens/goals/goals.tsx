@@ -33,6 +33,7 @@ const GoalsScreen = ({
       <View style={{ flex: 0.8, backgroundColor: appTheme.colors.background }}>
         <Divider />
         <ItemCardList
+          keyPrefix='goals-list'
           items={goalStore.cardsInfo}
           onPress={item =>
             navigation.push('GoalScreen', {

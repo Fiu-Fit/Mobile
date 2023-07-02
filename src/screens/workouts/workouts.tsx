@@ -24,6 +24,7 @@ const WorkoutsScreen = ({
       <View style={{ flex: 0.8 }}>
         <ItemCardList
           items={workoutStore.workoutCardsInfo}
+          keyPrefix='workouts-workout-list'
           onPress={item =>
             navigation.push('WorkoutScreen', {
               itemId: item.id,
