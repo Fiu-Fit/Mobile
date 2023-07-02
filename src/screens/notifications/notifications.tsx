@@ -26,6 +26,7 @@ const NotificactionsScreen = ({
       <NotificationSelector />
       <View style={{ flex: 0.9 }}>
         <ItemCardList
+          keyPrefix='notifications-goal-list'
           items={notificationStore.notificationCardsInfo}
           onPress={async item => {
             logger.debug('Goal id in notification screen: ', item.id);

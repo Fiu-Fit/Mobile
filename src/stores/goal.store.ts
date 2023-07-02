@@ -32,8 +32,7 @@ export class GoalStore {
         title: goal.title,
         content: goal.status,
         type: 'goal',
-        imageUrl:
-          'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
+        imageUrl: require('../imgs/goal.png'),
       }),
     );
   }
@@ -50,6 +49,10 @@ export class GoalStore {
       deleteGoal: flow,
       editGoal: flow,
     });
+  }
+
+  get downloadList() {
+    return this.downloads;
   }
 
   async downloadResources() {

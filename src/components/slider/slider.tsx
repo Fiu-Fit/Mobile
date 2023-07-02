@@ -4,6 +4,7 @@ import { WorkoutDetailStore } from '../../stores/workoutDetail.store';
 import { GoalStore } from '../../stores/goal.store';
 import VideoPlayer from 'react-native-video-player';
 import Pagination from '../pagination';
+import { observer } from 'mobx-react';
 
 const Slider = ({ store }: { store: WorkoutDetailStore | GoalStore }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -42,9 +43,9 @@ const Slider = ({ store }: { store: WorkoutDetailStore | GoalStore }) => {
       style={{ flex: 0.7 }}
       className='mb-10 mx-5 items-center justify-center'>
       <FlatList
-        data={store.downloads}
+        data={store.downloadList}
         renderItem={({ item, index: i }) => (
-          <View className='items-center justify-center'>
+          <View key={i} className='items-center justify-center'>
             {item.slice(item.lastIndexOf('.')) === '.jpg' ? (
               <Image
                 key={i}
@@ -83,9 +84,9 @@ const Slider = ({ store }: { store: WorkoutDetailStore | GoalStore }) => {
           );
         }}
       />
-      <Pagination data={store.downloads} scrollX={scrollX} index={index} />
+      <Pagination data={store.downloadList} scrollX={scrollX} index={index} />
     </View>
   );
 };
 
-export default Slider;
+export default observer(Slider);

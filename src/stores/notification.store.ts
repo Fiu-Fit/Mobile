@@ -31,8 +31,7 @@ export class NotificationStore {
           title: GOAL_NOTIFICATION_TITLE,
           content: GOAL_NOTIFICATION_CONTENT(goalNotification.goalTitle),
           type: NotificationType.GoalCompleted.toString(),
-          imageUrl:
-            'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
+          imageUrl: require('../imgs/goal.png'),
           onPressScreen: 'GoalScreen',
         };
       } else {
@@ -42,8 +41,7 @@ export class NotificationStore {
           title: MESSAGE_NOTIFICATION_TITLE,
           content: MESSAGE_NOTIFICATION_CONTENT(messageNotification.senderName),
           type: NotificationType.NewMessage.toString(),
-          imageUrl:
-            'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
+          imageUrl: require('../imgs/notification.png'),
           onPressScreen: 'ChatScreen',
         };
       }

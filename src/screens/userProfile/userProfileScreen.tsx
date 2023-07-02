@@ -13,7 +13,7 @@ type UserProfileScreenProps = {
 };
 
 const UserProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
-  const { givenUserId, canEdit } = route.params;
+  const { givenUserId } = route.params;
   return (
     <UserProfile
       route={{
@@ -22,7 +22,6 @@ const UserProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
         params: { givenUserId },
       }}
       navigation={navigation}
-      myProfile={canEdit}
     />
   );
 };

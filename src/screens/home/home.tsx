@@ -104,6 +104,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
         </Text>
         {workoutStore.workoutsCount > 0 ? (
           <ItemCardList
+            keyPrefix='home-favorite-workouts'
             items={workoutStore.workoutCardsInfo}
             onPress={item =>
               navigation.navigate('Workouts', {

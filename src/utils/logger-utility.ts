@@ -44,6 +44,7 @@ const config = {
     'workout-media-medial',
     'workout-info',
     'verification-modal',
+    'item-card',
     'edit-profile',
     'confirm-registration-screen',
     'user-list',

@@ -1,14 +1,14 @@
 import { View } from 'react-native';
+import { Text } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import { WorkoutScreenNavigationProp } from '../../navigation/navigation-props';
 import React, { useCallback } from 'react';
 import WorkoutRatingModal from '../../components/workoutRatingModal';
 import { observer } from 'mobx-react';
 import Loader from '../../components/loader';
-import { action } from 'mobx';
+import { action, runInAction } from 'mobx';
 import WorkoutHeader from '../../components/workoutHeader';
 import WorkoutInfo from '../../components/workoutInfo';
-import Button from '../../components/button';
 import ItemCardList from '../../components/itemCardList';
 import ExerciseModal from '../../components/exerciseModal';
 import { ExerciseCardInfo } from '../../utils/workout-types';
@@ -18,6 +18,7 @@ import { Role } from '../../constants/roles';
 import WorkoutCompletedModal from '../../components/workoutCompletedModal';
 import { useFocusEffect } from '@react-navigation/native';
 import MultimediaModal from '../../components/multimediaModal';
+import Button from '../../components/button';
 
 type WorkoutScreenProps = {
   navigation: WorkoutScreenNavigationProp;
@@ -43,9 +44,9 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
 
   useFocusEffect(
     useCallback(() => {
-      action(() => {
+      runInAction(() => {
         workoutDetailStore.fetchWorkout(itemId);
-      })();
+      });
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
@@ -78,6 +79,7 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
         )}
 
         <ItemCardList
+          keyPrefix='workout-exercise-cards'
           items={workoutDetailStore.exerciseCards}
           onPress={item => setSelectedExercise(item)}
         />
@@ -110,12 +112,20 @@ const WorkoutScreen = ({ navigation, route }: WorkoutScreenProps) => {
       </View>
       {currentUser.role !== Role.Athlete &&
         currentUser.id === workoutDetailStore.workout.authorId && (
-          <FloatingActionButton
-            onPress={() => navigation.push('UpsertWorkoutScreen', { itemId })}
-            icon='pencil'
-          />
+          <View>
+            <FloatingActionButton
+              onPress={() => navigation.push('UpsertWorkoutScreen', { itemId })}
+              icon='pencil'
+            />
+            <FloatingActionButton
+              onPress={() => navigation.push('WorkoutMetricsScreen')}
+              icon='chart-bar'
+              right={320}
+            />
+          </View>
         )}
-      <View className='mb-10 mx-10' style={{ flex: 0.1 }}>
+
+      <View style={{ flex: 0.1, marginHorizontal: 130, marginTop: 30 }}>
         <Button title='Completar' onPress={() => handleCompletedWorkout()} />
       </View>
     </View>

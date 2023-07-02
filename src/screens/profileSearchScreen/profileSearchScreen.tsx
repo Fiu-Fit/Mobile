@@ -71,6 +71,7 @@ const ProfileSearchScreen = ({
       ) : (
         <ItemCardList
           items={searchStore.cardsInfo ?? []}
+          keyPrefix='profileSearch-user'
           onPress={item => {
             navigation.push('UserProfileScreen', {
               givenUserId: Number(item.id),

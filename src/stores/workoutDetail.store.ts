@@ -11,14 +11,18 @@ import {
   ExerciseCardInfo,
   IWorkoutHeader,
   WorkoutExercise,
+  WorkoutMetric,
   WorkoutProps,
   WorkoutRatingProps,
+  imageMap,
+  monthMap,
 } from '../utils/workout-types';
 import { axiosClient } from '../utils/constants';
 import LoggerFactory from '../utils/logger-utility';
 import { workoutStore } from './workout.store';
 import { goalStore } from './goal.store';
 import storage from '@react-native-firebase/storage';
+import { BarChartProps } from '../utils/custom-types';
 
 const logger = LoggerFactory('workout-detail-store');
 
@@ -42,8 +46,14 @@ export class WorkoutDetailStore {
   newExercises = new Map<string, WorkoutExercise>();
   ratings: WorkoutRatingProps[] = [];
   downloads: string[] = [];
+  metrics: WorkoutMetric[] = [];
   state = 'pending';
+  selectedYearFilter: Number = new Date().getFullYear();
+  authorName: string = 'Author';
 
+  get downloadList(): string[] {
+    return this.downloads;
+  }
   get workoutHeader(): IWorkoutHeader {
     const { name, description, duration, exercises, averageRating } =
       this.workout;
@@ -51,7 +61,7 @@ export class WorkoutDetailStore {
       name,
       description,
       duration,
-      author: 'Jorge', // @TODO Backend: attach User Object in Author instead of AuthorID
+      author: this.authorName,
       averageRating: averageRating ?? 'No ratings!',
       exerciseCount: exercises.size,
     };
@@ -69,11 +79,13 @@ export class WorkoutDetailStore {
           type: 'exercise',
           exercise: workoutExercise.exercise,
           imageUrl:
-            'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
+            imageMap.get(workoutExercise.exercise.category) ??
+            require('../imgs/error.png'),
         };
       },
     );
   }
+  // Sisi, me refiero a que quizas te tengas que cambiar de ramaah sisis esta bien
 
   get exercises(): WorkoutExercise[] {
     return Array.from(this.workout.exercises.values());
@@ -86,6 +98,42 @@ export class WorkoutDetailStore {
     return comments;
   }
 
+  get favoritesData() {
+    return this.metrics.map((metric, index) => {
+      const label = monthMap.get(index) || '';
+      const value = metric.favoriteCount;
+
+      return { value, label };
+    });
+  }
+
+  get averageRatingsData() {
+    return this.metrics.map((metric, index) => {
+      const label = monthMap.get(index) || '';
+      const value = metric.averageRating ? metric.averageRating : 5;
+
+      return { value, label };
+    });
+  }
+
+  get ratingsData() {
+    const ratingsData: BarChartProps[] = [];
+
+    for (let i = 0; i < 5; i++) {
+      const ratingData = this.metrics.map((metric, index) => {
+        const label = monthMap.get(index) || '';
+        const value = metric.ratings[i].count || 0;
+
+        return { value, label };
+      });
+
+      ratingsData.push(ratingData);
+    }
+
+    logger.info('Ratings data: ', ratingsData);
+    return ratingsData;
+  }
+
   constructor() {
     makeObservable(this, {
       workout: observable,
@@ -93,9 +141,16 @@ export class WorkoutDetailStore {
       newExercises: observable,
       ratings: observable,
       downloads: observable,
+      metrics: observable,
+      selectedYearFilter: observable,
+      authorName: observable,
+      downloadList: computed,
       exerciseCards: computed,
       workoutHeader: computed,
       workoutComments: computed,
+      favoritesData: computed,
+      averageRatingsData: computed,
+      ratingsData: computed,
       addNewExercise: action,
       editExercise: action,
       removeExercise: action,
@@ -106,6 +161,8 @@ export class WorkoutDetailStore {
       completeWorkout: flow,
       removeWorkoutAsFavourite: flow,
       createWorkoutRating: flow,
+      fetchWorkoutMetrics: flow,
+      fetchAuthor: flow,
     });
   }
 
@@ -146,6 +203,27 @@ export class WorkoutDetailStore {
     logger.debug('Files uploaded!');
   }
 
+  *fetchAuthor(isNested: boolean = false) {
+    this.state = 'pending';
+    try {
+      logger.debug(
+        `Getting author ${this.workout.authorId} for workout ${this.workout._id}`,
+      );
+      const { data } = yield axiosClient.get(`/users/${this.workout.authorId}`);
+      logger.debug('Got author ', data);
+      runInAction(() => {
+        this.authorName = data.name;
+      });
+      if (!isNested) {
+        this.state = 'done';
+      }
+    } catch (e) {
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
   *fetchWorkout(workoutId: string) {
     this.state = 'pending';
     if (!workoutId || workoutId === '') {
@@ -159,7 +237,7 @@ export class WorkoutDetailStore {
         `/workouts/${workoutId}`,
       );
       logger.debug('Got data: ', data);
-      runInAction(async () => {
+      yield runInAction(async () => {
         const {
           exercises: exercisesList,
         }: {
@@ -179,12 +257,12 @@ export class WorkoutDetailStore {
           return map;
         }, this.workout.exercises);
         this.newExercises = new Map<string, WorkoutExercise>();
-        await this.fetchWorkoutRatings();
         logger.debug('Loaded Workout: ', this.workout);
-        await this.downloadResources();
-
-        this.state = 'done';
       });
+      yield this.fetchWorkoutRatings(true);
+      yield this.downloadResources();
+      yield this.fetchAuthor(true);
+      this.state = 'done';
     } catch (e) {
       runInAction(() => {
         this.state = 'error';
@@ -236,6 +314,26 @@ export class WorkoutDetailStore {
     }
   }
 
+  *fetchWorkoutMetrics() {
+    this.state = 'pending';
+    try {
+      logger.debug('Getting workout metrics...');
+      const { data } = yield axiosClient.get<WorkoutMetric[]>(
+        `/workouts/${this.workout._id}/metrics?year=${this.selectedYearFilter}`,
+      );
+      logger.debug('Got workout metrics');
+      runInAction(() => {
+        this.metrics = data;
+        this.state = 'done';
+      });
+    } catch (e) {
+      logger.error('Error while fetching workout metrics:', { e });
+      runInAction(() => {
+        this.state = 'error';
+      });
+    }
+  }
+
   addNewExercise(exercise: WorkoutExercise) {
     this.newExercises.set(exercise._id, exercise);
   }
@@ -276,7 +374,9 @@ export class WorkoutDetailStore {
             _id,
             ...workoutPayload,
           });
-      this.workout._id = data._id;
+      runInAction(() => {
+        this.workout._id = data._id;
+      });
       logger.info('Upsert workout Data: ', data);
       yield this.uploadResources();
     } catch (err) {
@@ -307,7 +407,7 @@ export class WorkoutDetailStore {
     }
   }
 
-  *fetchWorkoutRatings() {
+  *fetchWorkoutRatings(isNested: boolean = false) {
     this.ratings = [];
     this.state = 'pending';
     try {
@@ -326,7 +426,9 @@ export class WorkoutDetailStore {
       logger.debug(`Got data for workout: ${this.workout._id}`, data);
       runInAction(() => {
         this.ratings = data;
-        this.state = 'done';
+        if (!isNested) {
+          this.state = 'done';
+        }
       });
     } catch (e) {
       logger.error('Error while fetching ratings:', { e });
