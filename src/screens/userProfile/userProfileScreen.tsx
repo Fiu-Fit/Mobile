@@ -22,7 +22,6 @@ const UserProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
         params: { givenUserId },
       }}
       navigation={navigation}
-      myProfile={canEdit}
     />
   );
 };
