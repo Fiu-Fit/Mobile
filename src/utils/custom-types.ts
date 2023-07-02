@@ -68,6 +68,7 @@ export type User = {
   followedUsers: User[];
   phoneNumber?: string;
   verification?: Verification;
+  profilePicture?: string;
 };
 
 export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<

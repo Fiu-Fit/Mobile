@@ -129,6 +129,7 @@ const defaultUserObject = {
   deviceToken: '',
   coordinates: [0, 0],
   followedUsers: [],
+  profilePicture: '',
 };
 
 const UserContext = createContext<{

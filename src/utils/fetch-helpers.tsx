@@ -3,6 +3,7 @@ import { axiosClient } from './constants';
 import LoggerFactory from './logger-utility';
 import { User } from './custom-types';
 import { useUserContext } from '../App';
+import { searchStore } from '../stores/userSearch.store';
 
 const logger = LoggerFactory('fetch-helpers');
 
@@ -30,6 +31,8 @@ export const useFetchUser = ({
         logger.debug('user: ', response);
         setCurrentUser(response as User);
       }
+      logger.debug('Current user for picture: ', response as User);
+      searchStore.downloadProfilePicture(response as User);
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
