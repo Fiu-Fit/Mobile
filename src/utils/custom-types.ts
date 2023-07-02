@@ -40,7 +40,7 @@ export interface CardInfo {
   title: string;
   content: string;
   type: string;
-  imageUrl: string;
+  imageUrl: NodeRequire;
   onPressScreen?: string;
 }
 
@@ -96,3 +96,10 @@ export type DateState = {
   selectedDate: Date | undefined;
   displayedDate: Moment;
 };
+
+export type BarData = {
+  value: number;
+  label: string;
+};
+
+export type BarChartProps = { label: string; value: number }[];

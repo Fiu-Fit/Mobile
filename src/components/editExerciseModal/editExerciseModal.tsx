@@ -6,6 +6,7 @@ import {
   ExerciseCardInfo,
   Unit,
   WorkoutExercise,
+  imageMap,
   unitMap,
 } from '../../utils/workout-types';
 import { Formik, isNaN } from 'formik';
@@ -95,9 +96,9 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
             <Image
               key={'edit-exercise-modal-image'}
               style={{ width: 300, height: '100%' }}
-              source={{
-                uri: 'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
-              }}
+              source={imageMap.get(
+                selectedExercise?.category ?? require('../../imgs/error.png'),
+              )}
             />
           </View>
           <ScrollView
@@ -131,21 +132,17 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
               {({ values, errors, handleChange }) => (
                 <>
                   <List.Section
-                    title='Exercises'
+                    title='Ejercicios'
                     key={'edit-exercise-modal-exercises-section'}>
                     <List.Accordion
                       key={'edit-exercise-modal-exercises-list'}
-                      title={selectedExercise?.name ?? 'Pick an Exercise'}
+                      title={selectedExercise?.name ?? 'Elige un ejercicio'}
                       left={props =>
                         FolderIcon({
                           key: 'edit-exercise-modal-exercises-icon',
                           ...props,
                         })
-                      }
-                      onPress={() => {
-                        setSelectedExercise(undefined);
-                      }}
-                      expanded={!selectedExercise}>
+                      }>
                       {exerciseList.map((exercise, index) => (
                         <List.Item
                           key={`edit-exercise-modal-exercises-dropdown-${exercise._id}-${index}`}
@@ -161,13 +158,13 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                   </List.Section>
 
                   <List.Section
-                    title='Unit'
+                    title='Unidad'
                     key={'edit-exercise-modal-units-section'}>
                     <List.Accordion
                       key={'edit-exercise-modal-units-dropdown'}
                       title={
                         unitMap.get(selectedUnit ?? Unit.UNRECOGNIZED) ??
-                        'Pick a Unit'
+                        'Elige una unidad'
                       }
                       left={props =>
                         FolderIcon({
@@ -207,8 +204,8 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                       });
                     }}
                     multiline={true}
-                    labelText='Exercise sets'
-                    iconName='comment-outline'
+                    labelText='Sets'
+                    iconName='dumbbell'
                     error={errors.sets}
                     password={false}
                     onFocus={() => {
@@ -226,8 +223,8 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                       });
                     }}
                     multiline={true}
-                    labelText='Exercise Reps'
-                    iconName='comment-outline'
+                    labelText='Repeticiones'
+                    iconName='dumbbell'
                     error={errors.reps}
                     password={false}
                     onFocus={() => {
@@ -245,8 +242,8 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                       });
                     }}
                     multiline={true}
-                    labelText='Weight (0 if unneeded)'
-                    iconName='comment-outline'
+                    labelText='Peso (0 si no se necesita)'
+                    iconName='dumbbell'
                     error={errors.weight}
                     password={false}
                     keyboardType='numeric'
@@ -254,31 +251,33 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                       errors.weight = '';
                     }}
                   />
-                  <CustomButton
-                    key={'edit-exercise-modal-save-button'}
-                    title='Guardar'
-                    onPress={() => {
-                      runInAction(() => {
-                        workoutExercise.sets = Number(values.sets);
-                        workoutExercise.reps = Number(values.reps);
-                        workoutExercise.weight = Number(values.weight);
-                        workoutExercise.exercise =
-                          selectedExercise ??
-                          ({
-                            _id: '',
-                            name: '',
-                            description: '',
-                            category: '',
-                          } as unknown as Exercise);
+                  <View className='mt-5'>
+                    <CustomButton
+                      key={'edit-exercise-modal-save-button'}
+                      title='Guardar'
+                      onPress={() => {
+                        runInAction(() => {
+                          workoutExercise.sets = Number(values.sets);
+                          workoutExercise.reps = Number(values.reps);
+                          workoutExercise.weight = Number(values.weight);
+                          workoutExercise.exercise =
+                            selectedExercise ??
+                            ({
+                              _id: '',
+                              name: '',
+                              description: '',
+                              category: '',
+                            } as unknown as Exercise);
 
-                        workoutExercise.unit =
-                          selectedUnit ?? Unit.UNRECOGNIZED;
-                      });
-                      workoutDetailStore.addNewExercise(workoutExercise);
-                      logger.info('workoutExercise saved: ', workoutExercise);
-                      onDismiss();
-                    }}
-                  />
+                          workoutExercise.unit =
+                            selectedUnit ?? Unit.UNRECOGNIZED;
+                        });
+                        workoutDetailStore.addNewExercise(workoutExercise);
+                        logger.info('workoutExercise saved: ', workoutExercise);
+                        onDismiss();
+                      }}
+                    />
+                  </View>
                 </>
               )}
             </Formik>

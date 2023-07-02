@@ -3,6 +3,7 @@ import WorkoutScreen from '../screens/workout';
 import WorkoutsScreen from '../screens/workouts';
 import { WorkoutStackParamList } from './navigation-props';
 import UpsertWorkoutScreen from '../screens/upsertWorkout';
+import WorkoutMetricsScreen from '../screens/workoutMetrics';
 
 const Stack = createStackNavigator<WorkoutStackParamList>();
 
@@ -14,6 +15,10 @@ const WorkoutStack = () => {
       <Stack.Screen
         name='UpsertWorkoutScreen'
         component={UpsertWorkoutScreen}
+      />
+      <Stack.Screen
+        name='WorkoutMetricsScreen'
+        component={WorkoutMetricsScreen}
       />
     </Stack.Navigator>
   );

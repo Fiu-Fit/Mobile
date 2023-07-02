@@ -42,13 +42,13 @@ const WorkoutInfo = ({
               marginRight: 30,
               marginLeft: 5,
             }}
-            name={'comment-outline'}
+            name={'star'}
           />
         </TouchableOpacity>
         <TouchableOpacity
           className='flex-row justify-center'
           onPress={() => {
-            logger.debug('downloads: ', workoutDetailStore.downloads);
+            logger.debug('downloads: ', workoutDetailStore.downloadList);
             onPressMultimediaModal();
           }}>
           <Icon

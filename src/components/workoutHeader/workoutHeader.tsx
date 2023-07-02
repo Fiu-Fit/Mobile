@@ -64,10 +64,10 @@ const WorkoutHeader = () => {
               color: workoutStore.favoriteWorkouts.some(
                 workout => workout._id === workoutDetailStore.workout._id,
               )
-                ? 'yellow'
+                ? 'red'
                 : appTheme.colors.onSurface,
             }}
-            name={'star'}
+            name={'heart'}
           />
         </TouchableOpacity>
       </View>

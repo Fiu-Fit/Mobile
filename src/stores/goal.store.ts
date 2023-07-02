@@ -52,6 +52,10 @@ export class GoalStore {
     });
   }
 
+  get downloadList() {
+    return this.downloads;
+  }
+
   async downloadResources() {
     logger.debug('Downloading files: ', this.currentGoal.multimedia);
     this.downloads = [];

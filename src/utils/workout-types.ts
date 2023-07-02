@@ -30,6 +30,21 @@ export const categoryMap = new Map<number, string>([
   [-1, 'Cualquiera'],
 ]);
 
+export const imageMap = new Map<number, NodeRequire>([
+  [0, require('../imgs/category0.png')],
+  [1, require('../imgs/category1.png')],
+  [2, require('../imgs/category2.png')],
+  [3, require('../imgs/category3.png')],
+  [4, require('../imgs/category4.png')],
+  [5, require('../imgs/category5.png')],
+  [6, require('../imgs/category6.png')],
+  [7, require('../imgs/category7.png')],
+  [8, require('../imgs/category8.png')],
+  [9, require('../imgs/category9.png')],
+  [10, require('../imgs/category10.png')],
+  [-1, require('../imgs/error.png')],
+]);
+
 export const workoutCategoryOptions = [
   { label: 'Piernas', key: 0 },
   { label: 'Pecho', key: 1 },
@@ -63,6 +78,35 @@ export const difficultyMap = new Map<number, string>([
   [-1, 'Cualquiera'],
 ]);
 
+export const workoutMetricYear = [
+  { label: '2023', key: 2023 },
+  { label: '2022', key: 2022 },
+  { label: '2021', key: 2021 },
+  { label: '2020', key: 2020 },
+];
+
+export const yearMap = new Map<number, string>([
+  [2023, '2023'],
+  [2022, '2022'],
+  [2021, '2021'],
+  [2020, '2020'],
+]);
+
+export const monthMap = new Map<number, string>([
+  [0, 'Ene'],
+  [1, 'Feb'],
+  [2, 'Marzo'],
+  [3, 'Abril'],
+  [4, 'Mayo'],
+  [5, 'Junio'],
+  [6, 'Julio'],
+  [7, 'Agosto'],
+  [8, 'Septiembre'],
+  [9, 'Octubre'],
+  [10, 'Noviembre'],
+  [11, 'Diciembre'],
+]);
+
 export enum Unit {
   SECONDS = 0,
   REPETITIONS = 1,
@@ -85,6 +129,7 @@ export type WorkoutExercise = {
   weight?: number;
   unit: Unit;
   exercise: Exercise;
+  category: CategoryType;
 };
 
 export type Exercise = {
@@ -129,4 +174,15 @@ export type WorkoutRatingProps = {
   rating: number;
   comment?: string;
   ratedAt: Date;
+};
+
+export type RatingCount = {
+  rating: number;
+  count: number;
+};
+
+export type WorkoutMetric = {
+  favoriteCount: number;
+  averageRating: number;
+  ratings: RatingCount[];
 };

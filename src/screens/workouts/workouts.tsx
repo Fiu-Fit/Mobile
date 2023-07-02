@@ -36,6 +36,7 @@ const WorkoutsScreen = ({
           onPress={() =>
             navigation.push('UpsertWorkoutScreen', { itemId: undefined })
           }
+          top={680}
         />
       )}
     </View>

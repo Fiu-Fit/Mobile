@@ -7,6 +7,7 @@ interface FloatingActionButtonProps {
   text?: string;
   bottom?: number;
   right?: number;
+  top?: number;
   onPress?: () => void;
 }
 
@@ -14,6 +15,7 @@ const FloatingActionButton = ({
   icon = 'plus',
   text = 'Add',
   descriptive = false,
+  top = 20,
   bottom = 20,
   right = 20,
   onPress = () => {},
@@ -25,7 +27,7 @@ const FloatingActionButton = ({
     </Button>
   ) : (
     <IconButton
-      style={{ position: 'absolute', bottom, right }}
+      style={{ position: 'absolute', bottom, right, top }}
       icon={icon}
       iconColor={theme.colors.onPrimary}
       containerColor={theme.colors.primary}
