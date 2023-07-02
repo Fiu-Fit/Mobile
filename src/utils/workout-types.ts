@@ -93,8 +93,8 @@ export const yearMap = new Map<number, string>([
 ]);
 
 export const monthMap = new Map<number, string>([
-  [0, 'Ene'],
-  [1, 'Feb'],
+  [0, 'Enero'],
+  [1, 'Febrero'],
   [2, 'Marzo'],
   [3, 'Abril'],
   [4, 'Mayo'],
