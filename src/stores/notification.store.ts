@@ -31,7 +31,7 @@ export class NotificationStore {
           title: GOAL_NOTIFICATION_TITLE,
           content: GOAL_NOTIFICATION_CONTENT(goalNotification.goalTitle),
           type: NotificationType.GoalCompleted.toString(),
-          imageUrl: require('../imgs/error.png'),
+          imageUrl: require('../imgs/goal.png'),
           onPressScreen: 'GoalScreen',
         };
       } else {
@@ -41,7 +41,7 @@ export class NotificationStore {
           title: MESSAGE_NOTIFICATION_TITLE,
           content: MESSAGE_NOTIFICATION_CONTENT(messageNotification.senderName),
           type: NotificationType.NewMessage.toString(),
-          imageUrl: require('../imgs/error.png'),
+          imageUrl: require('../imgs/notification.png'),
           onPressScreen: 'ChatScreen',
         };
       }
