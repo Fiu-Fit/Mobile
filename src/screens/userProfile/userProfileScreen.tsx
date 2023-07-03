@@ -7,7 +7,6 @@ type UserProfileScreenProps = {
   route: {
     params: {
       givenUserId: number;
-      canEdit: boolean;
     };
   };
 };
