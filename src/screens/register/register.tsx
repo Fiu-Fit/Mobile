@@ -58,7 +58,7 @@ const RegisterScreen = ({
     <SafeAreaView className='flex-1 bg-black'>
       {loading && <Loader />}
       <View className='flex-none pt-20 items-center justify-center'>
-        <Text className='text-6xl font-white text-white'>Register</Text>
+        <Text className='text-6xl font-white text-white'>Registrarse</Text>
       </View>
       <ScrollView className='px-7'>
         <Formik
@@ -74,18 +74,18 @@ const RegisterScreen = ({
           validate={values => {
             let errors: FormikErrors<ErrorInputProps> = {};
             if (!values.firstName) {
-              errors.firstName = 'Please input firstName';
+              errors.firstName = 'Por favor ingrese su nombre';
             }
             if (!values.lastName) {
-              errors.lastName = 'Please input lastName';
+              errors.lastName = 'Por favor ingrese su apellido';
             }
             if (!values.bodyWeight) {
-              errors.bodyWeight = 'Please input your body weight';
+              errors.bodyWeight = 'Por favor ingrese su peso';
             }
             if (!values.email) {
-              errors.email = 'Please input email';
+              errors.email = 'Por favor ingrese su email';
             } else if (!values.email.match(/\S+@\S+\.\S+/)) {
-              errors.email = 'Please input valid email';
+              errors.email = 'Por favor ingrese un email valido';
             }
             if (!values.password) {
               errors.password = 'Please input password';
@@ -105,7 +105,7 @@ const RegisterScreen = ({
             <>
               <Input
                 value={values.firstName}
-                placeholder='Enter you first name'
+                placeholder='Ingrese su nombre'
                 placeholderTextColor={COLORS.darkGrey}
                 onChangeText={handleChange('firstName')}
                 labelText='First Name'
@@ -118,7 +118,7 @@ const RegisterScreen = ({
               />
               <Input
                 value={values.lastName}
-                placeholder='Enter your last name'
+                placeholder='Ingrese su apellido'
                 placeholderTextColor={COLORS.darkGrey}
                 onChangeText={handleChange('lastName')}
                 labelText='Last Name'
@@ -131,10 +131,10 @@ const RegisterScreen = ({
               />
               <Input
                 value={values.bodyWeight}
-                placeholder='420.69'
+                placeholder='100'
                 placeholderTextColor={COLORS.darkGrey}
                 onChangeText={handleChange('bodyWeight')}
-                labelText='Body Weight (this is used for calorie tracking)'
+                labelText='Peso (Para calcular las calorías)'
                 iconName='scale-balance'
                 error={errors.bodyWeight}
                 password={false}
