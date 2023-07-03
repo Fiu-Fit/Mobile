@@ -166,6 +166,7 @@ export type WorkoutExercise = {
   unit: Unit;
   exercise: Exercise;
   category: CategoryType;
+  repDuration: number;
 };
 
 export type Exercise = {
