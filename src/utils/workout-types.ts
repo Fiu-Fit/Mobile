@@ -30,19 +30,55 @@ export const categoryMap = new Map<number, string>([
   [-1, 'Cualquiera'],
 ]);
 
-export const imageMap = new Map<number, NodeRequire>([
-  [0, require('../imgs/category0.png')],
-  [1, require('../imgs/category1.png')],
-  [2, require('../imgs/category2.png')],
-  [3, require('../imgs/category3.png')],
-  [4, require('../imgs/category4.png')],
-  [5, require('../imgs/category5.png')],
-  [6, require('../imgs/category6.png')],
-  [7, require('../imgs/category7.png')],
-  [8, require('../imgs/category8.png')],
-  [9, require('../imgs/category9.png')],
-  [10, require('../imgs/category10.png')],
-  [-1, require('../imgs/error.png')],
+export const imageMap = new Map<number, string>([
+  [
+    0,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fcategory0.png?alt=media&token=81260bbe-6cc9-4fd3-818e-e2bfa1c583d6',
+  ],
+  [
+    1,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fcategory1.png?alt=media&token=8fde8ec3-f294-4ce5-bf86-915140c5149c',
+  ],
+  [
+    2,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fcategory2.png?alt=media&token=58f77a68-f185-49a1-a098-d40269796618',
+  ],
+  [
+    3,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fcategory3.png?alt=media&token=482a0088-777a-4ecf-964a-13f0482d337e',
+  ],
+  [
+    4,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fcategory4.png?alt=media&token=716bb227-c392-4d6d-83e6-28f07a4bd94a',
+  ],
+  [
+    5,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fcategory5.png?alt=media&token=65cc19bc-075e-4c1a-a58a-4f831cd75115',
+  ],
+  [
+    6,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fcategory6.png?alt=media&token=d1aa60b2-c7e7-48d9-804f-f8b3f9c42441',
+  ],
+  [
+    7,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fcategory7.png?alt=media&token=721ab990-9a60-4d46-94fc-a68847931161',
+  ],
+  [
+    8,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fcategory8.png?alt=media&token=92f53edb-e565-4d70-8304-637cb955a3f3',
+  ],
+  [
+    9,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fcategory9.png?alt=media&token=91e7d4b7-287b-4153-9c24-ee60a5c34dfb',
+  ],
+  [
+    10,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fcategory10.png?alt=media&token=8ca511aa-f37e-4abb-9187-c49045498fcc',
+  ],
+  [
+    -1,
+    'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Ferror.png?alt=media&token=252e80d6-d0bb-4281-a3a8-923218af07d6',
+  ],
 ]);
 
 export const workoutCategoryOptions = [

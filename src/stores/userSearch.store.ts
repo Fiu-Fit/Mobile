@@ -10,7 +10,6 @@ import { axiosClient } from '../utils/constants';
 import axios, { CancelTokenSource } from 'axios';
 import LoggerFactory from '../utils/logger-utility';
 import { CardInfo, User } from '../utils/custom-types';
-import storage from '@react-native-firebase/storage';
 
 const logger = LoggerFactory('user-search-store');
 
@@ -25,16 +24,12 @@ class SearchStore {
   distance: number | undefined = undefined;
   lastDistance: number | undefined = undefined;
   filterOption: FilterOprions = 'name';
-  profilePicture: string =
-    'https://img.uxwing.com/wp-content/themes/uxwing/download/peoples-avatars-thoughts/user-profile-icon.png';
-
   constructor() {
     makeObservable(this, {
       query: observable,
       distance: observable,
       results: observable,
       filterOption: observable,
-      profilePicture: observable,
       cardsInfo: computed,
       isLoading: observable,
       setSearchQuery: action,
@@ -42,28 +37,6 @@ class SearchStore {
       searchByName: action,
       switchSearchCriteria: action,
     });
-  }
-
-  async downloadProfilePicture(user: User) {
-    const lastSlashIndex = user.profilePicture!.lastIndexOf('/');
-    const fileName = user.profilePicture!.substring(lastSlashIndex + 1);
-
-    try {
-      const download = await storage()
-        .ref(`/users/${user.id}/${fileName}`)
-        .getDownloadURL();
-      runInAction(() => {
-        this.profilePicture =
-          download +
-          user.profilePicture!.slice(user.profilePicture!.lastIndexOf('.'));
-      });
-
-      logger.debug('Profile picture downloaded: ', this.profilePicture);
-    } catch (e) {
-      this.profilePicture =
-        'https://img.uxwing.com/wp-content/themes/uxwing/download/peoples-avatars-thoughts/user-profile-icon.png';
-      logger.debug('Error while download workout multimedia: ', e);
-    }
   }
 
   setSearchQuery(query: string) {
@@ -95,7 +68,9 @@ class SearchStore {
         title: `${result.firstName} ${result.lastName}`,
         content: result.email,
         type: result.role,
-        imageUrl: require('../imgs/user.png'),
+        imageUrl:
+          result.profilePicture ||
+          'https://img.uxwing.com/wp-content/themes/uxwing/download/peoples-avatars-thoughts/user-profile-icon.png',
       }),
     );
   }

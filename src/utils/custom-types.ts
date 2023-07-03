@@ -40,7 +40,7 @@ export interface CardInfo {
   title: string;
   content: string;
   type: string;
-  imageUrl: NodeRequire;
+  imageUrl: string;
   onPressScreen?: string;
 }
 

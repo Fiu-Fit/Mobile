@@ -31,7 +31,8 @@ export class NotificationStore {
           title: GOAL_NOTIFICATION_TITLE,
           content: GOAL_NOTIFICATION_CONTENT(goalNotification.goalTitle),
           type: NotificationType.GoalCompleted.toString(),
-          imageUrl: require('../imgs/goal.png'),
+          imageUrl:
+            'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2FGolden-Cup.png?alt=media&token=b9a12a35-b592-46f8-a968-8312f7df6354',
           onPressScreen: 'GoalScreen',
         };
       } else {
@@ -41,7 +42,8 @@ export class NotificationStore {
           title: MESSAGE_NOTIFICATION_TITLE,
           content: MESSAGE_NOTIFICATION_CONTENT(messageNotification.senderName),
           type: NotificationType.NewMessage.toString(),
-          imageUrl: require('../imgs/notification.png'),
+          imageUrl:
+            'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fnewmessage.png?alt=media&token=c4c03742-5119-4fdb-9137-d88659c1b5b8',
           onPressScreen: 'ChatScreen',
         };
       }
@@ -84,7 +86,8 @@ export class NotificationStore {
     try {
       logger.debug('Getting message notifications...');
       const { data } = yield axiosClient.get<MessageNotificationProps[]>(
-        `/notifications/messages?userId=${userId}`);
+        `/notifications/messages?userId=${userId}`,
+      );
       logger.debug('Got data: ', data);
       runInAction(() => {
         this.notifications = data;
