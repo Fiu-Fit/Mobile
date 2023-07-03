@@ -32,9 +32,6 @@ export const useFetchUser = ({
         setCurrentUser(response as User);
       }
       logger.debug('Current user for picture: ', response as User);
-      if (response.profilePicture) {
-        searchStore.downloadProfilePicture(response as User);
-      }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

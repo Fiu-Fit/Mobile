@@ -35,21 +35,28 @@ const EditProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
       await storage()
         .ref(`/users/${currentUser.id}/${fileName}`)
         .putFile(selectedMultimedia!);
+      return await storage()
+        .ref(`/users/${currentUser.id}/${fileName}`)
+        .getDownloadURL();
     } catch (e) {
       logger.debug('Error while uploading workout multimedia: ', e);
     }
-    logger.debug('Profile picture uploaded!')
+    logger.debug('Profile picture uploaded!');
   };
 
   const handleSave = async () => {
-    const { verification, interests, followedUsers, ...userData } = currentUser;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { verification, interests, followedUsers, followers, ...userData } = currentUser;
     userData.firstName = editedFirstName;
     userData.lastName = editedLastName;
     userData.bodyWeight = Number(editedWeight);
     userData.phoneNumber = editedPhoneNumber;
-    userData.profilePicture = selectedMultimedia;
 
     try {
+      if (selectedMultimedia) {
+        const profilePicUrl = await uploadProfilePicture();
+        userData.profilePicture = profilePicUrl;
+      }
       await axiosClient.put(`/users/${userData.id}`, userData);
       Alert.alert('Se actualizaron los datos del usuario!');
     } catch (err) {
@@ -64,12 +71,7 @@ const EditProfile = ({ navigation }: { navigation: ProfileNavigationProp }) => {
       return;
     }
     setCurrentUser(fetchedUser.response);
-    if (selectedMultimedia) {
-      await uploadProfilePicture();
-      runInAction(() => {
-        searchStore.profilePicture = selectedMultimedia;
-      });
-    }
+
     navigation.navigate('Profile');
   };
 
