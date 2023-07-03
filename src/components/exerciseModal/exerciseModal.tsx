@@ -31,7 +31,7 @@ const ExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
             style={{ flex: 0.5 }}>
             <Image
               style={{ width: 300, height: '100%' }}
-              source={exerciseItem.imageUrl}
+              source={{ uri: exerciseItem.imageUrl }}
             />
           </View>
           <View
