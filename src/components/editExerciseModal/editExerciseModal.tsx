@@ -2,6 +2,7 @@ import { Image, ScrollView, View } from 'react-native';
 import { useAppTheme } from '../../App';
 import { List, Modal, Portal } from 'react-native-paper';
 import {
+  CategoryType,
   Exercise,
   ExerciseCardInfo,
   Unit,
@@ -52,6 +53,8 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
       reps: 0,
       unit: Unit.UNRECOGNIZED,
       weight: 0,
+      repDuration: 1,
+      category: CategoryType.UNRECOGNIZED,
     };
   const containerStyle = {
     backgroundColor: appTheme.colors.surface,
@@ -96,9 +99,11 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
             <Image
               key={'edit-exercise-modal-image'}
               style={{ width: 300, height: '100%' }}
-              source={imageMap.get(
-                selectedExercise?.category ?? require('../../imgs/error.png'),
-              )}
+              source={{
+                uri:
+                  imageMap.get(Number(selectedExercise?.category) ?? '') ??
+                  'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Ferror.png?alt=media&token=252e80d6-d0bb-4281-a3a8-923218af07d6',
+              }}
             />
           </View>
           <ScrollView
@@ -124,6 +129,8 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                 reps: workoutExercise?.reps ?? 0,
                 unit: (workoutExercise?.unit as Unit) ?? Unit.UNRECOGNIZED,
                 weight: workoutExercise?.weight ?? 0,
+                repDuration: 1,
+                category: CategoryType.UNRECOGNIZED,
               }}
               key={'edit-exercise-modal-form'}
               onSubmit={function (): void | Promise<any> {
@@ -260,6 +267,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                           workoutExercise.sets = Number(values.sets);
                           workoutExercise.reps = Number(values.reps);
                           workoutExercise.weight = Number(values.weight);
+                          workoutExercise.repDuration = 1;
                           workoutExercise.exercise =
                             selectedExercise ??
                             ({
