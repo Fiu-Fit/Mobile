@@ -24,7 +24,9 @@ export class WorkoutStore {
         title: workout.name,
         content: categoryMap.get(workout.category) || 'undefined',
         type: 'workout',
-        imageUrl: imageMap.get(workout.category) ?? require('../imgs/error.png'),
+        imageUrl:
+          imageMap.get(workout.category) ??
+          'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Ferror.png?alt=media&token=252e80d6-d0bb-4281-a3a8-923218af07d6',
       }),
     );
   }
@@ -50,6 +52,7 @@ export class WorkoutStore {
       const filters = {
         category: this.selectedTypeFilter,
         difficulty: this.selectedDifficultyFilter,
+        isBlocked: false,
       };
 
       const params = {
@@ -78,6 +81,7 @@ export class WorkoutStore {
     try {
       const filters = {
         category: interests,
+        isBlocked: false,
       };
 
       const params = {
