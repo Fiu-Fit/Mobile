@@ -67,6 +67,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
             progressStore.fetchProgress(currentUser.id);
           }}
           items={workoutCategoryOptions}
+          keyPrefix='home'
         />
       )}
       <View style={{ flex: 0.1 }}>

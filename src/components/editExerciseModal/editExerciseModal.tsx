@@ -53,7 +53,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
       reps: 0,
       unit: Unit.UNRECOGNIZED,
       weight: 0,
-      repDuration: 1,
+      repDuration: 3,
       category: CategoryType.UNRECOGNIZED,
     };
   const containerStyle = {
@@ -129,7 +129,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                 reps: workoutExercise?.reps ?? 0,
                 unit: (workoutExercise?.unit as Unit) ?? Unit.UNRECOGNIZED,
                 weight: workoutExercise?.weight ?? 0,
-                repDuration: 1,
+                repDuration: 3,
                 category: CategoryType.UNRECOGNIZED,
               }}
               key={'edit-exercise-modal-form'}
@@ -267,7 +267,7 @@ const EditExerciseModal = ({ onDismiss, exerciseItem }: ModalProps) => {
                           workoutExercise.sets = Number(values.sets);
                           workoutExercise.reps = Number(values.reps);
                           workoutExercise.weight = Number(values.weight);
-                          workoutExercise.repDuration = 1;
+                          workoutExercise.repDuration = 3;
                           workoutExercise.exercise =
                             selectedExercise ??
                             ({

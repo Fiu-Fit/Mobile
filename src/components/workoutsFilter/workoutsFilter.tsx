@@ -32,6 +32,7 @@ const WorkoutsFilter = () => {
             workoutStore.fetchWorkouts();
           }}
           items={workoutCategoryOptions}
+          keyPrefix='workouts-category'
         />
       )}
       {workoutDifficultyFilterModalVisible && (
@@ -42,6 +43,7 @@ const WorkoutsFilter = () => {
             workoutStore.fetchWorkouts();
           }}
           items={workoutDifficultyOptions}
+          keyPrefix='workouts-difficulty'
         />
       )}
       <WorkoutFilter

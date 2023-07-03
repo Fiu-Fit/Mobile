@@ -43,6 +43,7 @@ const WorkoutMetricsScreen = () => {
             });
           }}
           items={workoutMetricYear}
+          keyPrefix='metrics'
         />
       )}
       <View
