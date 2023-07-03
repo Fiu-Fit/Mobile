@@ -3,7 +3,7 @@ import { Button, Text } from 'react-native-paper';
 import { HomeNavigationProp } from '../../navigation/navigation-props';
 import { axiosClient } from '../../utils/constants';
 import LoggerFactory from '../../utils/logger-utility';
-import { useUserContext } from '../../App';
+import { useAppTheme, useUserContext } from '../../App';
 import { Role } from '../../constants/roles';
 import { User } from '../../utils/custom-types';
 import { useState } from 'react';
@@ -13,6 +13,7 @@ const logger = LoggerFactory('home-header');
 
 const HomeHeader = ({ navigation }: { navigation: HomeNavigationProp }) => {
   const { currentUser } = useUserContext();
+  const appTheme = useAppTheme();
   const [verificationModalOpen, setVerficationModalOpen] =
     useState<boolean>(false);
   return (
@@ -43,7 +44,11 @@ const HomeHeader = ({ navigation }: { navigation: HomeNavigationProp }) => {
               );
             }
           }}>
-          <Text className='text-l'>Ser entrenador</Text>
+          <Text
+            className='text-l'
+            style={{ color: appTheme.colors.onBackground }}>
+            Ser entrenador
+          </Text>
         </Button>
       )}
       {currentUser.role === Role.Trainer && !currentUser.verification && (
@@ -53,7 +58,11 @@ const HomeHeader = ({ navigation }: { navigation: HomeNavigationProp }) => {
           onPress={() => {
             setVerficationModalOpen(true);
           }}>
-          <Text className='text-l'>Quiero ser verificado!</Text>
+          <Text
+            className='text-l'
+            style={{ color: appTheme.colors.onBackground }}>
+            Quiero ser verificado!
+          </Text>
         </Button>
       )}
       {verificationModalOpen && (
