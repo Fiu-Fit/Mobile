@@ -79,8 +79,8 @@ export class WorkoutDetailStore {
           type: 'exercise',
           exercise: workoutExercise.exercise,
           imageUrl:
-            imageMap.get(workoutExercise.exercise.category) ??
-            require('../imgs/error.png'),
+            imageMap.get(workoutExercise.exercise?.category) ??
+            'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Ferror.png?alt=media&token=252e80d6-d0bb-4281-a3a8-923218af07d6',
         };
       },
     );
@@ -110,7 +110,7 @@ export class WorkoutDetailStore {
   get averageRatingsData() {
     return this.metrics.map((metric, index) => {
       const label = monthMap.get(index) || '';
-      const value = metric.averageRating ? metric.averageRating : 5;
+      const value = metric.averageRating ? metric.averageRating : 0;
 
       return { value, label };
     });
@@ -212,7 +212,7 @@ export class WorkoutDetailStore {
       const { data } = yield axiosClient.get(`/users/${this.workout.authorId}`);
       logger.debug('Got author ', data);
       runInAction(() => {
-        this.authorName = data.name;
+        this.authorName = `${data.firstName} ${data.lastName}`;
       });
       if (!isNested) {
         this.state = 'done';
