@@ -1,4 +1,5 @@
-import { View } from 'react-native';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Alert, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { HomeNavigationProp } from '../../navigation/navigation-props';
 import { axiosClient } from '../../utils/constants';
@@ -25,8 +26,13 @@ const HomeHeader = ({ navigation }: { navigation: HomeNavigationProp }) => {
           mode='outlined'
           onPress={async () => {
             try {
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const { followedUsers, ...rest } = currentUser;
+              const {
+                followedUsers,
+                followers,
+                verification,
+                interests,
+                ...rest
+              } = currentUser;
               const updatedUser = await axiosClient.put<User>(
                 `/users/${currentUser.id}`,
                 {
@@ -35,6 +41,10 @@ const HomeHeader = ({ navigation }: { navigation: HomeNavigationProp }) => {
                 },
               );
               logger.debug('Updated user: ', updatedUser);
+              Alert.alert(
+                'Ya sos Trainer!',
+                'Logueate nuevamente para crear tu primer entrenamiento!',
+              );
               await axiosClient.post('/auth/logout');
               navigation.getParent()?.navigate('LoginScreen');
             } catch (err: any) {
