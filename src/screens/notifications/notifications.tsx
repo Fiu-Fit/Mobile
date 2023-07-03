@@ -41,7 +41,7 @@ const NotificactionsScreen = ({
               try {
                 const user = await axiosClient.get<User>(`/users/${item.id}`);
                 logger.debug('Got user: ', user.data);
-                RootNavigation.navigate('Search', {
+                RootNavigation.navigate('Profile', {
                   screen: 'ChatScreen',
                   params: { user: user.data },
                 });

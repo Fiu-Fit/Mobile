@@ -114,7 +114,7 @@ const navigateToScreen = (type: NotificationType, id: number) => {
         });
       } else {
         const user = await axiosClient.get<User>(`/users/${id}`);
-        RootNavigation.navigate('Search', {
+        RootNavigation.navigate('Profile', {
           screen: 'ChatScreen',
           params: { user: user.data },
         });

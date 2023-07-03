@@ -268,7 +268,7 @@ const UserProfile = (props: UserProfileProps) => {
             className='w-50'
             style={styles.button}
             onPress={() => {
-              Geolocation.getCurrentPosition(
+              Geolocation.watchPosition(
                 async position =>
                   await updateUserPositionCallback(position, currentUser),
                 async error => {
@@ -276,15 +276,13 @@ const UserProfile = (props: UserProfileProps) => {
                     Geolocation.requestAuthorization(
                       () => {
                         logger.info('Geolocation permission accepted!');
-                        Geolocation.getCurrentPosition(
-                          async positionOnError => {
-                            await updateUserPositionCallback(
-                              positionOnError,
-                              currentUser,
-                            );
-                            Alert.alert('Geolocalización Actualizada!');
-                          },
-                        );
+                        Geolocation.watchPosition(async positionOnError => {
+                          await updateUserPositionCallback(
+                            positionOnError,
+                            currentUser,
+                          );
+                          Alert.alert('Geolocalización Actualizada!');
+                        });
                       },
                       errorRequest => {
                         if (errorRequest.PERMISSION_DENIED) {
