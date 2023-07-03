@@ -5,7 +5,7 @@ import {
   Switch,
   Text,
 } from 'react-native';
-import { Appbar, Searchbar } from 'react-native-paper';
+import { Appbar, Divider, Searchbar } from 'react-native-paper';
 import { useAppTheme, useUserContext } from '../../App';
 import { observer } from 'mobx-react';
 import { searchStore } from '../../stores/userSearch.store';
@@ -38,17 +38,23 @@ const ProfileSearchScreen = ({
 
   return (
     <View style={styles.container}>
-      <Appbar.Header style={{ backgroundColor: appTheme.colors.primary }}>
-        <Appbar.Content title='Búsqueda de perfiles' />
+      <Appbar.Header style={{ backgroundColor: appTheme.colors.background }}>
+        <Appbar.Content
+          color={appTheme.colors.onBackground}
+          title='Búsqueda de perfiles'
+        />
       </Appbar.Header>
-      <Text>Buscar por cercanía:</Text>
-      <Switch
-        trackColor={{ false: '#767577', true: '#81b0ff' }}
-        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-        ios_backgroundColor='#3e3e3e'
-        onValueChange={toggleSwitch}
-        value={isEnabled}
-      />
+      <View className='justify-between flex-row mt-5 mx-5'>
+        <Text>Buscar por cercanía:</Text>
+        <Switch
+          trackColor={{ false: '#767577', true: '#81b0ff' }}
+          thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+          ios_backgroundColor='#3e3e3e'
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+        />
+      </View>
+
       {isEnabled ? (
         <Searchbar
           placeholder='Distancia'
