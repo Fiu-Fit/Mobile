@@ -8,7 +8,6 @@ import TabNavigator from './main-navigator';
 import EditProfile from '../screens/editProfile';
 import UserProfile from '../components/userProfile';
 import ConfirmRegistrationScreen from '../screens/confirm-registration';
-import WorkoutMetricsScreen from '../screens/workoutMetrics';
 
 const Stack = createStackNavigator<AuthStackParamList>();
 

@@ -47,6 +47,7 @@ const config = {
     'item-card',
     'edit-profile',
     'confirm-registration-screen',
+    'user-list',
   ],
   transportOptions: {
     colors: {

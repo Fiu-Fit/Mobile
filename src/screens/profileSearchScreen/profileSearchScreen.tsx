@@ -75,9 +75,9 @@ const ProfileSearchScreen = ({
           onPress={item => {
             navigation.push('UserProfileScreen', {
               givenUserId: Number(item.id),
-              canEdit: false,
             });
           }}
+          profileCard={true}
         />
       )}
     </View>

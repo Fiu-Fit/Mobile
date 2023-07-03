@@ -5,13 +5,15 @@ import { CardInfo } from '../../utils/custom-types';
 
 interface ItemListProps<T extends CardInfo> {
   items: T[];
+  profileCard?: boolean;
   keyPrefix?: string;
   onPress: (item: T) => void;
 }
 const ItemCardList = <T extends CardInfo>({
   items,
   onPress,
-  keyPrefix
+  profileCard = false,
+  keyPrefix,
 }: ItemListProps<T>) => {
   return (
     <>
@@ -22,6 +24,7 @@ const ItemCardList = <T extends CardInfo>({
             keyPrefix={`${keyPrefix}-itemCardList`}
             key={`itemCard-${item.id}`}
             item={item}
+            profileCard={profileCard}
             onPress={() => onPress(item)}
           />
         )}

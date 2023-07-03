@@ -32,7 +32,8 @@ export class GoalStore {
         title: goal.title,
         content: goal.status,
         type: 'goal',
-        imageUrl: require('../imgs/goal.png'),
+        imageUrl:
+          'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2FGolden-Cup.png?alt=media&token=b9a12a35-b592-46f8-a968-8312f7df6354',
       }),
     );
   }

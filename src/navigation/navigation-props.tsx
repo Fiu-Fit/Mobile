@@ -33,9 +33,12 @@ export type NotificationStackParamList = {
 export type UserStackParamList = {
   UserSearchScreen: undefined;
   ChatScreen: { user: User };
+  MyProfileScreen: undefined;
   UserProfileScreen: {
     givenUserId: number;
-    canEdit: boolean;
+  };
+  UserListScreen: {
+    showFollowers?: boolean;
   };
 };
 
@@ -43,10 +46,9 @@ export type TabParamList = {
   WorkoutScreen: Omit<WorkoutStackParamList, 'WorkoutsScreen'>;
   Workouts: undefined;
   Goals: undefined;
-  Profile: undefined;
   HomeTab: undefined;
   LoginScreen: undefined;
-  Users: undefined;
+  Profile: undefined;
   Notifications: undefined;
 };
 
@@ -112,10 +114,6 @@ export type WorkoutsNavigationProp = BottomTabNavigationProp<
   'Workouts'
 >;
 
-export type ProfileNavigationProp = BottomTabNavigationProp<
-  TabParamList,
-  'Profile'
->;
 
 export type GoalsNavigationProp = BottomTabNavigationProp<
   TabParamList,
@@ -133,7 +131,7 @@ export type NotificationsNavigationProp = BottomTabNavigationProp<
 >;
 export type UsersNavigationProp = BottomTabNavigationProp<
   TabParamList,
-  'Users'
+  'Profile'
 >;
 
 export type ChatScreenNavigationProp = StackNavigationProp<
@@ -149,4 +147,14 @@ export type UserSearchScreenNavigationProp = StackNavigationProp<
 export type UserProfileScreenNavigationProp = StackNavigationProp<
   UserStackParamList,
   'UserProfileScreen'
+>;
+
+export type ProfileNavigationProp = BottomTabNavigationProp<
+  UserStackParamList,
+  'MyProfileScreen'
+>;
+
+export type UserListScreenNavigationProp = StackNavigationProp<
+  UserStackParamList,
+  'UserListScreen'
 >;

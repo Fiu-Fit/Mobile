@@ -10,6 +10,7 @@ interface ItemCardProps<T extends CardInfo> {
   onPress?: () => void;
   onEditPress?: () => void;
   onRemovePress?: () => void;
+  profileCard: boolean,
   keyPrefix?: string;
 }
 
@@ -34,6 +35,7 @@ const ItemCard = <T extends CardInfo>({
   onPress,
   onEditPress,
   onRemovePress,
+  profileCard,
   keyPrefix,
 }: ItemCardProps<T>) => {
   const appTheme = useAppTheme();
@@ -56,8 +58,8 @@ const ItemCard = <T extends CardInfo>({
           className='flex-row justify-center items-center h-36'>
           <Image
             key={`${item.type}-${keyPrefix}-card-image-${item.id}`}
-            style={styles.logo}
-            source={item.imageUrl}
+            style={[styles.logo, profileCard && { borderRadius: 50 }]}
+            source={{ uri: item.imageUrl }}
             resizeMode='cover'
           />
           <View

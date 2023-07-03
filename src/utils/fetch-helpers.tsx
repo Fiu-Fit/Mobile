@@ -32,9 +32,6 @@ export const useFetchUser = ({
         setCurrentUser(response as User);
       }
       logger.debug('Current user for picture: ', response as User);
-      if (response.profilePicture) {
-        searchStore.downloadProfilePicture(response as User);
-      }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,6 +43,7 @@ export const useFetchUser = ({
 export const fetchUserData = async (id?: number) => {
   let data;
   let followedUsers;
+  let followers;
   let verification;
   try {
     logger.debug(`Fetching user: ${id}`);
@@ -70,6 +68,28 @@ export const fetchUserData = async (id?: number) => {
     );
   }
   try {
+    followedUsers = (
+      await axiosClient.get(`/followers/following?userId=${data.id}`)
+    ).data;
+    logger.debug('followed users:', followedUsers?.rows);
+  } catch (err: any) {
+    logger.error(
+      `An error ocurred while fetching followed users for user: ${data.id}`,
+      { error: err },
+    );
+  }
+  try {
+    followers = (
+      await axiosClient.get(`/followers/followers?userId=${data.id}`)
+    ).data;
+    logger.debug('followers:', followedUsers?.rows);
+  } catch (err: any) {
+    logger.error(
+      `An error ocurred while fetching followers for user: ${data.id}`,
+      { error: err },
+    );
+  }
+  try {
     verification = (await axiosClient.get(`/verifications/user/${data.id}`))
       .data;
   } catch (err: any) {
@@ -84,6 +104,7 @@ export const fetchUserData = async (id?: number) => {
     response: {
       ...data,
       followedUsers: followedUsers?.rows ?? [],
+      followers: followers?.rows ?? [],
       verification,
     },
     error: null,

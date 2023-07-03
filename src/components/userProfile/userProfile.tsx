@@ -20,7 +20,6 @@ import { axiosClient } from '../../utils/constants';
 import { fetchUserData, useFetchUser } from '../../utils/fetch-helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-import { searchStore } from '../../stores/userSearch.store';
 import COLORS from '../../constants/colors';
 import FloatingActionButton from '../dumb/floatingActionButton';
 
@@ -65,7 +64,8 @@ const updateUserPositionCallback = async (
 ) => {
   // We need to do this to update the user.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { verification, interests, followedUsers, ...data } = currentUser;
+  const { verification, interests, followedUsers, followers, ...data } =
+    currentUser;
   const updatedUser = { ...data };
   const { latitude, longitude } = position.coords;
   logger.info('Updating with info:', {
@@ -139,7 +139,7 @@ const UserProfile = (props: UserProfileProps) => {
         setIsLoading(false);
       })
       .catch(error =>
-        logger.error('an error ocurred while updateing the user: ', { error }),
+        logger.error('an error ocurred while updating the user: ', { error }),
       );
     const following = Boolean(
       currentUser.followedUsers.find(user => user?.id === selectedUser?.id),
@@ -172,7 +172,11 @@ const UserProfile = (props: UserProfileProps) => {
         },
       ]}>
       <Image
-        source={{ uri: searchStore.profilePicture }}
+        source={{
+          uri:
+            selectedUser?.profilePicture ||
+            'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2Fuser-profile-icon.png?alt=media&token=21062428-0f66-46cf-8d3f-8320a9a3e875',
+        }}
         style={styles.profilePicture}
       />
       <Text style={styles.name}>
@@ -233,9 +237,31 @@ const UserProfile = (props: UserProfileProps) => {
               value={isEnabled}
             />
           </View>
-
+          <View
+            className='flex-row justify-between mx-10 mb-5'
+            style={{ width: '100%' }}>
+            <Button
+              mode='contained'
+              style={styles.smallButton}
+              onPress={() => {
+                props.navigation?.push('UserListScreen', {
+                  showFollowers: true,
+                });
+              }}>
+              Ver Seguidores
+            </Button>
+            <Button
+              mode='contained'
+              style={styles.smallButton}
+              onPress={() => {
+                props.navigation?.push('UserListScreen', {});
+              }}>
+              Ver Seguidos
+            </Button>
+          </View>
           <Button
             mode='contained'
+            className='w-50'
             style={styles.button}
             onPress={() => {
               Geolocation.getCurrentPosition(
@@ -279,6 +305,12 @@ const UserProfile = (props: UserProfileProps) => {
             }}
             icon='pencil'
           />
+          <Button
+            mode='contained'
+            style={styles.button}
+            onPress={() => props.navigation?.push('UserSearchScreen')}>
+            Buscar usuarios
+          </Button>
           <Button
             mode='contained'
             style={styles.button}
@@ -343,6 +375,11 @@ const styles = StyleSheet.create({
   button: {
     marginVertical: 10,
     width: '100%',
+    borderRadius: 5,
+  },
+  smallButton: {
+    marginVertical: 10,
+    width: '48%',
     borderRadius: 5,
   },
   input: {

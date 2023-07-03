@@ -40,7 +40,7 @@ export interface CardInfo {
   title: string;
   content: string;
   type: string;
-  imageUrl: NodeRequire;
+  imageUrl: string;
   onPressScreen?: string;
 }
 
@@ -66,6 +66,7 @@ export type User = {
   coordinates: [number, number];
   uid: string;
   followedUsers: User[];
+  followers: User[];
   phoneNumber?: string;
   verification?: Verification;
   profilePicture?: string;
