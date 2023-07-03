@@ -22,7 +22,8 @@ export const requestPermissions = async (user: User) => {
 
       const token = await getFCMToken();
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { followedUsers, verification, interests, ...rest } = user;
+      const { followedUsers, verification, interests, followers, ...rest } =
+        user;
 
       const updatedUser = await axiosClient.put<User>(`/users/${user.id}`, {
         ...rest,
@@ -125,6 +126,7 @@ const navigateToScreen = (type: NotificationType, id: number) => {
 export const NotificationListener = () => {
   messaging().onMessage(remoteMessage => {
     if (!remoteMessage) {
+      logger.info('Got null remote message on foreground!');
       return;
     }
     logger.info('remote message on foreground!', JSON.stringify(remoteMessage));
