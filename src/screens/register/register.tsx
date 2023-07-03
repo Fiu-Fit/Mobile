@@ -54,9 +54,10 @@ const RegisterScreen = ({
     setLoading(false);
   };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <SafeAreaView className='flex-1 bg-black'>
-      {loading && <Loader />}
       <View className='flex-none pt-20 items-center justify-center'>
         <Text className='text-6xl font-white text-white'>Registrarse</Text>
       </View>
@@ -74,10 +75,10 @@ const RegisterScreen = ({
           validate={values => {
             let errors: FormikErrors<ErrorInputProps> = {};
             if (!values.firstName) {
-              errors.firstName = 'Por favor ingrese su nombre';
+              errors.firstName = 'Ingrese nombre';
             }
             if (!values.lastName) {
-              errors.lastName = 'Por favor ingrese su apellido';
+              errors.lastName = 'Ingrese apellido';
             }
             if (!values.bodyWeight) {
               errors.bodyWeight = 'Por favor ingrese su peso';
@@ -103,32 +104,39 @@ const RegisterScreen = ({
           }}>
           {({ values, errors, handleChange, handleSubmit }) => (
             <>
-              <Input
-                value={values.firstName}
-                placeholder='Ingrese su nombre'
-                placeholderTextColor={COLORS.darkGrey}
-                onChangeText={handleChange('firstName')}
-                labelText='First Name'
-                iconName='account-outline'
-                error={errors.firstName}
-                password={false}
-                onFocus={() => {
-                  errors.firstName = '';
-                }}
-              />
-              <Input
-                value={values.lastName}
-                placeholder='Ingrese su apellido'
-                placeholderTextColor={COLORS.darkGrey}
-                onChangeText={handleChange('lastName')}
-                labelText='Last Name'
-                iconName='account'
-                error={errors.lastName}
-                password={false}
-                onFocus={() => {
-                  errors.lastName = '';
-                }}
-              />
+              <View className='flex-row'>
+                <View style={{ width: '49%', marginRight: 5 }}>
+                  <Input
+                    value={values.firstName}
+                    placeholder='Ingrese su nombre'
+                    placeholderTextColor={COLORS.darkGrey}
+                    onChangeText={handleChange('firstName')}
+                    labelText='Nombre'
+                    iconName='account-outline'
+                    error={errors.firstName}
+                    password={false}
+                    onFocus={() => {
+                      errors.firstName = '';
+                    }}
+                  />
+                </View>
+                <View style={{ width: '49%' }}>
+                  <Input
+                    value={values.lastName}
+                    placeholder='Ingrese su apellido'
+                    placeholderTextColor={COLORS.darkGrey}
+                    onChangeText={handleChange('lastName')}
+                    labelText='Apellido'
+                    iconName='account'
+                    error={errors.lastName}
+                    password={false}
+                    onFocus={() => {
+                      errors.lastName = '';
+                    }}
+                  />
+                </View>
+              </View>
+
               <Input
                 value={values.bodyWeight}
                 placeholder='100'
@@ -146,10 +154,10 @@ const RegisterScreen = ({
 
               <Input
                 value={values.phoneNumber}
-                placeholder='Enter your phone number'
+                placeholder='Ingresa tu nombre de teléfono'
                 placeholderTextColor={COLORS.darkGrey}
                 onChangeText={handleChange('phoneNumber')}
-                labelText='Phone number'
+                labelText='Teléfono'
                 iconName='phone-outline'
                 error={errors.phoneNumber}
                 password={false}
@@ -160,7 +168,7 @@ const RegisterScreen = ({
 
               <Input
                 value={values.email}
-                placeholder='Enter your email'
+                placeholder='Ingresa tu email'
                 placeholderTextColor={COLORS.darkGrey}
                 onChangeText={handleChange('email')}
                 labelText='Email'
@@ -175,10 +183,10 @@ const RegisterScreen = ({
 
               <Input
                 value={values.password}
-                placeholder='Enter your password'
+                placeholder='Ingresa tu contraseña'
                 placeholderTextColor={COLORS.darkGrey}
                 iconName='lock-outline'
-                labelText='Password'
+                labelText='Contraseña'
                 onChangeText={handleChange('password')}
                 password
                 error={errors.password}
@@ -186,15 +194,16 @@ const RegisterScreen = ({
                   errors.password = '';
                 }}
               />
-
-              <Button title='Register' onPress={handleSubmit} />
+              <View className='mt-5'>
+                <Button title='Registrarme' onPress={handleSubmit} />
+              </View>
             </>
           )}
         </Formik>
         <Text
           onPress={() => navigation.push('LoginScreen')}
-          className='font-bold text-xs text-white/70 text-center'>
-          Already have account?
+          className='font-bold text-xs text-white/70 text-center mt-5'>
+          ¿Ya tienes una cuenta?
         </Text>
       </ScrollView>
     </SafeAreaView>

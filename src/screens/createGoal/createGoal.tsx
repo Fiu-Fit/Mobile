@@ -56,9 +56,10 @@ const CreateGoalScreen = ({
     flowResult(exerciseStore.fetchExercises());
   }, []);
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <SafeAreaView className='flex-1 bg-black'>
-      {loading && <Loader />}
       {showingCalendarModal && (
         <CalendarModal
           onDismiss={() => setShowingCalendarModal(false)}

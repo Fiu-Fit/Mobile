@@ -162,7 +162,11 @@ const UserProfile = (props: UserProfileProps) => {
   useFetchUser({ observables: [followAction.followState] });
 
   return isLoading ? (
-    <ActivityIndicator size='large' color='#0000ff' />
+    <ActivityIndicator
+      size='large'
+      color={appTheme.colors.onBackground}
+      style={{ marginTop: 400 }}
+    />
   ) : (
     <View
       style={[

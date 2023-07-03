@@ -222,10 +222,11 @@ const LoginScreen = ({
     }
   };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <ScrollView contentInsetAdjustmentBehavior='automatic'>
       <SafeAreaView className='flex-1 bg-black px-8 w-full'>
-        {loading && <Loader />}
         <FiuFitLogo />
         <View className='flex-1 py-5 w-full'>
           <Formik
@@ -283,7 +284,7 @@ const LoginScreen = ({
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={handleSubmit}
-                    className='bg-primary-color h-12 w-full justify-center items-center mb-5 rounded-md'>
+                    className='bg-primary-color h-12 w-full justify-center items-center mb-5 rounded-md mt-2'>
                     <View className='flex flex-row'>
                       <Text className='text-white text-lg text-bold align-center'>
                         {'Ingresar'}
@@ -313,8 +314,8 @@ const LoginScreen = ({
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => navigation.push('RegisterScreen')}
-            className='bg-primary-color h-12 w-full justify-center items-center mb-5 rounded-md'>
-            <View className='flex flex-row'>
+            className='h-12 w-full justify-center items-center mb-5 rounded-md'>
+            <View className='flex flex-row items-center justify-center'>
               <Text className='text-white text-lg text-bold align-center'>
                 {'¿No tienes una cuenta?'}
               </Text>

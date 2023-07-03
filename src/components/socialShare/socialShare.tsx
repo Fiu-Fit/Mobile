@@ -1,4 +1,5 @@
-import { View, Button } from 'react-native';
+import { View } from 'react-native';
+import { Button } from 'react-native-paper';
 import Share from 'react-native-share';
 import LoggerFactory from '../../utils/logger-utility';
 
@@ -30,8 +31,10 @@ const SocialShare = ({ content }: { content: ShareTypedContent }) => {
     }
   };
   return (
-    <View>
-      <Button onPress={onShare} title='Share' />
+    <View className='my-3'>
+      <Button onPress={onShare} mode='contained'>
+        Compartir
+      </Button>
     </View>
   );
 };

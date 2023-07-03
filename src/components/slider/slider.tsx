@@ -60,8 +60,8 @@ const Slider = ({ store }: { store: WorkoutDetailStore | GoalStore }) => {
                 video={{
                   uri: item,
                 }}
-                videoWidth={400}
-                videoHeight={450}
+                videoWidth={600}
+                videoHeight={1200}
               />
             )}
           </View>
@@ -78,7 +78,7 @@ const Slider = ({ store }: { store: WorkoutDetailStore | GoalStore }) => {
             <View
               style={{
                 height: '100%',
-                width: 100,
+                width: 20,
               }}
             />
           );

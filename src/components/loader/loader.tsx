@@ -1,17 +1,34 @@
 import React from 'react';
-import {View, useWindowDimensions, ActivityIndicator, Text} from 'react-native';
+import {
+  View,
+  useWindowDimensions,
+  ActivityIndicator,
+  Text,
+} from 'react-native';
 import COLORS from '../../constants/colors';
+import { useAppTheme } from '../../App';
 
 const Loader = () => {
-  const {height, width} = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
+  const appTheme = useAppTheme();
   return (
     <View
-      style={{height, width}}
-      className="justify-center bg-black/50 absolute">
-      <View className="h-70, bg-black mx-50 flex-row justify-start items-center px-20 round-sm">
-        <ActivityIndicator size="large" color={COLORS.blue} />
-        <Text className="ml-10 text-xl">Loading...</Text>
-      </View>
+      style={{
+        height,
+        width,
+        backgroundColor: appTheme.colors.background,
+        opacity: 0.9,
+      }}
+      className='justify-center bg-black absolute'>
+      <ActivityIndicator
+        size='large'
+        color={appTheme.colors.onBackground}
+        style={{
+          marginTop: 400,
+          marginLeft: 200,
+          position: 'absolute',
+        }}
+      />
     </View>
   );
 };

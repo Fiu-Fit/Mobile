@@ -41,11 +41,12 @@ const WorkoutHeader = () => {
     setLoading(false);
   };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <View
       className='items-center justify-center'
       style={{ backgroundColor: appTheme.colors.background, flex: 0.2 }}>
-      {loading && <Loader />}
       <View
         className='flex-row items-around justify-around mt-10'
         style={{ width: '100%' }}>

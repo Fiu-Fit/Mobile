@@ -1,5 +1,10 @@
 import { makeObservable, observable, computed, flow, runInAction } from 'mobx';
-import { GoalInputProps, GoalStatus, GoalsProps } from '../utils/goal-types';
+import {
+  GoalInputProps,
+  GoalStatus,
+  GoalsProps,
+  goalMap,
+} from '../utils/goal-types';
 import LoggerFactory from '../utils/logger-utility';
 import { CardInfo } from '../utils/custom-types';
 import { axiosClient } from '../utils/constants';
@@ -30,7 +35,7 @@ export class GoalStore {
       (goal): CardInfo => ({
         id: goal.id,
         title: goal.title,
-        content: goal.status,
+        content: goalMap.get(goal.status) ?? 'En progreso',
         type: 'goal',
         imageUrl:
           'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2FGolden-Cup.png?alt=media&token=b9a12a35-b592-46f8-a968-8312f7df6354',

@@ -76,7 +76,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
       <View className='flex-row justify-around' style={{ flex: 0.2 }}>
         <MetricCards />
       </View>
-      <View className='justify-center items-center' style={{ flex: 0.1 }}>
+      <View className='justify-center items-center mb-2' style={{ flex: 0.1 }}>
         <WorkoutFilter
           iconName='calendar'
           text='Periodo de tiempo'
@@ -116,7 +116,7 @@ const HomeScreen = ({ navigation }: { navigation: HomeNavigationProp }) => {
         ) : (
           <View className='items-center mx-10'>
             <Text
-              className='text-l mt-10'
+              className='text-l mt-10 mb-10'
               style={{ color: appTheme.colors.onSurface }}>
               Aún no tienes entrenamientos favoritos
             </Text>

@@ -11,7 +11,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import EditGoalModal from '../../components/editGoalModal';
 import LoggerFactory from '../../utils/logger-utility';
 import SocialShare from '../../components/socialShare';
-import { GoalStatus } from '../../utils/goal-types';
+import { GoalStatus, goalMap } from '../../utils/goal-types';
 import MultimediaModal from '../../components/multimediaModal/multimediaModal';
 
 const logger = LoggerFactory('goal-screen');
@@ -55,6 +55,20 @@ const GoalScreen = (props: GoalScreenProps) => {
           style={{ color: appTheme.colors.onSurfaceVariant }}>
           {goalStore.currentGoal?.description}
         </Text>
+      </View>
+      <View
+        className='items-center justify-around'
+        style={{ backgroundColor: appTheme.colors.backdrop, flex: 0.6 }}>
+        <Text className='text-xl text-red-400'>
+          {goalMap.get(goalStore.currentGoal?.status)}
+        </Text>
+        <Image
+          className='h-80 w-80'
+          source={{
+            uri: 'https://firebasestorage.googleapis.com/v0/b/fiufit-e9664.appspot.com/o/resources%2FGolden-Cup.png?alt=media&token=b9a12a35-b592-46f8-a968-8312f7df6354',
+          }}
+          resizeMode='cover'
+        />
         {(goalStore.currentGoal?.status === GoalStatus.COMPLETED ||
           goalStore.currentGoal?.status === GoalStatus.COMPLETEDLATE) && (
           <SocialShare
@@ -65,21 +79,6 @@ const GoalScreen = (props: GoalScreenProps) => {
             }}
           />
         )}
-      </View>
-      <View
-        className='items-center justify-around'
-        style={{ backgroundColor: appTheme.colors.backdrop, flex: 0.6 }}>
-        <Text className='text-xl text-red-400'>
-          {goalStore.currentGoal?.status}
-        </Text>
-        <Image
-          className='h-20 w-80'
-          source={{
-            uri: 'https://static.vecteezy.com/system/resources/previews/009/665/172/original/man-doing-sit-up-exercise-for-abdominal-muscles-vector-young-boy-wearing-a-blue-shirt-flat-character-athletic-man-doing-sit-ups-for-the-belly-and-abdominal-exercises-men-doing-crunches-in-the-gym-free-png.png',
-          }}
-          resizeMode='cover'
-        />
-        <Text className='text-xl'>x {goalStore.currentGoal?.targetValue}</Text>
       </View>
       <View
         className='flex-row items-center justify-around'

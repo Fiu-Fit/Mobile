@@ -11,6 +11,8 @@ import {
   ExerciseCardInfo,
   Unit,
   WorkoutProps,
+  categoryMap,
+  workoutCategoryOptions,
 } from '../../utils/workout-types';
 import { workoutDetailStore } from '../../stores/workoutDetail.store';
 import LoggerFactory from '../../utils/logger-utility';
@@ -21,6 +23,7 @@ import EditExerciseModal from '../../components/editExerciseModal';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Button from '../../components/button';
 import { Text } from 'react-native-paper';
+import WorkoutFilterModal from '../../components/workoutFilterModal';
 
 type UpsertWorkoutScreenProps = {
   navigation: UpsertWorkoutScreenNavigationProp;
@@ -33,7 +36,7 @@ type UpsertWorkoutScreenProps = {
 
 type UpsertWorkoutFormValue = Omit<
   WorkoutProps,
-  'rating' | 'athleteIds' | 'multimedia'
+  'rating' | 'athleteIds' | 'multimedia' | 'category'
 >;
 
 const logger = LoggerFactory('upsert-workout-screen');
@@ -51,8 +54,10 @@ const UpsertWorkoutScreen = ({
   const [selectedMultimedia, setSelectedMultimedia] = React.useState<string[]>(
     [],
   );
+  const [categoryModalVisible, setCategoryModalVisible] = React.useState(false);
 
   useEffect(() => {
+    logger.debug('Upserting...');
     flowResult(workoutDetailStore.fetchWorkout(itemId ?? ''));
     setSelectedMultimedia(workoutDetailStore.workout.multimedia);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,7 +88,6 @@ const UpsertWorkoutScreen = ({
           description: workoutDetailStore.workout.description,
           difficulty: workoutDetailStore.workout.difficulty,
           duration: workoutDetailStore.workout.duration,
-          category: workoutDetailStore.workout.category,
           exercises: workoutDetailStore.workout.exercises,
           authorId: currentUser.id,
           averageRating: workoutDetailStore.workout.averageRating,
@@ -95,13 +99,24 @@ const UpsertWorkoutScreen = ({
             workoutDetailStore.workout.description = values.description;
             workoutDetailStore.workout.difficulty = Number(values.difficulty);
             workoutDetailStore.workout.duration = Number(values.duration);
-            workoutDetailStore.workout.category = values.category;
             workoutDetailStore.workout.authorId = currentUser.id;
           });
           handleSubmitWorkout();
         }}>
         {({ values, errors, handleChange, handleSubmit }) => (
           <View className='mx-5'>
+            {categoryModalVisible && (
+              <WorkoutFilterModal
+                onDismiss={() => setCategoryModalVisible(false)}
+                onSelect={(category: number | undefined) => {
+                  runInAction(() => {
+                    workoutDetailStore.workout.category =
+                      category !== -1 ? category : -1;
+                  });
+                }}
+                items={workoutCategoryOptions}
+              />
+            )}
             <Input
               value={values.name}
               placeholder='Nombre'
@@ -140,26 +155,65 @@ const UpsertWorkoutScreen = ({
                 errors.description = '';
               }}
             />
-            <Input
-              value={values.difficulty}
-              placeholder='Dificultad'
-              placeholderTextColor={appTheme.colors.background}
-              onChangeText={text => {
-                runInAction(() => {
-                  workoutDetailStore.workout.difficulty = Number(text);
-                  handleChange('difficulty')(text);
-                });
-              }}
-              multiline={true}
-              labelText='Dificultad'
-              iconName='dumbbell'
-              error={errors.difficulty}
-              password={false}
-              onFocus={() => {
-                errors.difficulty = '';
-              }}
-              keyboardType='numeric'
-            />
+            <View className='flex-row mb-2 justify-between items-center'>
+              <View style={{ width: '30%', marginRight: 5 }}>
+                <Input
+                  value={values.difficulty}
+                  placeholder='Dificultad'
+                  placeholderTextColor={appTheme.colors.background}
+                  onChangeText={text => {
+                    runInAction(() => {
+                      workoutDetailStore.workout.difficulty = Number(text);
+                      handleChange('difficulty')(text);
+                    });
+                  }}
+                  multiline={true}
+                  labelText='Dificultad'
+                  iconName='dumbbell'
+                  error={errors.difficulty}
+                  password={false}
+                  onFocus={() => {
+                    errors.difficulty = '';
+                  }}
+                  keyboardType='numeric'
+                />
+              </View>
+              <View style={{ width: '30%', marginRight: 5 }}>
+                <Input
+                  value={values.duration}
+                  placeholder='Duración'
+                  placeholderTextColor={appTheme.colors.background}
+                  onChangeText={text => {
+                    runInAction(() => {
+                      workoutDetailStore.workout.duration = Number(text);
+                      handleChange('duration')(text);
+                    });
+                  }}
+                  multiline={true}
+                  labelText='Duración'
+                  iconName='clock'
+                  error={errors.duration}
+                  password={false}
+                  onFocus={() => {
+                    errors.duration = '';
+                  }}
+                  keyboardType='numeric'
+                />
+              </View>
+              <View style={{ width: '30%', marginTop: 50 }}>
+                <Button
+                  title={
+                    categoryMap.get(
+                      workoutDetailStore.workout.category ?? -1,
+                    ) || 'Desconocido'
+                  }
+                  onPress={() => {
+                    setCategoryModalVisible(true);
+                  }}
+                  icon='label-variant'
+                />
+              </View>
+            </View>
             <FieldArray
               key={'upsertWorkout-fieldarray'}
               name='exercises'
@@ -182,35 +236,37 @@ const UpsertWorkoutScreen = ({
                       }
                     />
                   ))}
-                  <CustomButton
-                    keyPrefix={'upsertWorkout-add-exercise-button'}
-                    icon='plus'
-                    onPress={() => {
-                      workoutDetailStore.addNewExercise({
-                        _id: workoutDetailStore.newExercises.size.toString(),
-                        exerciseId: '',
-                        sets: 0,
-                        reps: 0,
-                        unit: Unit.SECONDS,
-                        exercise: {
-                          _id: '',
-                          name: '',
-                          description: '',
-                          category: CategoryType.FULLBODY,
-                        },
-                      });
-                      setSelectedExercise(
-                        workoutDetailStore.exerciseCards.find(
-                          exerciseCard =>
-                            exerciseCard.id ===
-                            (
-                              workoutDetailStore.newExercises.size - 1
-                            ).toString(),
-                        ) as ExerciseCardInfo,
-                      );
-                      logger.info('Adding new Exercise');
-                    }}
-                  />
+                  <View className='items-center'>
+                    <CustomButton
+                      keyPrefix={'upsertWorkout-add-exercise-button'}
+                      icon='plus'
+                      onPress={() => {
+                        workoutDetailStore.addNewExercise({
+                          _id: workoutDetailStore.newExercises.size.toString(),
+                          exerciseId: '',
+                          sets: 0,
+                          reps: 0,
+                          unit: Unit.SECONDS,
+                          exercise: {
+                            _id: '',
+                            name: '',
+                            description: '',
+                            category: CategoryType.FULLBODY,
+                          },
+                        });
+                        setSelectedExercise(
+                          workoutDetailStore.exerciseCards.find(
+                            exerciseCard =>
+                              exerciseCard.id ===
+                              (
+                                workoutDetailStore.newExercises.size - 1
+                              ).toString(),
+                          ) as ExerciseCardInfo,
+                        );
+                        logger.info('Adding new Exercise');
+                      }}
+                    />
+                  </View>
                 </>
               )}
             />

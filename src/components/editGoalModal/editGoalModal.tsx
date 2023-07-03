@@ -53,7 +53,9 @@ const EditGoalModal = ({ onDismiss }: EditGoalModalProps) => {
     borderRadius: 20,
   };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <Portal>
       <Modal
         visible={true}

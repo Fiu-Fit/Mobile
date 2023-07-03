@@ -57,14 +57,15 @@ const WorkoutRatingModal = ({ onDismiss }: WorkoutRatingModalProps) => {
     setLoading(false);
   };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <Portal>
       <Modal
         visible={true}
         onDismiss={onDismiss}
         contentContainerStyle={containerStyle}>
         <View className='items-center' style={{ flex: 0.4 }}>
-          {loading && <Loader />}
           <Text
             className='my-5'
             style={{ color: appTheme.colors.onBackground }}>

@@ -4,6 +4,12 @@ export enum GoalStatus {
   COMPLETEDLATE = 'CompletedLate',
 }
 
+export const goalMap = new Map<string, string>([
+  ['InProgress', 'En progreso'],
+  ['Completed', 'Completada'],
+  ['CompletedLate', 'Completada Tarde'],
+]);
+
 export type GoalsProps = {
   id: number;
   title: string;
