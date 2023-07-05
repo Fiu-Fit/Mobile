@@ -174,10 +174,11 @@ const LoginScreen = ({
   async function createNewUser(user: FirebaseAuthTypes.User) {
     const [firstName, lastName] = user?.displayName?.split(' ') || ['', ''];
     try {
-      await axiosClient.post('users', {
+      return await axiosClient.post('users', {
         email: user?.email || '',
         firstName,
         lastName,
+        bodyWeight: 60,
         uid: user.uid,
         role: Role.Athlete,
       });
@@ -191,26 +192,30 @@ const LoginScreen = ({
   const handleGoogleSignIn = async () => {
     try {
       const { idToken } = await GoogleSignin.signIn();
-
+      logger.info('Google sign in ID Token:', idToken);
       const credential = auth.GoogleAuthProvider.credential(idToken);
-
+      logger.info('Google sign in credential:', credential);
       const userCredential = await auth().signInWithCredential(credential);
-
+      logger.info('Google sign in user credential:', userCredential);
       const user = userCredential.user;
-
+      logger.info('Google sign in user:', user);
       const token = await auth().currentUser?.getIdToken();
-
+      logger.info('Google sign in Token:', token);
       if (token) {
         await saveToken(token);
       }
 
       if (isNewUser(user)) {
         await createNewUser(user);
-
+        const { response } = await fetchUserData();
+        setCurrentUser(response as User);
         navigation.push('InterestsScreen', {
           name: user?.displayName?.split(' ')[0] || '',
         });
       } else {
+        const { response } = await fetchUserData();
+        setCurrentUser(response as User);
+        logger.info('Got already created user:', user);
         navigation.push('Home');
       }
 

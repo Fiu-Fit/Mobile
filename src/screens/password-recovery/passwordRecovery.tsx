@@ -72,11 +72,15 @@ const PasswordRecoveryScreen = ({
                   errors.email = '';
                 }}
               />
-              <Button title='Enviar email' onPress={handleSubmit} />
-              <Button
-                title='Volver a login'
-                onPress={() => navigation.push('LoginScreen')}
-              />
+              <View className='my-5'>
+                <Button title='Enviar email' onPress={handleSubmit} />
+              </View>
+              <View>
+                <Button
+                  title='Volver a login'
+                  onPress={() => navigation.push('LoginScreen')}
+                />
+              </View>
             </>
           )}
         </Formik>

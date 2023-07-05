@@ -223,6 +223,7 @@ const UpsertWorkoutScreen = ({
                     <ItemCard<ExerciseCardInfo>
                       key={`upsertWorkout-${index}-${exercise.id}-key`}
                       keyPrefix={`upsertWorkout-${index}-${exercise.id}`}
+                      profileCard={false}
                       item={exercise}
                       onPress={() => {
                         setSelectedExercise(exercise);
@@ -251,8 +252,10 @@ const UpsertWorkoutScreen = ({
                             _id: '',
                             name: '',
                             description: '',
-                            category: CategoryType.FULLBODY,
+                            category: CategoryType.UNRECOGNIZED,
                           },
+                          category: CategoryType.UNRECOGNIZED,
+                          repDuration: 0,
                         });
                         setSelectedExercise(
                           workoutDetailStore.exerciseCards.find(

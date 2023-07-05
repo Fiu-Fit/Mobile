@@ -259,8 +259,9 @@ export class WorkoutDetailStore {
         this.newExercises = new Map<string, WorkoutExercise>();
         logger.debug('Loaded Workout: ', this.workout);
       });
+      this.downloads = this.workout.multimedia;
+      this.workout.multimedia = [];
       yield this.fetchWorkoutRatings(true);
-      yield this.downloadResources();
       yield this.fetchAuthor(true);
       this.state = 'done';
     } catch (e) {
@@ -368,6 +369,9 @@ export class WorkoutDetailStore {
       };
       logger.info('Workout ID: ', _id);
       logger.info('Upserting workout: ', workoutPayload);
+      yield this.uploadResources();
+      yield this.downloadResources();
+      workoutPayload.multimedia = this.downloads;
       const { data } = yield !this.workout._id
         ? axiosClient.post<WorkoutProps>('/workouts', workoutPayload)
         : axiosClient.put<WorkoutProps>(`/workouts/${this.workout._id}`, {
@@ -378,7 +382,6 @@ export class WorkoutDetailStore {
         this.workout._id = data._id;
       });
       logger.info('Upsert workout Data: ', data);
-      yield this.uploadResources();
     } catch (err) {
       logger.error(
         'Error while trying to upsert workout:',
